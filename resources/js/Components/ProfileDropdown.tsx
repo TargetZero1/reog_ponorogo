@@ -63,28 +63,41 @@ export function ProfileDropdown({ scrolled, isMobile = false, isWhiteBackgroundP
                 </div>
 
                 {/* User Section */}
-                <Link
-                  href={route('profile')}
-                  className={linkClasses}
-                  role="menuitem"
-                  tabIndex={-1}
-                  id="menu-item-profile"
-                >
-                  Profile
-                </Link>
-                <Link
-                  href={route('payment.history')}
-                  className={linkClasses}
-                  role="menuitem"
-                  tabIndex={-1}
-                  id="menu-item-orders"
-                >
-                  My Orders
-                </Link>
+                {!isAdmin && (
+                  <>
+                    <Link
+                      href={route('profile')}
+                      className={linkClasses}
+                      role="menuitem"
+                      tabIndex={-1}
+                      id="menu-item-profile"
+                    >
+                      Profile
+                    </Link>
+                    <Link
+                      href={route('payment.history')}
+                      className={linkClasses}
+                      role="menuitem"
+                      tabIndex={-1}
+                      id="menu-item-orders"
+                    >
+                      My Orders
+                    </Link>
+                  </>
+                )}
 
                 {/* Admin Section */}
                 {isAdmin && (
                   <>
+                    <Link
+                      href={route('profile')}
+                      className={linkClasses}
+                      role="menuitem"
+                      tabIndex={-1}
+                      id="menu-item-admin-profile"
+                    >
+                      Admin Profile
+                    </Link>
                     <div className={sectionHeaderClasses} role="none">
                       Admin Panel
                     </div>

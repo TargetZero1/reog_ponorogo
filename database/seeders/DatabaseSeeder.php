@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Database\Seeders\EventSeeder;
+use Database\Seeders\PlaceSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -41,5 +42,8 @@ class DatabaseSeeder extends Seeder
 
         // Seed example events
         $this->call(EventSeeder::class);
+        
+        // Seed places (tourist attractions)
+        $this->call(PlaceSeeder::class);
     }
 }

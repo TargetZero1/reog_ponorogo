@@ -19,10 +19,10 @@ export default function Index(props: any) {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-red-50">
+      <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-red-50 -mt-6">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#6b0000] via-[#7b0b0b] to-[#8b0b0b] text-white py-12 px-4">
-          <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto px-4 pt-8 pb-6">
+          <div className="bg-gradient-to-r from-[#6b0000] via-[#7b0b0b] to-[#8b0b0b] text-white rounded-xl shadow-lg py-8 px-6">
             <h1 className="text-4xl font-bold mb-2">Kelola Pertunjukan Reog</h1>
             <p className="text-red-100">Manage all events and performances for Reog Ponorogo</p>
           </div>

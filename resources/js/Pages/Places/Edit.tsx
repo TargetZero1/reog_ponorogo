@@ -37,7 +37,7 @@ export default function EditPlace({ place }: { place: any }) {
   };
 
   const removeArrayItem = (field: 'highlights' | 'activities' | 'facilities', index: number) => {
-    const newArray = formData[field].filter((_, i) => i !== index);
+    const newArray = formData[field].filter((_: string, i: number) => i !== index);
     setFormData({ ...formData, [field]: newArray });
   };
 
@@ -197,7 +197,7 @@ export default function EditPlace({ place }: { place: any }) {
                 </button>
               </div>
               <div className="space-y-2">
-                {formData.highlights.map((highlight, index) => (
+                {formData.highlights.map((highlight: string, index: number) => (
                   <div key={index} className="flex gap-2">
                     <input
                       type="text"
@@ -234,7 +234,7 @@ export default function EditPlace({ place }: { place: any }) {
                 </button>
               </div>
               <div className="space-y-2">
-                {formData.activities.map((activity, index) => (
+                {formData.activities.map((activity: string, index: number) => (
                   <div key={index} className="flex gap-2">
                     <input
                       type="text"
@@ -271,7 +271,7 @@ export default function EditPlace({ place }: { place: any }) {
                 </button>
               </div>
               <div className="space-y-2">
-                {formData.facilities.map((facility, index) => (
+                {formData.facilities.map((facility: string, index: number) => (
                   <div key={index} className="flex gap-2">
                     <input
                       type="text"

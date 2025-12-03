@@ -7,24 +7,26 @@ import { ContainerBackground } from '../Components/ContainerBackground';
 export default function TempatWisata({ places }: { places?: any[] }) {
   const [selectedAttraction, setSelectedAttraction] = useState<number | null>(null);
 
-  // If backend provides `places`, use them; otherwise fall back to local demo data
-  const attractions = (places && places.length)
-    ? places.map((p: any) => ({
-        name: p.name,
-        category: p.category || 'Wisata',
-        description: p.description || '',
-        location: p.location || '',
-        hours: p.hours || '24 Jam',
-        rating: p.rating || 4.5,
-        image: p.image_path || 'https://images.unsplash.com/photo-1726744069854-a74d917b8f35?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-        highlights: p.highlights || [],
-        price: p.price ? `Rp ${Number(p.price).toLocaleString('id-ID')}` : 'Gratis',
-        activities: p.activities || [],
-        facilities: p.facilities || [],
-        bestTime: p.best_time || '',
-        slug: p.slug,
-        id: p.id,
-      }))
+  // Use places from database (only published ones are shown)
+  const attractions = (places && places.length > 0)
+    ? places
+        .filter((p: any) => p.published !== false) // Only show published places
+        .map((p: any) => ({
+          name: p.name,
+          category: p.category || 'Wisata',
+          description: p.description || '',
+          location: p.location || '',
+          hours: p.hours || '24 Jam',
+          rating: p.rating || 4.5,
+          image: p.image_path || 'https://images.unsplash.com/photo-1726744069854-a74d917b8f35?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+          highlights: Array.isArray(p.highlights) ? p.highlights : (p.highlights ? [p.highlights] : []),
+          price: p.price ? `Rp ${Number(p.price).toLocaleString('id-ID')}` : 'Gratis',
+          activities: Array.isArray(p.activities) ? p.activities : (p.activities ? [p.activities] : []),
+          facilities: Array.isArray(p.facilities) ? p.facilities : (p.facilities ? [p.facilities] : []),
+          bestTime: p.best_time || '',
+          slug: p.slug,
+          id: p.id,
+        }))
     : [
     {
       id: 1,
