@@ -49,13 +49,6 @@ export default function Analytics({
               <Download size={18} />
               Export PDF
             </a>
-            <a
-              href={route('admin.analytics.export', { format: 'excel' })}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition shadow-md"
-            >
-              <FileSpreadsheet size={18} />
-              Export Excel
-            </a>
           </div>
         </div>
 

@@ -26,18 +26,11 @@ export default function Reports({ summary, topAttractions, topCustomers }: Repor
           </div>
           <div className="flex gap-3">
             <a
-              href={route('admin.reports.export', { format: 'csv' })}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition shadow-md"
+              href={route('admin.reports.export')}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition shadow-md"
             >
               <Download size={18} />
-              Export CSV
-            </a>
-            <a
-              href={route('admin.reports.export', { format: 'excel' })}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition shadow-md"
-            >
-              <FileSpreadsheet size={18} />
-              Export Excel
+              Export PDF
             </a>
           </div>
         </div>

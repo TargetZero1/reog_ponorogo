@@ -279,6 +279,15 @@ class BookingController extends Controller
         $thisMonthRevenue = Ticket::whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->sum('total_price');
+        
+        // Additional stats for Users and Events
+        $thisMonthNewUsers = User::where('role', 'user')
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
+        $thisMonthNewEvents = Event::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
 
         return Inertia::render('Admin/Dashboard', [
             'stats' => [
@@ -290,6 +299,8 @@ class BookingController extends Controller
                 'todayRevenue' => $todayRevenue,
                 'thisMonthOrders' => $thisMonthOrders,
                 'thisMonthRevenue' => $thisMonthRevenue,
+                'thisMonthNewUsers' => $thisMonthNewUsers,
+                'thisMonthNewEvents' => $thisMonthNewEvents,
             ],
             'recentOrders' => $recentOrders,
             'ordersByMonth' => $ordersByMonth,

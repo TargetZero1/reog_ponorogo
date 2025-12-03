@@ -1,7 +1,7 @@
 import React from 'react';
 import { BarChart3, ShoppingCart, Users, Zap, Calendar, TrendingUp, DollarSign, FileText } from 'lucide-react';
 import { Layout } from '../../Components/Layout';
-import { router } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 
 interface AdminDashboardProps {
   stats: {
@@ -13,6 +13,8 @@ interface AdminDashboardProps {
     todayRevenue: number;
     thisMonthOrders: number;
     thisMonthRevenue: number;
+    thisMonthNewUsers: number;
+    thisMonthNewEvents: number;
   };
   recentOrders: any[];
   ordersByMonth: any[];
@@ -29,7 +31,9 @@ export default function Dashboard({ stats, recentOrders, ordersByMonth, revenueB
       color: 'from-blue-500 to-blue-600',
       bgColor: 'bg-blue-50',
       change: stats.todayOrders,
-      changeLabel: 'Today'
+      changeLabel: 'Today',
+      changeType: 'number',
+      showChange: true
     },
     {
       icon: DollarSign,
@@ -37,8 +41,10 @@ export default function Dashboard({ stats, recentOrders, ordersByMonth, revenueB
       value: `Rp ${Number(stats.totalRevenue).toLocaleString('id-ID')}`,
       color: 'from-green-500 to-green-600',
       bgColor: 'bg-green-50',
-      change: `Rp ${Number(stats.todayRevenue).toLocaleString('id-ID')}`,
-      changeLabel: 'Today'
+      change: stats.todayRevenue,
+      changeLabel: 'Today',
+      changeType: 'currency',
+      showChange: true
     },
     {
       icon: Users,
@@ -46,8 +52,10 @@ export default function Dashboard({ stats, recentOrders, ordersByMonth, revenueB
       value: stats.totalUsers,
       color: 'from-purple-500 to-purple-600',
       bgColor: 'bg-purple-50',
-      change: stats.thisMonthOrders,
-      changeLabel: 'This Month Orders'
+      change: stats.thisMonthNewUsers || 0,
+      changeLabel: 'New This Month',
+      changeType: 'number',
+      showChange: true
     },
     {
       icon: Calendar,
@@ -55,8 +63,10 @@ export default function Dashboard({ stats, recentOrders, ordersByMonth, revenueB
       value: stats.totalEvents,
       color: 'from-amber-500 to-amber-600',
       bgColor: 'bg-amber-50',
-      change: stats.thisMonthRevenue,
-      changeLabel: 'This Month Revenue'
+      change: stats.thisMonthNewEvents || 0,
+      changeLabel: 'New This Month',
+      changeType: 'number',
+      showChange: true
     },
   ];
 
@@ -66,7 +76,7 @@ export default function Dashboard({ stats, recentOrders, ordersByMonth, revenueB
 
   return (
     <Layout>
-      <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen p-6 md:p-8">
+      <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen p-6 md:p-8 pt-20">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-8">
@@ -78,22 +88,36 @@ export default function Dashboard({ stats, recentOrders, ordersByMonth, revenueB
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {statCards.map((card, idx) => {
               const Icon = card.icon;
+              const formattedChange = card.changeType === 'currency' 
+                ? `Rp ${Number(card.change || 0).toLocaleString('id-ID')}` 
+                : (card.change || 0);
+              const changeSuffix = card.changeLabel === 'Today' 
+                ? 'today' 
+                : card.changeLabel === 'New This Month' 
+                  ? 'new this month' 
+                  : 'this month';
+              
               return (
                 <div key={idx} className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                   <div className="flex items-center justify-between mb-4">
-                    <div className={`p-3 rounded-lg bg-gradient-to-br ${card.color} text-white`}>
+                    <div className={`p-3 rounded-lg bg-gradient-to-br ${card.color} text-white shadow-md`}>
                       <Icon size={24} />
                     </div>
-                    <div className={`text-xs px-2 py-1 rounded-full ${card.bgColor} text-gray-700 font-semibold`}>
-                      {card.changeLabel}
-                    </div>
+                    {card.showChange && (
+                      <div className={`text-xs px-3 py-1 rounded-full ${card.bgColor} text-gray-700 font-semibold border border-gray-200`}>
+                        {card.changeLabel}
+                      </div>
+                    )}
                   </div>
                   <div>
-                    <p className="text-gray-600 text-sm font-medium mb-1">{card.label}</p>
-                    <p className="text-2xl font-bold text-gray-900 mb-2">{card.value}</p>
-                    <p className="text-xs text-gray-500">
-                      <span className="font-semibold text-gray-700">{card.change}</span> {card.changeLabel === 'Today' ? 'today' : 'this month'}
-                    </p>
+                    <p className="text-gray-600 text-sm font-medium mb-2">{card.label}</p>
+                    <p className="text-3xl font-bold text-gray-900 mb-3">{card.value}</p>
+                    {card.showChange && (
+                      <p className="text-xs text-gray-600">
+                        <span className="font-semibold text-gray-800">{formattedChange}</span>
+                        <span className="text-gray-500 ml-1">{changeSuffix}</span>
+                      </p>
+                    )}
                   </div>
                 </div>
               );
@@ -230,12 +254,12 @@ export default function Dashboard({ stats, recentOrders, ordersByMonth, revenueB
                   <ShoppingCart size={20} className="text-amber-500" />
                   Recent Orders
                 </h2>
-                <a
-                  href={router.route('admin.orders')}
+                <Link
+                  href={route('admin.orders')}
                   className="text-sm text-blue-600 hover:text-blue-700 font-semibold"
                 >
                   View All →
-                </a>
+                </Link>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">

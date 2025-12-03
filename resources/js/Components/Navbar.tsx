@@ -19,11 +19,14 @@ export function Navbar({ activeSection = '', setActiveSection = () => {} }: Navb
     setCurrentPath(window.location.pathname);
   }, []);
 
+  // Determine if current page is admin page
+  const isAdminPage = currentPath.startsWith('/admin');
+  
   // Determine if current page has white background (needs maroon navbar)
-  const isWhiteBackgroundPage = currentPath !== '/' && 
+  const isWhiteBackgroundPage = (currentPath !== '/' && 
     currentPath !== '/index.php' && 
     !currentPath.includes('#') &&
-    currentPath !== route('home').replace(window.location.origin, '');
+    currentPath !== route('home').replace(window.location.origin, '')) || isAdminPage;
 
   // ✅ FIXED: Using named routes with the route() helper
   const navLinks = [
@@ -86,9 +89,13 @@ export function Navbar({ activeSection = '', setActiveSection = () => {} }: Navb
         role="navigation"
         aria-label="Main navigation"
         className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-          scrolled 
-            ? 'backdrop-blur-md bg-white/80 shadow-lg border-b border-white/20' 
-            : 'backdrop-blur-sm bg-black/20'
+          isAdminPage
+            ? 'backdrop-blur-md bg-gradient-to-r from-red-950 via-red-900 to-red-950 shadow-lg border-b border-red-800/30'
+            : scrolled 
+              ? 'backdrop-blur-md bg-white/80 shadow-lg border-b border-white/20' 
+              : isWhiteBackgroundPage
+                ? 'backdrop-blur-md bg-gradient-to-r from-red-950 via-red-900 to-red-950 shadow-lg border-b border-red-800/30'
+                : 'backdrop-blur-sm bg-black/20'
         }`}
       >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -99,9 +106,11 @@ export function Navbar({ activeSection = '', setActiveSection = () => {} }: Navb
                 <span className="text-red-950">🦚</span>
               </div>
               <span className={`tracking-wide font-semibold drop-shadow-lg ${
-                scrolled 
-                  ? 'text-red-950' 
-                  : 'text-white'
+                isAdminPage || (isWhiteBackgroundPage && !scrolled)
+                  ? 'text-white' 
+                  : scrolled 
+                    ? 'text-red-950' 
+                    : 'text-white'
               }`}>
                 Reog Ponorogo
               </span>
@@ -116,10 +125,14 @@ export function Navbar({ activeSection = '', setActiveSection = () => {} }: Navb
                 aria-current={activeSection === link.id ? 'page' : undefined}
                 className={`px-4 py-2 rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 font-medium ${
                   activeSection === link.id
-                    ? 'bg-amber-500 text-red-950 shadow-lg'
-                    : scrolled 
-                      ? 'text-red-950 hover:bg-amber-50 hover:text-red-800 drop-shadow-sm' 
-                      : 'text-white hover:bg-white/20 hover:text-amber-200 drop-shadow-lg'
+                    ? isAdminPage || isWhiteBackgroundPage
+                      ? 'bg-amber-500 text-red-950 shadow-lg'
+                      : 'bg-amber-500 text-red-950 shadow-lg'
+                    : isAdminPage || (isWhiteBackgroundPage && !scrolled)
+                      ? 'text-white hover:bg-white/20 hover:text-amber-200 drop-shadow-lg'
+                      : scrolled 
+                        ? 'text-red-950 hover:bg-amber-50 hover:text-red-800 drop-shadow-sm' 
+                        : 'text-white hover:bg-white/20 hover:text-amber-200 drop-shadow-lg'
                 }`}
               >
                 {link.label}
@@ -145,7 +158,7 @@ export function Navbar({ activeSection = '', setActiveSection = () => {} }: Navb
                 ))}
               </>
             )}
-            <ProfileDropdown scrolled={scrolled} isWhiteBackgroundPage={false} />
+            <ProfileDropdown scrolled={scrolled} isWhiteBackgroundPage={isAdminPage || isWhiteBackgroundPage} />
           </div>
 
           <div className="md:hidden flex items-center">
@@ -155,9 +168,11 @@ export function Navbar({ activeSection = '', setActiveSection = () => {} }: Navb
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-menu"
               className={`p-2 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 drop-shadow-lg ${
-                scrolled 
-                  ? 'text-red-950 hover:bg-amber-50' 
-                  : 'text-white hover:bg-white/20'
+                isAdminPage || (isWhiteBackgroundPage && !scrolled)
+                  ? 'text-white hover:bg-white/20'
+                  : scrolled 
+                    ? 'text-red-950 hover:bg-amber-50' 
+                    : 'text-white hover:bg-white/20'
               }`}
             >
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -167,9 +182,11 @@ export function Navbar({ activeSection = '', setActiveSection = () => {} }: Navb
       </div>
       {mobileMenuOpen && (
         <div id="mobile-menu" className={`md:hidden backdrop-blur-md ${
-          scrolled 
-            ? 'bg-white/90 border-neutral-200' 
-            : 'bg-black/40 border-white/20'
+          isAdminPage || isWhiteBackgroundPage
+            ? 'bg-gradient-to-r from-red-950/95 via-red-900/95 to-red-950/95 border-red-800/30'
+            : scrolled 
+              ? 'bg-white/90 border-neutral-200' 
+              : 'bg-black/40 border-white/20'
         } border-t`}>
           <div className="px-2 pt-2 pb-3 space-y-1">
             {navLinks.map((link) => (
@@ -179,9 +196,11 @@ export function Navbar({ activeSection = '', setActiveSection = () => {} }: Navb
                 className={`block w-full text-left px-3 py-2 rounded-md transition-all focus:outline-none focus:ring-2 focus:ring-amber-400 font-medium ${
                   activeSection === link.id
                     ? 'bg-amber-500 text-red-950'
-                    : scrolled 
-                      ? 'text-red-950 hover:bg-amber-50 hover:text-red-800' 
-                      : 'text-white hover:bg-white/20 hover:text-amber-200'
+                    : isAdminPage || isWhiteBackgroundPage
+                      ? 'text-white hover:bg-white/20 hover:text-amber-200'
+                      : scrolled 
+                        ? 'text-red-950 hover:bg-amber-50 hover:text-red-800' 
+                        : 'text-white hover:bg-white/20 hover:text-amber-200'
                 }`}
               >
                 {link.label}
