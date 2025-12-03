@@ -43,11 +43,11 @@ export default function Analytics({
           </div>
           <div className="flex gap-3">
             <a
-              href={route('admin.analytics.export', { format: 'csv' })}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition shadow-md"
+              href={route('admin.analytics.export')}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition shadow-md"
             >
               <Download size={18} />
-              Export CSV
+              Export PDF
             </a>
             <a
               href={route('admin.analytics.export', { format: 'excel' })}
