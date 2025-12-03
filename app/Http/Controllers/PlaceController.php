@@ -52,7 +52,7 @@ class PlaceController extends Controller
 
         Place::create($data);
 
-        return redirect()->route('places.index')->with('success', 'Place created');
+        return redirect()->route('admin.places.index')->with('success', 'Place created');
     }
 
     public function edit($id)
@@ -94,7 +94,7 @@ class PlaceController extends Controller
 
         $place->update($data);
 
-        return redirect()->route('places.index')->with('success', 'Place updated');
+        return redirect()->route('admin.places.index')->with('success', 'Place updated');
     }
 
     public function destroy($id)
