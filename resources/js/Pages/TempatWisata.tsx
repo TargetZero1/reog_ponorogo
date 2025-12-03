@@ -167,7 +167,7 @@ export default function TempatWisata({ places }: { places?: any[] }) {
 
         {/* Content */}
         <div className="relative z-10 text-center px-3 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500 text-red-950 px-4 sm:px-8 py-2 sm:py-4 rounded-full mb-6 sm:mb-8 shadow-lg sm:shadow-2xl animate-[slideDown_1s_ease-out] border-2 border-amber-400/50 backdrop-blur-sm relative overflow-hidden group">
+          <div className="inline-flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500 text-red-950 px-4 sm:px-8 py-2 sm:py-4 rounded-full mb-10 sm:mb-12 md:mb-16 shadow-lg sm:shadow-2xl animate-[slideDown_1s_ease-out] border-2 border-amber-400/50 backdrop-blur-sm relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
             <Sparkles size={18} className="sm:size-6 animate-[spin_4s_linear_infinite] relative z-10" />
             <span className="tracking-wide relative z-10 text-sm sm:text-base">Destinasi Wisata</span>
@@ -176,9 +176,9 @@ export default function TempatWisata({ places }: { places?: any[] }) {
 
           <div className="mb-6 sm:mb-8 animate-[slideUp_1s_ease-out_0.2s_both]">
             <h1 className="text-white mb-2 sm:mb-4 tracking-tight leading-tight">
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-500 to-amber-300 mb-4 drop-shadow-2xl animate-[shimmer_3s_ease-in-out_infinite] relative text-2xl sm:text-4xl md:text-5xl font-bold">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-500 to-amber-300 mb-4 drop-shadow-2xl relative text-2xl sm:text-4xl md:text-5xl font-bold overflow-visible px-2">
                 Tempat Wisata di Ponorogo
-                <div className="absolute -inset-2 bg-gradient-to-r from-amber-500/20 to-red-500/20 blur-3xl -z-10"></div>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-32 bg-gradient-to-br from-amber-500/25 via-amber-400/20 to-red-500/15 blur-3xl rounded-full -z-10"></div>
               </span>
             </h1>
           </div>

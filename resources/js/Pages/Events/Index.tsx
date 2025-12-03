@@ -10,11 +10,11 @@ export default function Index(props: any) {
 
   function deleteEvent(id: number) {
     if (!confirm('Yakin ingin menghapus event ini?')) return;
-    router.delete(`/admin/events/${id}`);
+    router.delete(route('admin.events.destroy', id));
   }
 
   function togglePublish(id: number, currentStatus: boolean) {
-    router.patch(`/admin/events/${id}/toggle-publish`, {}, { preserveScroll: true });
+    router.patch(route('admin.events.toggle-publish', id), {}, { preserveScroll: true });
   }
 
   return (
@@ -35,10 +35,21 @@ export default function Index(props: any) {
               <button onClick={() => setTab('places')} className={`px-4 py-2 rounded ${tab === 'places' ? 'bg-amber-500 text-red-950' : 'bg-white text-red-700 border'}`}>Places</button>
             </div>
 
-            <div>
+            <div className="flex items-center gap-3">
+              {tab === 'events' && (
+                <a
+                  href={route('events.index')}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg font-semibold hover:bg-blue-100 transition border border-blue-200"
+                >
+                  <Eye size={18} />
+                  Lihat Situs Publik
+                </a>
+              )}
               {tab === 'events' ? (
                 <a
-                  href="/admin/events/create"
+                  href={route('admin.events.create')}
                   className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-red-950 rounded-lg font-semibold hover:from-amber-400 hover:to-amber-500 transition shadow-lg"
                 >
                   <Plus size={20} />
@@ -46,7 +57,7 @@ export default function Index(props: any) {
                 </a>
               ) : (
                 <a
-                  href="/admin/places/create"
+                  href={route('admin.places.create')}
                   className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-red-950 rounded-lg font-semibold hover:from-amber-400 hover:to-amber-500 transition shadow-lg"
                 >
                   <Plus size={20} />
@@ -55,6 +66,16 @@ export default function Index(props: any) {
               )}
             </div>
           </div>
+          
+          {/* Info Banner */}
+          {tab === 'events' && (
+            <div className="mb-6 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
+              <p className="text-sm text-blue-800">
+                <strong>Info:</strong> Hanya event yang dipublikasikan yang akan muncul di halaman publik (<a href={route('events.index')} target="_blank" rel="noopener noreferrer" className="underline font-semibold">/events</a>). 
+                Event draft hanya terlihat di panel admin ini.
+              </p>
+            </div>
+          )}
 
           {/* Content Grid */}
           {tab === 'events' ? (
@@ -63,7 +84,7 @@ export default function Index(props: any) {
                 <div className="text-gray-400 mb-4 text-6xl">📅</div>
                 <p className="text-gray-600 text-lg mb-4">Belum ada event yang dibuat</p>
                 <a
-                  href="/admin/events/create"
+                  href={route('admin.events.create')}
                   className="inline-block px-6 py-2 bg-amber-500 text-red-950 rounded-lg font-semibold hover:bg-amber-600"
                 >
                   Buat Event Pertama
@@ -137,14 +158,14 @@ export default function Index(props: any) {
                     <div className="bg-gray-50 px-4 py-3 space-y-2 border-t border-gray-100">
                       <div className="flex gap-2">
                         <a
-                          href={`/admin/events/${e.id}`}
+                          href={route('admin.events.show', e.id)}
                           className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-blue-50 text-blue-700 rounded font-semibold text-sm hover:bg-blue-100 transition"
                         >
                           <Eye size={16} />
                           Lihat
                         </a>
                         <a
-                          href={`/admin/events/${e.id}/edit`}
+                          href={route('admin.events.edit', e.id)}
                           className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-green-50 text-green-700 rounded font-semibold text-sm hover:bg-green-100 transition"
                         >
                           <Edit size={16} />
@@ -168,6 +189,17 @@ export default function Index(props: any) {
                       >
                         {e.published ? '🔓 Sembunyikan' : '🔓 Publikasikan'}
                       </button>
+                      {e.published && e.slug && (
+                        <a
+                          href={route('events.show', e.slug)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-purple-50 text-purple-700 rounded font-semibold text-sm hover:bg-purple-100 transition"
+                        >
+                          <Eye size={16} />
+                          Lihat di Situs Publik
+                        </a>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -180,7 +212,7 @@ export default function Index(props: any) {
                 <div className="text-gray-400 mb-4 text-6xl">📍</div>
                 <p className="text-gray-600 text-lg mb-4">Belum ada tempat wisata</p>
                 <a
-                  href="/admin/places/create"
+                  href={route('admin.places.create')}
                   className="inline-block px-6 py-2 bg-amber-500 text-red-950 rounded-lg font-semibold hover:bg-amber-600"
                 >
                   Buat Place Pertama
@@ -210,11 +242,11 @@ export default function Index(props: any) {
                     </div>
                     <div className="bg-gray-50 px-4 py-3 space-y-2 border-t border-gray-100">
                       <div className="flex gap-2">
-                        <a href={`/admin/places/${p.id}/edit`} className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-green-50 text-green-700 rounded font-semibold text-sm hover:bg-green-100 transition"><Edit size={16} />Edit</a>
-                        <button onClick={() => { if (confirm('Yakin ingin menghapus?')) { router.delete(`/admin/places/${p.id}`); } }} className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-red-50 text-red-700 rounded font-semibold text-sm hover:bg-red-100 transition"><Trash2 size={16} />Hapus</button>
+                        <a href={route('admin.places.edit', p.id)} className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-green-50 text-green-700 rounded font-semibold text-sm hover:bg-green-100 transition"><Edit size={16} />Edit</a>
+                        <button onClick={() => { if (confirm('Yakin ingin menghapus?')) { router.delete(route('admin.places.destroy', p.id)); } }} className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-red-50 text-red-700 rounded font-semibold text-sm hover:bg-red-100 transition"><Trash2 size={16} />Hapus</button>
                       </div>
                       <button
-                        onClick={() => router.patch(`/admin/places/${p.id}/toggle-publish`, {}, { preserveScroll: true })}
+                        onClick={() => router.patch(route('admin.places.toggle-publish', p.id), {}, { preserveScroll: true })}
                         className={`w-full flex items-center justify-center gap-2 px-3 py-2 rounded font-semibold text-sm transition ${
                           p.published
                             ? 'bg-yellow-50 text-yellow-700 hover:bg-yellow-100'

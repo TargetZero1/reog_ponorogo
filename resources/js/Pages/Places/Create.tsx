@@ -10,7 +10,7 @@ export default function CreatePlace() {
     <Layout>
       <div className="p-8 max-w-3xl mx-auto bg-white rounded-lg shadow">
         <h1 className="text-2xl font-bold mb-4">Create Place</h1>
-        <form method="POST" action="/admin/places">
+        <form method="POST" action={route('admin.places.store')}>
           <input type="hidden" name="_token" value={csrf_token} />
           <div className="mb-3">
             <label className="block text-sm font-medium text-gray-700">Name</label>
@@ -30,7 +30,7 @@ export default function CreatePlace() {
           </div>
           <div className="flex gap-3">
             <button className="bg-amber-500 text-red-950 px-4 py-2 rounded">Create</button>
-            <a href="/places" className="text-gray-600 self-center">Cancel</a>
+            <a href={route('admin.places.index')} className="text-gray-600 self-center">Cancel</a>
           </div>
         </form>
       </div>

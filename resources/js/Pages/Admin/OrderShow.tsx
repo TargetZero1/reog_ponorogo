@@ -52,7 +52,7 @@ export default function OrderShow({ order }: OrderShowProps) {
             <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">Update Status</button>
           </form>
 
-          <a href="/admin/orders" className="text-sm text-gray-600">Back to orders</a>
+          <a href={route('admin.orders')} className="text-sm text-gray-600">Back to orders</a>
         </div>
         </div>
       </div>

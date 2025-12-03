@@ -80,7 +80,7 @@ export function Hero() {
       </div>
 
       <div className="relative z-10 text-center px-3 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-        <div className="inline-flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500 text-red-950 px-4 sm:px-8 py-2 sm:py-4 rounded-full mb-6 sm:mb-8 shadow-lg sm:shadow-2xl animate-[slideDown_1s_ease-out] border-2 border-amber-400/50 backdrop-blur-sm relative overflow-hidden group">
+        <div className="inline-flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500 text-red-950 px-4 sm:px-8 py-2 sm:py-4 rounded-full mb-10 sm:mb-12 md:mb-16 shadow-lg sm:shadow-2xl animate-[slideDown_1s_ease-out] border-2 border-amber-400/50 backdrop-blur-sm relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
           <Sparkles size={18} className="sm:size-6 animate-[spin_4s_linear_infinite] relative z-10" />
           <span className="tracking-wide relative z-10 text-sm sm:text-base">Warisan Budaya Indonesia</span>
@@ -89,11 +89,11 @@ export function Hero() {
 
         <div className="mb-6 sm:mb-8 animate-[slideUp_1s_ease-out_0.2s_both]">
           <h1 className="text-white mb-2 sm:mb-4 tracking-tight leading-tight">
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-500 to-amber-300 mb-4 drop-shadow-2xl animate-[shimmer_3s_ease-in-out_infinite] relative text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-500 to-amber-300 mb-4 drop-shadow-2xl relative text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold overflow-visible px-2">
               {heroSlides[currentSlide].title}
-              <div className="absolute -inset-2 bg-gradient-to-r from-amber-500/20 to-red-500/20 blur-3xl -z-10"></div>
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-32 bg-gradient-to-br from-amber-500/25 via-amber-400/20 to-red-500/15 blur-3xl rounded-full -z-10"></div>
             </span>
-            <span className="block drop-shadow-2xl text-white/95 relative">
+            <span className="block drop-shadow-2xl text-white/95 relative overflow-hidden px-2">
               {heroSlides[currentSlide].subtitle}
               <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent rounded-full"></div>
             </span>
@@ -143,7 +143,6 @@ export function Hero() {
             onClick={() => setIsVideoPlaying(true)}
             className="group relative bg-white/10 backdrop-blur-xl text-white border-2 border-white/40 px-6 sm:px-10 py-3 sm:py-5 rounded-2xl transition-all hover:bg-white/20 hover:border-amber-400 overflow-hidden"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 to-red-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
             <span className="relative z-10 flex items-center justify-center gap-2 sm:gap-3">
               <div className="w-8 sm:w-12 h-8 sm:w-12 bg-gradient-to-br from-amber-500 to-red-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
                 <Play size={16} className="sm:size-5 text-white ml-1" />

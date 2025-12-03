@@ -76,7 +76,7 @@ export default function Confirmation({ ticket, whatsappUrl }: ConfirmationProps)
 
         <div className="mt-4 pt-4 border-t border-neutral-200">
           <a
-            href="/tempat-wisata"
+            href={route('places.index')}
             className="flex items-center justify-center gap-2 text-amber-600 hover:text-amber-700 font-semibold"
           >
             <MapPin size={18} />

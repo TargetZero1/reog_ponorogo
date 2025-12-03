@@ -251,14 +251,50 @@ class BookingController extends Controller
             ->limit(5)
             ->get();
 
+        // Orders by month for chart (last 6 months)
+        $ordersByMonth = Ticket::selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as count, SUM(total_price) as revenue")
+            ->where('created_at', '>=', now()->subMonths(6))
+            ->groupByRaw("DATE_FORMAT(created_at, '%Y-%m')")
+            ->orderByRaw('month ASC')
+            ->get();
+
+        // Revenue by attraction (top 5)
+        $revenueByAttraction = Ticket::selectRaw('attraction_name, SUM(total_price) as revenue, COUNT(*) as orders')
+            ->groupBy('attraction_name')
+            ->orderByDesc('revenue')
+            ->limit(5)
+            ->get();
+
+        // Payment status breakdown
+        $paymentStatusBreakdown = Ticket::selectRaw('payment_status, COUNT(*) as count, SUM(total_price) as revenue')
+            ->groupBy('payment_status')
+            ->get();
+
+        // Today's stats
+        $todayOrders = Ticket::whereDate('created_at', today())->count();
+        $todayRevenue = Ticket::whereDate('created_at', today())->sum('total_price');
+        $thisMonthOrders = Ticket::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
+        $thisMonthRevenue = Ticket::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->sum('total_price');
+
         return Inertia::render('Admin/Dashboard', [
             'stats' => [
                 'totalOrders' => $totalOrders,
                 'totalRevenue' => $totalRevenue,
                 'totalUsers' => $totalUsers,
                 'totalEvents' => $totalEvents,
+                'todayOrders' => $todayOrders,
+                'todayRevenue' => $todayRevenue,
+                'thisMonthOrders' => $thisMonthOrders,
+                'thisMonthRevenue' => $thisMonthRevenue,
             ],
             'recentOrders' => $recentOrders,
+            'ordersByMonth' => $ordersByMonth,
+            'revenueByAttraction' => $revenueByAttraction,
+            'paymentStatusBreakdown' => $paymentStatusBreakdown,
         ]);
     }
 
@@ -656,60 +692,101 @@ class BookingController extends Controller
             ->limit(10)
             ->get();
 
-        $callback = function () use ($format, $totalOrders, $totalRevenue, $totalUsers, $averageOrderValue, $topAttractions, $topCustomers) {
-            $handle = fopen('php://output', 'w');
-            
-            if ($format === 'excel') {
-                fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF)); // BOM for Excel
-            }
-            
-            // Header
-            fputcsv($handle, ['BUSINESS REPORTS - ' . now()->format('Y-m-d H:i:s')]);
-            fputcsv($handle, []);
-            
-            // Summary
-            fputcsv($handle, ['SUMMARY STATISTICS']);
-            fputcsv($handle, ['Metric', 'Value']);
-            fputcsv($handle, ['Total Orders', $totalOrders]);
-            fputcsv($handle, ['Total Revenue', 'Rp ' . number_format($totalRevenue, 0, ',', '.')]);
-            fputcsv($handle, ['Total Users', $totalUsers]);
-            fputcsv($handle, ['Average Order Value', 'Rp ' . number_format($averageOrderValue, 0, ',', '.')]);
-            fputcsv($handle, []);
+        $html = '<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { color: #8B0000; border-bottom: 3px solid #D97706; padding-bottom: 10px; }
+        h2 { color: #8B0000; margin-top: 30px; border-bottom: 2px solid #D97706; padding-bottom: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background-color: #8B0000; color: white; padding: 12px; text-align: left; }
+        td { padding: 10px; border-bottom: 1px solid #ddd; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .summary { background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .summary-item { background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #D97706; }
+        .summary-item strong { display: block; color: #8B0000; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Business Reports</h1>
+        <p><strong>Generated:</strong> ' . now()->format('d F Y H:i:s') . '</p>
+    </div>
+    
+    <div class="summary">
+        <div class="summary-item">
+            <strong>Total Orders</strong>
+            <span>' . $totalOrders . '</span>
+        </div>
+        <div class="summary-item">
+            <strong>Total Revenue</strong>
+            <span>Rp ' . number_format($totalRevenue, 0, ',', '.') . '</span>
+        </div>
+        <div class="summary-item">
+            <strong>Total Users</strong>
+            <span>' . $totalUsers . '</span>
+        </div>
+        <div class="summary-item">
+            <strong>Average Order Value</strong>
+            <span>Rp ' . number_format($averageOrderValue, 0, ',', '.') . '</span>
+        </div>
+    </div>
 
-            // Top Attractions
-            fputcsv($handle, ['TOP ATTRACTIONS BY REVENUE']);
-            fputcsv($handle, ['Rank', 'Attraction', 'Orders', 'Revenue (Rp)']);
-            $rank = 1;
-            foreach ($topAttractions as $attr) {
-                fputcsv($handle, [
-                    $rank++,
-                    $attr->attraction_name,
-                    $attr->orders,
-                    number_format($attr->revenue, 0, ',', '.')
-                ]);
-            }
-            fputcsv($handle, []);
+    <h2>Top Attractions by Revenue</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Attraction</th>
+                <th>Orders</th>
+                <th>Revenue</th>
+            </tr>
+        </thead>
+        <tbody>';
 
-            // Top Customers
-            fputcsv($handle, ['TOP CUSTOMERS BY ORDER COUNT']);
-            fputcsv($handle, ['Rank', 'Name', 'Email', 'Total Orders']);
-            $rank = 1;
-            foreach ($topCustomers as $customer) {
-                fputcsv($handle, [
-                    $rank++,
-                    $customer->name,
-                    $customer->email,
-                    $customer->tickets_count
-                ]);
-            }
+        $rank = 1;
+        foreach ($topAttractions as $attr) {
+            $html .= '<tr>
+                <td>' . $rank++ . '</td>
+                <td>' . htmlspecialchars($attr->attraction_name) . '</td>
+                <td>' . $attr->orders . '</td>
+                <td>Rp ' . number_format($attr->revenue, 0, ',', '.') . '</td>
+            </tr>';
+        }
 
-            fclose($handle);
-        };
+        $html .= '</tbody>
+    </table>
 
-        $filename = 'reports_export_' . now()->format('Ymd_His') . '.csv';
-        return response()->streamDownload($callback, $filename, [
-            'Content-Type' => $format === 'excel' ? 'text/csv; charset=UTF-8' : 'text/csv',
-            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
-        ]);
+    <h2>Top Customers by Order Count</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Total Orders</th>
+            </tr>
+        </thead>
+        <tbody>';
+
+        $rank = 1;
+        foreach ($topCustomers as $customer) {
+            $html .= '<tr>
+                <td>' . $rank++ . '</td>
+                <td>' . htmlspecialchars($customer->name) . '</td>
+                <td>' . htmlspecialchars($customer->email) . '</td>
+                <td>' . $customer->tickets_count . '</td>
+            </tr>';
+        }
+
+        $html .= '</tbody>
+    </table>
+</body>
+</html>';
+
+        $filename = 'reports_export_' . now()->format('Ymd_His') . '.pdf';
+        return $this->generatePDF($html, $filename);
     }
 }

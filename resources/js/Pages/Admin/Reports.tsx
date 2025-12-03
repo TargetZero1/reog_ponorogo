@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp, DollarSign, ShoppingCart, Users as UsersIcon } from 'lucide-react';
+import { TrendingUp, DollarSign, ShoppingCart, Users as UsersIcon, Download, FileSpreadsheet } from 'lucide-react';
 import { Layout } from '../../Components/Layout';
 
 interface ReportsProps {
@@ -19,9 +19,27 @@ export default function Reports({ summary, topAttractions, topCustomers }: Repor
       <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-8">
         <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900">Reports</h1>
-          <p className="text-gray-600 mt-2">Comprehensive business reports and insights</p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold text-gray-900">Reports</h1>
+            <p className="text-gray-600 mt-2">Comprehensive business reports and insights</p>
+          </div>
+          <div className="flex gap-3">
+            <a
+              href={route('admin.reports.export', { format: 'csv' })}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition shadow-md"
+            >
+              <Download size={18} />
+              Export CSV
+            </a>
+            <a
+              href={route('admin.reports.export', { format: 'excel' })}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition shadow-md"
+            >
+              <FileSpreadsheet size={18} />
+              Export Excel
+            </a>
+          </div>
         </div>
 
         {/* Summary Cards */}

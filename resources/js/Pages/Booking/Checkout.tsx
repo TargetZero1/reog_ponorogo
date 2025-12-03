@@ -60,7 +60,7 @@ export default function Checkout({ attraction, pricePerTicket, ticketType, sourc
           </div>
         )}
 
-        <form ref={formRef} onSubmit={submit} method="POST" action="/pesan-ticket/create" className="space-y-4">
+        <form ref={formRef} onSubmit={submit} method="POST" action={route('pesan.create')} className="space-y-4">
           <input type="hidden" name="_token" value={csrf_token as string} />
           <input type="hidden" name="attraction" value={attraction || ''} />
           <input type="hidden" name="ticket_type" value={ticketType || ''} />

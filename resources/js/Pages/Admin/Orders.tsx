@@ -23,13 +23,13 @@ export default function Orders({ orders, filters }: OrdersProps) {
     if (startDate) params.append('start_date', startDate);
     if (endDate) params.append('end_date', endDate);
     if (status) params.append('status', status);
-    return `/admin/orders/export?${params.toString()}`;
+    return `${route('admin.orders.export')}?${params.toString()}`;
   }
 
   async function updateStatus(id: number, newStatus: string) {
     if (!confirm('Ubah status pesanan?')) return;
     try {
-      await fetch(`/admin/orders/${id}/status`, {
+      await fetch(route('admin.orders.update_status', id), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -71,14 +71,14 @@ export default function Orders({ orders, filters }: OrdersProps) {
         <div className="mb-4 flex items-center justify-between">
           <div />
           <div>
-            <a href={buildExportUrl()} className="inline-block bg-blue-600 text-white px-4 py-2 rounded mr-2">Export CSV</a>
+              <a href={buildExportUrl()} className="inline-block bg-blue-600 text-white px-4 py-2 rounded mr-2">Export CSV</a>
             <button onClick={() => {
               const params = new URLSearchParams();
               if (q) params.append('q', q);
               if (startDate) params.append('start_date', startDate);
               if (endDate) params.append('end_date', endDate);
               if (status) params.append('status', status);
-              window.location.href = `/admin/orders?${params.toString()}`;
+              window.location.href = `${route('admin.orders')}?${params.toString()}`;
             }} className="inline-block bg-green-600 text-white px-4 py-2 rounded">Apply</button>
           </div>
         </div>
@@ -116,7 +116,7 @@ export default function Orders({ orders, filters }: OrdersProps) {
                     <td className="py-3 px-4">
                       <div className="flex items-center space-x-2">
                         <span className="inline-block bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">{order.payment_status}</span>
-                        <a href={`/admin/orders/${order.id}`} className="text-blue-600 hover:underline flex items-center"><Eye size={16} className="mr-1" />View</a>
+                        <a href={route('admin.orders.show', order.id)} className="text-blue-600 hover:underline flex items-center"><Eye size={16} className="mr-1" />View</a>
                         <select value={order.payment_status} onChange={(e) => updateStatus(order.id, e.target.value)} className="border rounded px-2 py-1 text-sm">
                           <option value="pending">pending</option>
                           <option value="completed">completed</option>

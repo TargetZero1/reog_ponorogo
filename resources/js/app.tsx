@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom/client';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 
-const appName = (import.meta as any).env.VITE_APP_NAME || 'Laravel';
+const appName = (import.meta as any).env.VITE_APP_NAME || 'reogheritage';
 
 createInertiaApp({
   title: (title) => `${title} - ${appName}`,

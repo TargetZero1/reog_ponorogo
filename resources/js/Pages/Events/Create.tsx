@@ -15,16 +15,15 @@ export default function Create() {
 
   function submit(e: any) {
     e.preventDefault();
-    post('/events');
+    post(route('admin.events.store'));
   }
-
   return (
     <Layout>
       <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-red-50">
         {/* Header */}
         <div className="bg-gradient-to-r from-[#6b0000] via-[#7b0b0b] to-[#8b0b0b] text-white py-8 px-4">
           <div className="max-w-4xl mx-auto flex items-center gap-4">
-            <a href="/events" className="p-2 hover:bg-red-700 rounded-lg transition">
+            <a href={route('admin.events.index')} className="p-2 hover:bg-red-700 rounded-lg transition">
               <ArrowLeft size={24} />
             </a>
             <div>
@@ -141,7 +140,7 @@ export default function Create() {
                 {processing ? 'Membuat...' : 'Buat Event'}
               </button>
               <a
-                href="/events"
+                href={route('admin.events.index')}
                 className="flex-1 px-6 py-3 bg-gray-200 text-gray-800 rounded-lg font-bold hover:bg-gray-300 transition text-center"
               >
                 Batal

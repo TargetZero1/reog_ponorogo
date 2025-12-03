@@ -21,7 +21,7 @@ export default function Register() {
 
   function submit(e: any) {
     e.preventDefault();
-    post('/pesan-ticket/register');
+    post(route('pesan.register.post'));
   }
 
   return (
@@ -115,7 +115,7 @@ export default function Register() {
             <p className="text-center text-sm text-gray-600 mt-4">
               Sudah punya akun?{' '}
               <a
-                href={`/pesan-ticket/login${attraction ? `?attraction=${encodeURIComponent(attraction)}` : ''}`}
+                href={`${route('pesan.login')}${attraction ? `?attraction=${encodeURIComponent(attraction)}` : ''}`}
                 className="text-red-600 font-semibold hover:text-red-700"
               >
                 Masuk di sini

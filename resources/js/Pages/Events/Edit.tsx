@@ -10,11 +10,12 @@ export default function Edit(props: any) {
     location: event.location || '',
     price: event.price || '0',
     capacity: event.capacity || '0',
+    published: event.published ?? false,
   });
 
   function submit(e: any) {
     e.preventDefault();
-    put(`/events/${event.id}`);
+    put(route('admin.events.update', event.id));
   }
 
   return (
@@ -88,6 +89,19 @@ export default function Edit(props: any) {
             </div>
           </div>
 
+          {/* Published Toggle */}
+          <div className="flex items-center gap-3 bg-amber-50 p-4 rounded-lg border border-amber-200">
+            <input
+              type="checkbox"
+              checked={data.published}
+              onChange={e => setData('published', e.target.checked)}
+              className="w-5 h-5 text-red-600 rounded focus:ring-2 focus:ring-red-500"
+            />
+            <label className="text-sm font-semibold text-red-950">
+              Publikasikan event ini (akan muncul di halaman publik)
+            </label>
+          </div>
+
           <div className="flex gap-3">
             <button
               type="submit"
@@ -96,7 +110,7 @@ export default function Edit(props: any) {
             >
               {processing ? 'Updating...' : 'Update Event'}
             </button>
-            <a href="/events" className="px-4 py-2 bg-gray-200 text-gray-800 rounded font-semibold hover:bg-gray-300">
+            <a href={route('admin.events.index')} className="px-4 py-2 bg-gray-200 text-gray-800 rounded font-semibold hover:bg-gray-300">
               Cancel
             </a>
           </div>

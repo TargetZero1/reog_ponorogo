@@ -44,7 +44,7 @@ class EventController extends Controller
 
         Event::create($data);
 
-        return redirect()->route('events.index');
+        return redirect()->route('admin.events.index')->with('success', 'Event created successfully!');
     }
 
     public function show($id)
@@ -81,7 +81,7 @@ class EventController extends Controller
 
         $event->update($data);
 
-        return redirect()->route('events.index');
+        return redirect()->route('admin.events.index')->with('success', 'Event updated successfully!');
     }
 
     public function destroy($id)

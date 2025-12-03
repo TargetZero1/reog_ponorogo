@@ -19,7 +19,7 @@ export default function Wisata({ places }: WisataProps) {
               <h1 className="text-3xl font-bold text-gray-900">Manage Wisata</h1>
               <p className="text-gray-600">Manage places and attractions</p>
             </div>
-            <a href="/places/create" className="bg-amber-500 text-red-950 px-4 py-2 rounded">Create Place</a>
+            <a href={route('admin.places.create')} className="bg-amber-500 text-red-950 px-4 py-2 rounded">Create Place</a>
           </div>
 
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -46,11 +46,11 @@ export default function Wisata({ places }: WisataProps) {
                       <td className="py-3 px-4">{p.category}</td>
                       <td className="py-3 px-4">{p.published ? 'Yes' : 'No'}</td>
                       <td className="py-3 px-4">
-                        <a href={`/places/${p.id}/edit`} className="text-blue-600 hover:underline mr-3">Edit</a>
+                        <a href={route('admin.places.edit', p.id)} className="text-blue-600 hover:underline mr-3">Edit</a>
                         <button onClick={async () => {
                           if (!confirm('Hapus place ini?')) return;
                           try {
-                            await fetch(`/places/${p.id}`, {
+                            await fetch(route('admin.places.destroy', p.id), {
                               method: 'DELETE',
                               headers: { 'X-CSRF-TOKEN': csrf_token },
                             });

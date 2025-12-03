@@ -5,7 +5,8 @@
     "scripts": {
         "build": "tsc && vite build",
         "dev": "vite",
-        "dev:all": "concurrently \"npm run dev\" \"php artisan serve\""
+        "dev:all": "concurrently \"npm run dev\" \"php artisan serve\"",
+        "smoke-test": "node smoke-test.js"
     },
     "devDependencies": {
         "@headlessui/react": "^2.0.0",
@@ -29,6 +30,7 @@
     },
     "dependencies": {
         "@inertiajs/inertia": "^0.11.1",
-        "lucide-react": "^0.553.0"
+        "lucide-react": "^0.553.0",
+        "ziggy-js": "^1.8.2"
     }
 }
