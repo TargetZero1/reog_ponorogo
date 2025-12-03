@@ -19,16 +19,18 @@ export default function Create() {
   }
   return (
     <Layout>
-      <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-red-50">
+      <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-red-50 -mt-6">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#6b0000] via-[#7b0b0b] to-[#8b0b0b] text-white py-8 px-4">
-          <div className="max-w-4xl mx-auto flex items-center gap-4">
-            <a href={route('admin.events.index')} className="p-2 hover:bg-red-700 rounded-lg transition">
-              <ArrowLeft size={24} />
-            </a>
-            <div>
-              <h1 className="text-3xl font-bold">Tambah Event Baru</h1>
-              <p className="text-red-100">Buat pertunjukan Reog baru untuk kalender</p>
+        <div className="max-w-4xl mx-auto px-4 pt-8 pb-6">
+          <div className="bg-gradient-to-r from-[#6b0000] via-[#7b0b0b] to-[#8b0b0b] text-white rounded-xl shadow-lg py-8 px-6">
+            <div className="flex items-center gap-4">
+              <a href={route('admin.events.index')} className="p-2 hover:bg-white/20 rounded-lg transition">
+                <ArrowLeft size={24} />
+              </a>
+              <div>
+                <h1 className="text-3xl font-bold">Tambah Event Baru</h1>
+                <p className="text-red-100">Buat pertunjukan Reog baru untuk kalender</p>
+              </div>
             </div>
           </div>
         </div>

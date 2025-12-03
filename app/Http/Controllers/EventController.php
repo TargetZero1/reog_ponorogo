@@ -71,9 +71,14 @@ class EventController extends Controller
     {
         $event = Event::findOrFail($id);
         
-        // Get all tickets for this event
-        $tickets = \App\Models\Ticket::where('source_id', $id)
-            ->where('ticket_type', 'event')
+        // Get all tickets for this event (check by attraction_name matching event title or source_id)
+        $tickets = \App\Models\Ticket::where(function($query) use ($event, $id) {
+                $query->where('attraction_name', $event->title)
+                      ->orWhere(function($q) use ($id) {
+                          $q->where('source_id', $id)
+                            ->where('ticket_type', 'event');
+                      });
+            })
             ->with('user')
             ->get();
         
