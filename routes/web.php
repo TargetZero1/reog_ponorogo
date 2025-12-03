@@ -30,7 +30,10 @@ Route::get('/tempat-wisata', function () {
 
 // 4. EVENTS INDEX (Added Name)
 Route::get('/events', function () {
-    $events = Event::where('published', true)->orderBy('date', 'asc')->paginate(12);
+    $events = Event::where('published', true)
+        ->where('date', '>=', now())
+        ->orderBy('date', 'asc')
+        ->paginate(12);
     return Inertia::render('Events/PublicIndex', [
         'events' => $events,
     ]);
@@ -89,6 +92,8 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     
     Route::patch('events/{id}/toggle-publish', [EventController::class, 'togglePublish'])->name('events.toggle-publish');
     Route::patch('places/{id}/toggle-publish', [\App\Http\Controllers\PlaceController::class, 'togglePublish'])->name('places.toggle-publish');
+    
+    Route::get('events/{id}/report', [EventController::class, 'getEventReport'])->name('events.report');
     
     Route::post('events/bulk/delete', [EventController::class, 'bulkDelete'])->name('events.bulk-delete');
     Route::post('events/bulk/publish', [EventController::class, 'bulkPublish'])->name('events.bulk-publish');
