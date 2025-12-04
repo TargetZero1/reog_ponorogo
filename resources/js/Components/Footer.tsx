@@ -26,8 +26,8 @@ export function Footer() {
   ];
 
   return (
-    <footer className="bg-gradient-to-br from-red-950 via-red-900 to-red-950 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <footer className="bg-gradient-to-br from-red-950 via-red-900 to-red-950 text-white pt-8 sm:pt-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Main Footer Content */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-6 sm:mb-8">
           {/* Brand Section */}

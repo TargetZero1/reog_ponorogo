@@ -1,10 +1,22 @@
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Camera, ZoomIn, Heart } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { usePage } from '@inertiajs/react';
+
+interface LikeData {
+  [photoId: number]: {
+    photo_id: number;
+    count: number;
+  };
+}
 
 export function GallerySection() {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [likedImages, setLikedImages] = useState<Set<number>>(new Set());
+  const [likeCounts, setLikeCounts] = useState<{ [key: number]: number }>({});
+  const { props } = usePage();
+  const locale = props.locale || 'id';
 
   const gallery = [
     {
@@ -12,55 +24,127 @@ export function GallerySection() {
       image: 'https://images.unsplash.com/photo-1698824554771-293b5dcc42db?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRvbmVzaWFuJTIwdHJhZGl0aW9uYWwlMjBkYW5jZSUyMHBlcmZvcm1hbmNlfGVufDF8fHx8MTc2MzEwMDE1NXww&ixlib=rb-4.1.0&q=80&w=1080',
       title: 'Dadak Merak Megah',
       category: 'Pertunjukan',
-      likes: 234
     },
     {
       id: 2,
       image: 'https://images.unsplash.com/photo-1720260991096-09620ead91cb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRvbmVzaWFuJTIwY3VsdHVyYWwlMjBoZXJpdGFnZXxlbnwxfHx8fDE3NjMxMDAxNTV8MA&ixlib=rb-4.1.0&q=80&w=1080',
       title: 'Warok Sakti',
       category: 'Karakter',
-      likes: 189
     },
     {
       id: 3,
       image: 'https://images.unsplash.com/photo-1760133453014-c8df5dcc0007?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRvbmVzaWFuJTIwdHJhZGl0aW9uYWwlMjBtYXNrfGVufDF8fHx8MTc2MzEwMDE1Nnww&ixlib=rb-4.1.0&q=80&w=1080',
       title: 'Topeng Reog Tradisional',
       category: 'Kerajinan',
-      likes: 156
     },
     {
       id: 4,
       image: 'https://images.unsplash.com/photo-1726744069854-a74d917b8f35?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb3VudGFpbiUyMGxha2UlMjBpbmRvbmVzaWF8ZW58MXx8fHwxNzYzMTAwMTU2fDA&ixlib=rb-4.1.0&q=80&w=1080',
       title: 'Telaga Ngebel',
       category: 'Wisata',
-      likes: 312
     },
     {
       id: 5,
       image: 'https://images.unsplash.com/photo-1668931104136-b7a75b438b01?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRvbmVzaWFuJTIwbW9zcXVlJTIwYXJjaGl0ZWN0dXJlfGVufDF8fHx8MTc2MzEwMDE1Nnww&ixlib=rb-4.1.0&q=80&w=1080',
       title: 'Masjid Tegalsari',
       category: 'Sejarah',
-      likes: 278
     },
     {
       id: 6,
       image: 'https://images.unsplash.com/photo-1634871572365-8bc444e6faea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRvbmVzaWFuJTIwZm9vZCUyMHNhdGF5fGVufDF8fHx8MTc2MzA0MzUwOHww&ixlib=rb-4.1.0&q=80&w=1080',
       title: 'Kuliner Sate Ponorogo',
       category: 'Kuliner',
-      likes: 421
     },
   ];
 
-  const toggleLike = (id: number) => {
-    setLikedImages(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) {
-        newSet.delete(id);
-      } else {
-        newSet.add(id);
-      }
-      return newSet;
+  // Fetch initial like data
+  useEffect(() => {
+    const photoIds = gallery.map(item => item.id);
+    axios.get(`/${locale}/gallery/likes`, {
+      params: { photo_ids: photoIds }
+    })
+    .then(response => {
+      const { likes, userLikes } = response.data;
+      
+      // Set like counts
+      const counts: { [key: number]: number } = {};
+      Object.keys(likes).forEach(photoId => {
+        counts[parseInt(photoId)] = likes[photoId].count;
+      });
+      setLikeCounts(counts);
+      
+      // Set user's liked images
+      setLikedImages(new Set(userLikes));
+    })
+    .catch(error => {
+      console.error('Error fetching likes:', error);
+      // Set default counts to 0
+      const counts: { [key: number]: number } = {};
+      photoIds.forEach(id => counts[id] = 0);
+      setLikeCounts(counts);
     });
+  }, [locale]);
+
+  const toggleLike = async (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    // Check if user is authenticated
+    const auth = props.auth as { user?: any };
+    if (!auth?.user) {
+      window.location.href = `/${locale}/login`;
+      return;
+    }
+
+    // Optimistic update
+    const wasLiked = likedImages.has(id);
+    const newLikedImages = new Set(likedImages);
+    if (wasLiked) {
+      newLikedImages.delete(id);
+    } else {
+      newLikedImages.add(id);
+    }
+    setLikedImages(newLikedImages);
+    setLikeCounts(prev => ({
+      ...prev,
+      [id]: (prev[id] || 0) + (wasLiked ? -1 : 1)
+    }));
+
+    try {
+      const response = await axios.post(`/${locale}/gallery/like`, {
+        photo_id: id
+      });
+      
+      // Update with actual data from server
+      setLikeCounts(prev => ({
+        ...prev,
+        [id]: response.data.count
+      }));
+      
+      if (response.data.liked) {
+        setLikedImages(prev => new Set([...prev, id]));
+      } else {
+        setLikedImages(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(id);
+          return newSet;
+        });
+      }
+    } catch (error: any) {
+      console.error('Error toggling like:', error);
+      
+      // If 401, redirect to login
+      if (error.response?.status === 401) {
+        window.location.href = `/${locale}/login`;
+        return;
+      }
+      
+      // Revert optimistic update on error
+      setLikedImages(likedImages);
+      setLikeCounts(prev => ({
+        ...prev,
+        [id]: (prev[id] || 0) + (wasLiked ? 1 : -1)
+      }));
+    }
   };
 
   return (
@@ -105,13 +189,10 @@ export function GallerySection() {
                   <div className="flex items-center gap-2 text-white/80 text-xs sm:text-sm">
                     <Heart 
                       size={20} 
-                      className={`${likedImages.has(item.id) ? 'fill-red-500 text-red-500' : ''} transition-colors`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleLike(item.id);
-                      }}
+                      className={`${likedImages.has(item.id) ? 'fill-red-500 text-red-500' : ''} transition-colors cursor-pointer`}
+                      onClick={(e) => toggleLike(item.id, e)}
                     />
-                    <span>{item.likes + (likedImages.has(item.id) ? 1 : 0)}</span>
+                    <span>{likeCounts[item.id] || 0}</span>
                   </div>
                   <button className="flex items-center gap-2 text-white/80 hover:text-white transition-colors">
                     <ZoomIn size={20} />

@@ -113,27 +113,29 @@ export function Hero() {
       </div>
 
       <div className="relative z-10 text-center px-3 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-        <div className="inline-flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500 text-red-950 px-4 sm:px-8 py-2 sm:py-4 rounded-full mb-10 sm:mb-12 md:mb-16 shadow-lg sm:shadow-2xl animate-[slideDown_1s_ease-out] border-2 border-amber-400/50 backdrop-blur-sm relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
-          <Sparkles size={18} className="sm:size-6 animate-[spin_4s_linear_infinite] relative z-10" />
-          <span className="tracking-wide relative z-10 text-sm sm:text-base">{heroBadge}</span>
-          <Sparkles size={18} className="sm:size-6 animate-[spin_4s_linear_infinite_reverse] relative z-10" />
+        <div className="flex justify-center mb-8 sm:mb-10 md:mb-12">
+          <div className="inline-flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500 text-red-950 px-4 sm:px-8 py-2 sm:py-4 rounded-full shadow-lg sm:shadow-2xl animate-[slideDown_1s_ease-out] border-2 border-amber-400/50 backdrop-blur-sm relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
+            <Sparkles size={18} className="sm:size-6 animate-[spin_4s_linear_infinite] relative z-10" />
+            <span className="tracking-wide relative z-10 text-sm sm:text-base">{heroBadge}</span>
+            <Sparkles size={18} className="sm:size-6 animate-[spin_4s_linear_infinite_reverse] relative z-10" />
+          </div>
         </div>
 
         <div className="mb-6 sm:mb-8 animate-[slideUp_1s_ease-out_0.2s_both]">
-          <h1 className="text-white mb-2 sm:mb-4 tracking-tight leading-tight">
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-500 to-amber-300 mb-4 drop-shadow-2xl relative text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold overflow-visible px-2">
+          <h1 className="text-white mb-3 sm:mb-4 tracking-tight leading-tight text-center">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-500 to-amber-300 mb-4 sm:mb-5 md:mb-6 drop-shadow-2xl relative text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold overflow-visible pb-2">
               {heroSlides[currentSlide].title}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-32 bg-gradient-to-br from-amber-500/25 via-amber-400/20 to-red-500/15 blur-3xl rounded-full -z-10"></div>
             </span>
-            <span className="block drop-shadow-2xl text-white/95 relative overflow-hidden px-2">
+            <span className="block drop-shadow-2xl text-white/95 relative overflow-hidden text-base sm:text-lg md:text-xl pt-2">
               {heroSlides[currentSlide].subtitle}
               <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent rounded-full"></div>
             </span>
           </h1>
         </div>
 
-        <div className="text-amber-50/95 max-w-3xl mx-auto mb-8 sm:mb-12 leading-relaxed px-4 text-sm sm:text-base md:text-lg animate-[slideUp_1s_ease-out_0.4s_both] relative">
+        <div className="text-amber-50/95 max-w-3xl mx-auto mb-8 sm:mb-12 leading-relaxed px-4 text-sm sm:text-base md:text-lg animate-[slideUp_1s_ease-out_0.4s_both] relative text-center">
           <span className="relative inline-block">
             {heroSlides[currentSlide].description}
             <div className="absolute -inset-4 bg-gradient-to-r from-amber-500/5 via-red-500/5 to-amber-500/5 blur-2xl -z-10 rounded-full"></div>

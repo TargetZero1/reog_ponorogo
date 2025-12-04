@@ -82,6 +82,10 @@ Route::prefix('{locale}')->where(['locale' => 'id|en'])->group(function () {
 
     Route::get('/payment-history', [BookingController::class, 'showPaymentHistory'])->name('payment.history');
 
+    // --- Gallery Like Routes ---
+    Route::post('/gallery/like', [\App\Http\Controllers\GalleryLikeController::class, 'toggle'])->name('gallery.like');
+    Route::get('/gallery/likes', [\App\Http\Controllers\GalleryLikeController::class, 'getLikes'])->name('gallery.likes');
+
     // --- Profile Routes ---
     Route::get('/profile', function ($locale) {
         return Inertia::render('Profile');

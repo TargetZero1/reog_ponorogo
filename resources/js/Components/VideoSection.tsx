@@ -100,13 +100,13 @@ export function VideoSection() {
                     />
                   )}
                   
-                  {/* Subtle Overlay - Lighter for better thumbnail visibility */}
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+                  {/* Subtle Overlay */}
+                  <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors"></div>
                   
-                  {/* Play Button */}
+                  {/* Play Button - Subtle and transparent */}
                   <div className="relative z-10 transform group-hover:scale-110 transition-transform duration-300">
-                    <button className="w-20 sm:w-28 h-20 sm:h-28 bg-gradient-to-br from-amber-500 to-amber-600 rounded-full flex items-center justify-center shadow-2xl hover:shadow-amber-500/70 border-4 border-white/20">
-                      <Play size={32} className="sm:size-12 text-red-950 ml-1 sm:ml-2" />
+                    <button className="w-16 sm:w-20 h-16 sm:h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white/30 border-2 border-white/40 transition-all">
+                      <Play size={24} className="sm:size-8 text-white ml-0.5 sm:ml-1" fill="white" fillOpacity="0.9" />
                     </button>
                   </div>
                   

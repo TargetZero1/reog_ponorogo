@@ -88,7 +88,7 @@ export default function App() {
           <ContainerBackground index={4} />
           <GallerySection />
         </section>
-        <section id="testimoni" className="py-8 sm:py-12 md:py-16 lg:py-20 bg-gradient-to-br from-red-950 via-red-900 to-red-950 scroll-mt-16 relative overflow-hidden">
+        <section id="testimoni" className="py-8 sm:py-12 md:py-16 lg:py-20 pb-0 bg-gradient-to-br from-red-950 via-red-900 to-red-950 scroll-mt-16 relative overflow-hidden">
           <ContainerBackground index={6} />
           <TestimonialsSection />
         </section>

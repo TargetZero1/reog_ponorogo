@@ -166,7 +166,7 @@ class PlaceController extends Controller
     {
         $ids = $request->input('ids', []);
         Place::whereIn('id', $ids)->delete();
-        return redirect()->route('admin.places.index', ['locale' => request()->route('locale')])->with('success', 'Places deleted successfully');
+        return response()->json(['success' => true, 'message' => 'Places deleted successfully']);
     }
 
     // Bulk publish places
@@ -176,6 +176,6 @@ class PlaceController extends Controller
         $action = $request->input('action', 'publish');
         $published = $action === 'publish' ? true : false;
         Place::whereIn('id', $ids)->update(['published' => $published]);
-        return redirect()->route('admin.places.index', ['locale' => request()->route('locale')])->with('success', 'Places updated successfully');
+        return response()->json(['success' => true, 'message' => 'Places updated successfully']);
     }
 }
