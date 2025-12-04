@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { Layout } from '../../Components/Layout';
 import { Trash2, Edit, Eye, Plus, Calendar, MapPin, Users, BarChart3, X } from 'lucide-react';
 import { useTranslations, getLocalizedRoute } from '@/utils/translations';
+import { useToast } from '@/hooks/useToast';
+import { ToastContainer } from '@/Components/Toast';
 
 export default function Index(props: any) {
   const upcomingEvents = props.upcomingEvents || { data: [] };
@@ -14,14 +16,22 @@ export default function Index(props: any) {
   const { locale } = useTranslations();
   const page = usePage();
   const { csrf_token } = page.props as any;
+  const { toasts, showSuccess, showError, removeToast } = useToast();
 
   function deleteEvent(id: number) {
-    if (!confirm('Yakin ingin menghapus event ini?')) return;
-    router.delete(getLocalizedRoute('admin.events.destroy', { event: id }, locale));
+    if (!confirm('Are you sure you want to delete this event?')) return;
+    router.delete(getLocalizedRoute('admin.events.destroy', { event: id }, locale), {
+      onSuccess: () => showSuccess('Event deleted successfully'),
+      onError: () => showError('Failed to delete event')
+    });
   }
 
   function togglePublish(id: number, currentStatus: boolean) {
-    router.patch(getLocalizedRoute('admin.events.toggle-publish', { id }, locale), {}, { preserveScroll: true });
+    router.patch(getLocalizedRoute('admin.events.toggle-publish', { id }, locale), {}, { 
+      preserveScroll: true,
+      onSuccess: () => showSuccess(currentStatus ? 'Event unpublished' : 'Event published'),
+      onError: () => showError('Failed to update publish status')
+    });
   }
 
   async function loadEventReport(eventId: number) {
@@ -29,14 +39,14 @@ export default function Index(props: any) {
     try {
       const eventIdNum = Number(eventId);
       if (!eventIdNum || isNaN(eventIdNum)) {
-        alert('Invalid event ID');
+        showError('Invalid event ID');
         return;
       }
       const response = await fetch(getLocalizedRoute('admin.events.report', { id: eventIdNum }, locale));
       const data = await response.json();
       setSelectedEventReport(data);
     } catch (error) {
-      alert('Gagal memuat report');
+      showError('Failed to load report');
     } finally {
       setLoadingReport(null);
     }
@@ -469,6 +479,7 @@ export default function Index(props: any) {
           </div>
         </div>
       )}
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </Layout>
   );
 }

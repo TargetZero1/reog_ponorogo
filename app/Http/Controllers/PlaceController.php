@@ -158,7 +158,7 @@ class PlaceController extends Controller
         
         $place = Place::findOrFail($placeId);
         $place->update(['published' => !$place->published]);
-        return response()->json(['success' => true, 'published' => $place->published]);
+        return redirect()->back()->with('success', $place->published ? 'Place published successfully' : 'Place unpublished successfully');
     }
 
     // Bulk delete places

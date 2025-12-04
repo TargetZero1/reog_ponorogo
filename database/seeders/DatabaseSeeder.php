@@ -45,5 +45,8 @@ class DatabaseSeeder extends Seeder
         
         // Seed places (tourist attractions)
         $this->call(PlaceSeeder::class);
+
+        // Seed sample orders
+        $this->call(OrderSeeder::class);
     }
 }

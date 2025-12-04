@@ -491,14 +491,17 @@ class BookingController extends Controller
 <head>
     <meta charset="UTF-8">
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h1 { color: #8B0000; border-bottom: 3px solid #D97706; padding-bottom: 10px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th { background-color: #8B0000; color: white; padding: 12px; text-align: left; }
-        td { padding: 10px; border-bottom: 1px solid #ddd; }
-        tr:nth-child(even) { background-color: #f9f9f9; }
+        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+        h1 { color: #8B0000; border-bottom: 3px solid #D97706; padding-bottom: 10px; margin: 0 0 5px 0; }
         .header { margin-bottom: 30px; }
-        .summary { background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .header p { margin: 8px 0; font-size: 13px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px; }
+        th { background-color: #8B0000; color: white; padding: 12px 10px; text-align: left; font-weight: bold; border: 1px solid #6B0000; word-wrap: break-word; }
+        td { padding: 10px; border: 1px solid #ddd; word-wrap: break-word; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        tr:hover { background-color: #f0f0f0; }
+        .summary { background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; font-size: 13px; }
+        .summary p { margin: 6px 0; }
     </style>
 </head>
 <body>
@@ -510,30 +513,28 @@ class BookingController extends Controller
     <table>
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Customer</th>
-                <th>Email</th>
-                <th>Attraction</th>
-                <th>Quantity</th>
-                <th>Total Price</th>
-                <th>Status</th>
-                <th>Visit Date</th>
-                <th>Created At</th>
+                <th style="width: 8%;">ID</th>
+                <th style="width: 12%;">Customer</th>
+                <th style="width: 14%;">Email</th>
+                <th style="width: 13%;">Attraction</th>
+                <th style="width: 8%;">Qty</th>
+                <th style="width: 13%;">Total Price</th>
+                <th style="width: 10%;">Status</th>
+                <th style="width: 12%;">Visit Date</th>
             </tr>
         </thead>
         <tbody>';
 
         foreach ($orders as $o) {
             $html .= '<tr>
-                <td>#' . $o->id . '</td>
-                <td>' . htmlspecialchars(optional($o->user)->name ?? 'N/A') . '</td>
-                <td>' . htmlspecialchars(optional($o->user)->email ?? 'N/A') . '</td>
-                <td>' . htmlspecialchars($o->attraction_name) . '</td>
-                <td>' . $o->quantity . '</td>
-                <td>Rp ' . number_format($o->total_price, 0, ',', '.') . '</td>
-                <td>' . htmlspecialchars($o->payment_status) . '</td>
-                <td>' . ($o->visit_date ? date('d M Y', strtotime($o->visit_date)) : 'N/A') . '</td>
-                <td>' . $o->created_at->format('d M Y H:i') . '</td>
+                <td style="width: 8%; padding: 10px;">#' . $o->id . '</td>
+                <td style="width: 12%; padding: 10px;">' . htmlspecialchars(optional($o->user)->name ?? 'N/A') . '</td>
+                <td style="width: 14%; padding: 10px;">' . htmlspecialchars(optional($o->user)->email ?? 'N/A') . '</td>
+                <td style="width: 13%; padding: 10px;">' . htmlspecialchars($o->attraction_name) . '</td>
+                <td style="width: 8%; padding: 10px; text-align: center;">' . $o->quantity . '</td>
+                <td style="width: 13%; padding: 10px;">Rp ' . number_format($o->total_price, 0, ',', '.') . '</td>
+                <td style="width: 10%; padding: 10px;">' . htmlspecialchars($o->payment_status) . '</td>
+                <td style="width: 12%; padding: 10px;">' . ($o->visit_date ? date('d M Y', strtotime($o->visit_date)) : 'N/A') . '</td>
             </tr>';
         }
 

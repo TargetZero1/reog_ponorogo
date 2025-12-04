@@ -203,18 +203,18 @@ export default function Orders({ orders, filters }: OrdersProps) {
             </div>
             
             <div>
-              <table className="w-full table-fixed">
+              <table className="w-full">
                 <thead className="bg-gradient-to-r from-red-950 to-red-900 text-white">
                   <tr>
-                    <th className="text-left py-4 px-6 font-semibold">Order ID</th>
-                    <th className="text-left py-4 px-6 font-semibold">Customer</th>
-                    <th className="text-left py-4 px-6 font-semibold">Email</th>
-                    <th className="text-left py-4 px-6 font-semibold">Attraction</th>
-                    <th className="text-center py-4 px-6 font-semibold">Qty</th>
-                    <th className="text-left py-4 px-6 font-semibold">Amount</th>
-                    <th className="text-left py-4 px-6 font-semibold">Date</th>
-                    <th className="text-left py-4 px-6 font-semibold w-40">Status</th>
-                    <th className="text-center py-4 px-6 font-semibold w-48">Actions</th>
+                    <th className="text-left py-4 px-4 sm:px-6 font-semibold text-xs sm:text-sm">Order ID</th>
+                    <th className="text-left py-4 px-4 sm:px-6 font-semibold text-xs sm:text-sm">Customer</th>
+                    <th className="text-left py-4 px-4 sm:px-6 font-semibold text-xs sm:text-sm">Email</th>
+                    <th className="text-left py-4 px-4 sm:px-6 font-semibold text-xs sm:text-sm">Attraction</th>
+                    <th className="text-center py-4 px-4 sm:px-6 font-semibold text-xs sm:text-sm">Qty</th>
+                    <th className="text-left py-4 px-4 sm:px-6 font-semibold text-xs sm:text-sm">Amount</th>
+                    <th className="text-left py-4 px-4 sm:px-6 font-semibold text-xs sm:text-sm">Date</th>
+                    <th className="text-left py-4 px-4 sm:px-6 font-semibold text-xs sm:text-sm w-32 sm:w-40">Status</th>
+                    <th className="text-center py-4 px-4 sm:px-6 font-semibold text-xs sm:text-sm w-40 sm:w-48">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -223,26 +223,26 @@ export default function Orders({ orders, filters }: OrdersProps) {
                       key={idx}
                       className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
                     >
-                      <td className="py-4 px-6 font-medium text-gray-900">#{order.id}</td>
-                      <td className="py-4 px-6 text-gray-700 font-medium">{order.user?.name || 'Unknown'}</td>
-                      <td className="py-4 px-6 text-gray-600 text-sm">{order.user?.email || '-'}</td>
-                      <td className="py-4 px-6 text-gray-700">{order.attraction_name}</td>
-                      <td className="py-4 px-6 text-center font-semibold text-gray-900">{order.quantity}</td>
-                      <td className="py-4 px-6 font-semibold text-green-600">
+                      <td className="py-3 sm:py-4 px-4 sm:px-6 font-medium text-gray-900 text-xs sm:text-sm">#{order.id}</td>
+                      <td className="py-3 sm:py-4 px-4 sm:px-6 text-gray-700 font-medium text-xs sm:text-sm break-words">{order.user?.name || 'Unknown'}</td>
+                      <td className="py-3 sm:py-4 px-4 sm:px-6 text-gray-600 text-xs break-words">{order.user?.email || '-'}</td>
+                      <td className="py-3 sm:py-4 px-4 sm:px-6 text-gray-700 text-xs sm:text-sm break-words">{order.attraction_name}</td>
+                      <td className="py-3 sm:py-4 px-4 sm:px-6 text-center font-semibold text-gray-900 text-xs sm:text-sm">{order.quantity}</td>
+                      <td className="py-3 sm:py-4 px-4 sm:px-6 font-semibold text-green-600 text-xs sm:text-sm whitespace-nowrap">
                         Rp {Number(order.total_price).toLocaleString('id-ID')}
                       </td>
-                      <td className="py-4 px-6 text-gray-600 text-sm">
+                      <td className="py-3 sm:py-4 px-4 sm:px-6 text-gray-600 text-xs whitespace-nowrap">
                         {new Date(order.created_at).toLocaleDateString('id-ID', {
                           day: 'numeric',
                           month: 'short',
                           year: 'numeric'
                         })}
                       </td>
-                      <td className="py-4 px-6">
+                      <td className="py-3 sm:py-4 px-4 sm:px-6">
                         {getStatusBadge(order.payment_status)}
                       </td>
-                      <td className="py-4 px-6">
-                        <div className="flex items-center justify-center gap-2">
+                      <td className="py-3 sm:py-4 px-4 sm:px-6">
+                        <div className="flex items-center justify-center gap-1 sm:gap-2 flex-wrap">
                           <Link
                             href={getLocalizedRoute('admin.orders.show', { id: order.id }, locale)}
                             className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition flex-shrink-0"
@@ -254,7 +254,7 @@ export default function Orders({ orders, filters }: OrdersProps) {
                             value={order.payment_status}
                             onChange={(e) => updateStatus(order.id, e.target.value)}
                             disabled={updatingStatus === order.id}
-                            className="px-2.5 py-1.5 border border-gray-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-red-500 focus:border-red-500 transition disabled:opacity-50 disabled:cursor-not-allowed min-w-[110px]"
+                            className="px-2 sm:px-2.5 py-1 sm:py-1.5 border border-gray-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-red-500 focus:border-red-500 transition disabled:opacity-50 disabled:cursor-not-allowed min-w-[90px] sm:min-w-[110px]"
                           >
                             <option value="pending">Pending</option>
                             <option value="completed">Completed</option>

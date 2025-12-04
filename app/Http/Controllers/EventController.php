@@ -291,7 +291,7 @@ class EventController extends Controller
         
         $event = Event::findOrFail($eventId);
         $event->update(['published' => !$event->published]);
-        return response()->json(['success' => true, 'published' => $event->published]);
+        return redirect()->back()->with('success', $event->published ? 'Event published successfully' : 'Event unpublished successfully');
     }
 
     // Bulk delete events
@@ -299,7 +299,7 @@ class EventController extends Controller
     {
         $ids = $request->input('ids', []);
         Event::whereIn('id', $ids)->delete();
-        return redirect()->route('admin.events.index', ['locale' => request()->route('locale')])->with('success', 'Events deleted successfully');
+        return response()->json(['success' => true, 'message' => 'Events deleted successfully']);
     }
 
     // Bulk publish events
@@ -309,6 +309,6 @@ class EventController extends Controller
         $action = $request->input('action', 'publish'); // 'publish' or 'unpublish'
         $published = $action === 'publish' ? true : false;
         Event::whereIn('id', $ids)->update(['published' => $published]);
-        return redirect()->route('admin.events.index', ['locale' => request()->route('locale')])->with('success', 'Events updated successfully');
+        return response()->json(['success' => true, 'message' => 'Events updated successfully']);
     }
 }

@@ -3,6 +3,8 @@ import { Layout } from '../../Components/Layout';
 import { usePage, router, Link } from '@inertiajs/react';
 import { Plus, Edit, Trash2, Eye, EyeOff, Search, Filter, CheckSquare, Square } from 'lucide-react';
 import { useTranslations, getLocalizedRoute } from '@/utils/translations';
+import { useToast } from '@/hooks/useToast';
+import { ToastContainer } from '@/Components/Toast';
 
 interface WisataProps {
   places: any;
@@ -12,6 +14,7 @@ export default function Wisata({ places }: WisataProps) {
   const page = usePage();
   const { csrf_token } = page.props as any;
   const { locale } = useTranslations();
+  const { toasts, showSuccess, showError, removeToast } = useToast();
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -41,7 +44,7 @@ export default function Wisata({ places }: WisataProps) {
   const handleTogglePublish = async (id: number) => {
     const placeId = Number(id);
     if (!placeId || isNaN(placeId)) {
-      alert('Invalid place ID');
+      showError('Invalid place ID');
       return;
     }
     try {
@@ -53,36 +56,45 @@ export default function Wisata({ places }: WisataProps) {
         },
       });
       if (response.ok) {
+        const data = await response.json();
+        showSuccess(data.published ? 'Place published successfully' : 'Place unpublished successfully');
         router.reload({ only: ['places'] });
+      } else {
+        showError('Failed to update publish status');
       }
     } catch (e) {
-      alert('Gagal mengubah status publish');
+      showError('Failed to update publish status');
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Hapus place ini?')) return;
+    if (!confirm('Delete this place?')) return;
     const placeId = Number(id);
     if (!placeId || isNaN(placeId)) {
-      alert('Invalid place ID');
+      showError('Invalid place ID');
       return;
     }
     try {
-      await fetch(getLocalizedRoute('admin.places.destroy', { place: placeId }, locale), {
+      const response = await fetch(getLocalizedRoute('admin.places.destroy', { place: placeId }, locale), {
         method: 'DELETE',
         headers: { 'X-CSRF-TOKEN': csrf_token },
       });
-      router.reload({ only: ['places'] });
+      if (response.ok) {
+        showSuccess('Place deleted successfully');
+        router.reload({ only: ['places'] });
+      } else {
+        showError('Failed to delete place');
+      }
     } catch (e) {
-      alert('Gagal menghapus');
+      showError('Failed to delete place');
     }
   };
 
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) return;
-    if (!confirm(`Hapus ${selectedIds.length} place(s)?`)) return;
+    if (!confirm(`Delete ${selectedIds.length} place(s)?`)) return;
     try {
-      await fetch(getLocalizedRoute('admin.places.bulk-delete', {}, locale), {
+      const response = await fetch(getLocalizedRoute('admin.places.bulk-delete', {}, locale), {
         method: 'POST',
         headers: {
           'X-CSRF-TOKEN': csrf_token,
@@ -90,17 +102,22 @@ export default function Wisata({ places }: WisataProps) {
         },
         body: JSON.stringify({ ids: selectedIds }),
       });
-      setSelectedIds([]);
-      router.reload({ only: ['places'] });
+      if (response.ok) {
+        showSuccess(`${selectedIds.length} place(s) deleted successfully`);
+        setSelectedIds([]);
+        router.reload({ only: ['places'] });
+      } else {
+        showError('Failed to delete places');
+      }
     } catch (e) {
-      alert('Gagal menghapus');
+      showError('Failed to delete places');
     }
   };
 
   const handleBulkPublish = async (action: 'publish' | 'unpublish') => {
     if (selectedIds.length === 0) return;
     try {
-      await fetch(getLocalizedRoute('admin.places.bulk-publish', {}, locale), {
+      const response = await fetch(getLocalizedRoute('admin.places.bulk-publish', {}, locale), {
         method: 'POST',
         headers: {
           'X-CSRF-TOKEN': csrf_token,
@@ -108,10 +125,16 @@ export default function Wisata({ places }: WisataProps) {
         },
         body: JSON.stringify({ ids: selectedIds, action }),
       });
-      setSelectedIds([]);
-      router.reload({ only: ['places'] });
+      if (response.ok) {
+        const actionText = action === 'publish' ? 'published' : 'unpublished';
+        showSuccess(`${selectedIds.length} place(s) ${actionText} successfully`);
+        setSelectedIds([]);
+        router.reload({ only: ['places'] });
+      } else {
+        showError('Failed to update places');
+      }
     } catch (e) {
-      alert('Gagal mengubah status');
+      showError('Failed to update places');
     }
   };
 
@@ -371,6 +394,7 @@ export default function Wisata({ places }: WisataProps) {
           </div>
         </div>
       </div>
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </Layout>
   );
 }
