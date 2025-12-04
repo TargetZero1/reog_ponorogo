@@ -31,10 +31,13 @@ class HandleInertiaRequests extends Middleware
     {
         $locale = app()->getLocale();
         
+        // Get user - this will be null after logout
+        $user = $request->user();
+        
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $request->user(),
+                'user' => $user, // Explicitly set to null if logged out
             ],
             'csrf_token' => $request->session()->token(),
             'locale' => $locale,

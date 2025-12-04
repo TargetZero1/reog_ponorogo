@@ -158,8 +158,9 @@ Route::post('/logout', function (Request $request) {
     // Force session save to ensure changes are persisted
     $request->session()->save();
     
-    // Redirect to home with locale - use 303 See Other for POST redirect
-    return redirect("/{$locale}", 303);
+    // Redirect to login page with locale - use 303 See Other for POST redirect
+    // Use direct URL instead of route() to avoid any route resolution issues
+    return redirect("/{$locale}/pesan-ticket/login", 303);
 })->name('logout')->middleware('web');
 
 // Graceful GET fallback (just redirect to locale home without performing logout logic)
