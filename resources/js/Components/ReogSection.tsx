@@ -1,36 +1,95 @@
 import { History, Award, Users, Theater } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useState } from 'react';
+import { useTranslations } from '@/utils/translations';
 
 export function ReogSection() {
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null);
+  const { locale } = useTranslations();
 
-  const features = [
-    {
-      icon: <History size={24} />,
-      title: 'Sejarah Panjang',
-      description: 'Berakar dari abad ke-15, penuh makna filosofis dan spiritual',
-      color: 'from-amber-500 to-orange-600'
-    },
-    {
-      icon: <Award size={24} />,
-      title: 'Warisan Dunia',
-      description: 'Diakui UNESCO sebagai warisan budaya tak benda',
-      color: 'from-amber-500 to-amber-600'
-    },
-    {
-      icon: <Users size={24} />,
-      title: 'Komunitas Kuat',
-      description: 'Dilestarikan oleh paguyuban dan seniman di seluruh Indonesia',
-      color: 'from-red-500 to-red-600'
-    },
-    {
-      icon: <Theater size={24} />,
-      title: 'Pertunjukan Megah',
-      description: 'Topeng Dadak Merak dengan berat 50-60 kg yang memukau',
-      color: 'from-red-600 to-red-800'
-    }
-  ];
+  const features =
+    locale === 'en'
+      ? [
+          {
+            icon: <History size={24} />,
+            title: 'Centuries of History',
+            description: 'Tracing back to the 15th century with deep philosophical meaning',
+            color: 'from-amber-500 to-orange-600',
+          },
+          {
+            icon: <Award size={24} />,
+            title: 'World Heritage',
+            description: 'Recognized by UNESCO as intangible cultural heritage',
+            color: 'from-amber-500 to-amber-600',
+          },
+          {
+            icon: <Users size={24} />,
+            title: 'Strong Community',
+            description: 'Preserved by artists and cultural groups across Indonesia',
+            color: 'from-red-500 to-red-600',
+          },
+          {
+            icon: <Theater size={24} />,
+            title: 'Majestic Performance',
+            description: 'Dadak Merak mask weighing up to 60 kg performed with jaw strength',
+            color: 'from-red-600 to-red-800',
+          },
+        ]
+      : [
+          {
+            icon: <History size={24} />,
+            title: 'Sejarah Panjang',
+            description: 'Berakar dari abad ke-15, penuh makna filosofis dan spiritual',
+            color: 'from-amber-500 to-orange-600',
+          },
+          {
+            icon: <Award size={24} />,
+            title: 'Warisan Dunia',
+            description: 'Diakui UNESCO sebagai warisan budaya tak benda',
+            color: 'from-amber-500 to-amber-600',
+          },
+          {
+            icon: <Users size={24} />,
+            title: 'Komunitas Kuat',
+            description: 'Dilestarikan oleh paguyuban dan seniman di seluruh Indonesia',
+            color: 'from-red-500 to-red-600',
+          },
+          {
+            icon: <Theater size={24} />,
+            title: 'Pertunjukan Megah',
+            description: 'Topeng Dadak Merak dengan berat 50-60 kg yang memukau',
+            color: 'from-red-600 to-red-800',
+          },
+        ];
+
+  const sectionCopy =
+    locale === 'en'
+      ? {
+          tag: 'Main Attraction',
+          heading: 'What is Reog Ponorogo?',
+          paragraph1:
+            'Reog Ponorogo is a traditional performance art from Ponorogo, East Java, famous for the massive Dadak Merak mask carried purely with jaw strength.',
+          paragraph2:
+            'It retells the legend of King Kelono Sewandono in search of love, accompanied by the brave Warok guardians and agile Jathil riders.',
+          paragraph3:
+            'Every movement holds philosophical meaning that reflects the values of heroism, honesty, and unwavering spirit of the Ponorogo people.',
+          quote:
+            '"Reog Ponorogo is more than a dance—it is the embodiment of identity, courage, and dignity of the people of Ponorogo."',
+          badge: 'UNESCO Heritage',
+        }
+      : {
+          tag: 'Daya Tarik Utama',
+          heading: 'Apa Itu Reog Ponorogo?',
+          paragraph1:
+            'Reog Ponorogo adalah seni pertunjukan tradisional asal Ponorogo, Jawa Timur, terkenal dengan topeng Dadak Merak raksasa yang ditopang hanya oleh kekuatan rahang.',
+          paragraph2:
+            'Kisahnya menggambarkan legenda Prabu Kelono Sewandono yang ditemani Warok dan Jathil dalam perjalanannya mencari cinta Dewi Ragil Kuning.',
+          paragraph3:
+            'Setiap gerakan sarat filosofi tentang kepahlawanan, kejujuran, dan semangat juang yang mencerminkan jati diri masyarakat Ponorogo.',
+          quote:
+            '"Reog Ponorogo bukan sekadar tarian, melainkan wujud identitas dan kehormatan masyarakat Ponorogo yang berani dan bermartabat."',
+          badge: 'Warisan UNESCO',
+        };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -41,9 +100,9 @@ export function ReogSection() {
       {/* Section Header */}
       <div className="text-center mb-12 sm:mb-16 relative">
         <div className="inline-block bg-red-950 text-amber-400 px-4 sm:px-6 py-2 rounded-full mb-4 sm:mb-6 shadow-lg hover:shadow-xl transition-shadow font-semibold text-xs sm:text-sm">
-          Daya Tarik Utama
+          {sectionCopy.tag}
         </div>
-        <h2 className="text-red-950 mb-4 text-2xl sm:text-3xl md:text-4xl font-bold">Apa Itu Reog Ponorogo?</h2>
+        <h2 className="text-red-950 mb-4 text-2xl sm:text-3xl md:text-4xl font-bold">{sectionCopy.heading}</h2>
         <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-amber-500 to-red-600 mx-auto rounded-full mt-4"></div>
       </div>
 
@@ -65,7 +124,7 @@ export function ReogSection() {
           
           {/* Floating badge */}
           <div className="absolute top-6 left-6 bg-amber-500 text-red-950 px-4 py-2 rounded-full shadow-xl animate-[float_3s_ease-in-out_infinite]">
-            <span>Warisan UNESCO</span>
+            <span>{sectionCopy.badge}</span>
           </div>
         </div>
 
@@ -73,28 +132,21 @@ export function ReogSection() {
         <div className="space-y-4 sm:space-y-6">
           <div className="prose prose-sm sm:prose-base md:prose-lg max-w-none">
             <p className="text-gray-700 text-sm sm:text-base leading-relaxed">
-              <strong className="text-red-950">Reog Ponorogo</strong> adalah seni pertunjukan tradisional yang berasal dari Ponorogo, Jawa Timur. 
-              Pertunjukan ini terkenal dengan <strong>topeng Dadak Merak</strong> yang besar dan megah, 
-              yang dikenakan oleh penari dengan kekuatan luar biasa.
+              {sectionCopy.paragraph1}
             </p>
             
             <p className="text-neutral-700 leading-relaxed">
-              Reog menggambarkan legenda <strong>Prabu Kelono Sewandono</strong> yang mencari cinta 
-              Dewi Ragil Kuning dari Kediri. Dalam perjalanannya, ia ditemani oleh pasukan Warok 
-              dan Jathil yang gagah berani.
+              {sectionCopy.paragraph2}
             </p>
 
             <p className="text-neutral-700 leading-relaxed">
-              Setiap gerakan dalam Reog Ponorogo memiliki makna filosofis yang dalam, 
-              mencerminkan nilai-nilai kepahlawanan, kejujuran, dan semangat juang 
-              yang tinggi dari masyarakat Ponorogo.
+              {sectionCopy.paragraph3}
             </p>
 
             <div className="bg-gradient-to-r from-amber-50 to-red-50 border-l-4 border-red-600 p-6 rounded-r-2xl shadow-lg hover:shadow-xl transition-shadow relative overflow-hidden group">
               <div className="absolute inset-0 bg-gradient-to-r from-amber-100/50 to-red-100/50 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <p className="text-red-950 italic relative z-10 leading-relaxed">
-                "Reog Ponorogo bukan sekadar tarian, tetapi representasi jiwa dan identitas 
-                masyarakat Ponorogo yang berani, kuat, dan penuh kehormatan."
+                {sectionCopy.quote}
               </p>
             </div>
           </div>
