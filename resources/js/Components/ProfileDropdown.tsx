@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, usePage, router } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { UserCircle, LogOut, BarChart3, Users, ShoppingCart, FileText, Home, MapPin } from 'lucide-react';
 import { useTranslations, getLocalizedRoute } from '@/utils/translations';
 
@@ -13,20 +13,13 @@ export function ProfileDropdown({ scrolled, isMobile = false, isWhiteBackgroundP
   // Use white background page logic if provided, otherwise fall back to scrolled
   const useWhiteTheme = isWhiteBackgroundPage || (scrolled && !isWhiteBackgroundPage);
   const [isOpen, setIsOpen] = useState(false);
-  const { auth } = usePage().props as any;
+  const { auth, csrf_token } = usePage().props as any;
   const user = auth?.user;
   const isAdmin = user?.role === 'admin';
   const { t, locale } = useTranslations();
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
-  };
-
-  const handleLogout = (e?: React.MouseEvent) => {
-    e?.preventDefault();
-    // ✅ FIXED: Use named route for logout
-    router.post(getLocalizedRoute('logout', {}, locale));
-    setIsOpen(false);
   };
 
   const dropdownClasses = `absolute right-0 mt-2 w-56 rounded-md shadow-lg ${useWhiteTheme ? 'bg-white ring-1 ring-black ring-opacity-5' : 'bg-red-900'} focus:outline-none`;
@@ -169,16 +162,24 @@ export function ProfileDropdown({ scrolled, isMobile = false, isWhiteBackgroundP
                   </>
                 )}
 
-                <button
-                  onClick={handleLogout}
-                  className={`${linkClasses} w-full text-left flex items-center gap-2 border-t ${useWhiteTheme ? 'border-gray-200' : 'border-red-700'}`}
-                  role="menuitem"
-                  tabIndex={-1}
-                  id="menu-item-logout"
+                <form
+                  method="POST"
+                  action="/logout"
+                  onSubmit={() => setIsOpen(false)}
+                  className={`${useWhiteTheme ? 'border-gray-200' : 'border-red-700'} border-t`}
                 >
-                  <LogOut size={16} />
-                  {t('nav.logout')}
-                </button>
+                  <input type="hidden" name="_token" value={csrf_token} />
+                  <button
+                    type="submit"
+                    className={`${linkClasses} w-full text-left flex items-center gap-2`}
+                    role="menuitem"
+                    tabIndex={-1}
+                    id="menu-item-logout"
+                  >
+                    <LogOut size={16} />
+                    {t('nav.logout')}
+                  </button>
+                </form>
               </>
             ) : (
               <>
