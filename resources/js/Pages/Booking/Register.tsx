@@ -1,8 +1,10 @@
 import { useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import { Layout } from '../../Components/Layout';
+import { useTranslations, getLocalizedRoute } from '@/utils/translations';
 
 export default function Register() {
+  const { locale } = useTranslations();
   const [attraction, setAttraction] = useState(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
@@ -21,7 +23,12 @@ export default function Register() {
 
   function submit(e: any) {
     e.preventDefault();
-    post(route('pesan.register.post'));
+    const url = getLocalizedRoute('pesan.register.post', {}, locale);
+    if (attraction) {
+      post(`${url}?attraction=${encodeURIComponent(attraction)}`);
+    } else {
+      post(url);
+    }
   }
 
   return (
@@ -115,7 +122,7 @@ export default function Register() {
             <p className="text-center text-sm text-gray-600 mt-4">
               Sudah punya akun?{' '}
               <a
-                href={`${route('pesan.login')}${attraction ? `?attraction=${encodeURIComponent(attraction)}` : ''}`}
+                href={`${getLocalizedRoute('pesan.login', {}, locale)}${attraction ? `?attraction=${encodeURIComponent(attraction)}` : ''}`}
                 className="text-red-600 font-semibold hover:text-red-700"
               >
                 Masuk di sini

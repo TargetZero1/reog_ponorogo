@@ -1,4 +1,4 @@
-import { Sparkles, Play, ChevronDown, Flame, Crown, Music } from 'lucide-react';
+import { Sparkles, ChevronDown, Flame, Crown, Music } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useState, useEffect } from 'react';
 import { useTranslations } from '@/utils/translations';
@@ -6,7 +6,6 @@ import { useTranslations } from '@/utils/translations';
 export function Hero() {
   const { locale } = useTranslations();
   const [scrollY, setScrollY] = useState(0);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const heroSlides =
@@ -30,16 +29,16 @@ export function Hero() {
           },
         ]
       : [
-          {
-            title: 'Reog Ponorogo',
-            subtitle: 'Pesona Budaya dari Jawa Timur',
+    {
+      title: 'Reog Ponorogo',
+      subtitle: 'Pesona Budaya dari Jawa Timur',
             description:
               'Saksikan kemegahan pertunjukan Reog Ponorogo dengan topeng Dadak Merak ikonik berbobot 50 kg.',
             image:
               'https://images.unsplash.com/photo-1698824554771-293b5dcc42db?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-          },
-          {
-            title: 'Warisan Budaya',
+    },
+    {
+      title: 'Warisan Budaya',
             subtitle: 'Diakui UNESCO sebagai Warisan Dunia',
             description:
               'Tarian tradisional penuh warna yang menceritakan legenda kepahlawanan dan kearifan lokal Ponorogo.',
@@ -53,10 +52,7 @@ export function Hero() {
     ? ['UNESCO Heritage', '700+ Years of Tradition', '50-60 kg Mask']
     : ['Warisan UNESCO', '700+ Tahun Tradisi', 'Topeng 50-60 kg'];
   const exploreLabel = locale === 'en' ? 'Explore Reog Ponorogo' : 'Jelajahi Reog Ponorogo';
-  const watchLabel = locale === 'en' ? 'Watch Performance' : 'Tonton Pertunjukan';
   const whatsappLabel = locale === 'en' ? 'Ask via WhatsApp' : 'Tanya via WhatsApp';
-  const videoCaption = locale === 'en' ? 'Reog Ponorogo Performance Video' : 'Video Pertunjukan Reog Ponorogo';
-  const videoHint = locale === 'en' ? 'Click anywhere to close' : 'Klik di mana saja untuk menutup';
   const scrollLabel = locale === 'en' ? 'Scroll' : 'Gulir';
 
   useEffect(() => {
@@ -144,14 +140,14 @@ export function Hero() {
           </span>
         </div>
 
-          <div className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 mb-8 sm:mb-12 animate-[slideUp_1s_ease-out_0.5s_both]">
+        <div className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 mb-8 sm:mb-12 animate-[slideUp_1s_ease-out_0.5s_both]">
             {[Crown, Music, Flame].map((Icon, idx) => (
               <div key={idx} className="flex items-center gap-2 bg-black/30 backdrop-blur-md px-3 sm:px-6 py-2 sm:py-3 rounded-full border border-amber-500/30">
                 <Icon size={16} className="sm:size-5 text-amber-400" />
                 <span className="text-white text-xs sm:text-sm">{chips[idx]}</span>
-              </div>
-            ))}
           </div>
+            ))}
+        </div>
 
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center mb-12 sm:mb-16 animate-[slideUp_1s_ease-out_0.6s_both]">
           <button
@@ -167,18 +163,6 @@ export function Hero() {
             <span className="relative z-10 flex items-center justify-center gap-2 sm:gap-3">
               <span className="text-sm sm:text-base">{exploreLabel}</span>
               <ChevronDown size={20} className="sm:size-6 group-hover:translate-y-1 transition-transform" />
-            </span>
-          </button>
-
-          <button
-            onClick={() => setIsVideoPlaying(true)}
-            className="group relative bg-white/10 backdrop-blur-xl text-white border-2 border-white/40 px-6 sm:px-10 py-3 sm:py-5 rounded-2xl transition-all hover:bg-white/20 hover:border-amber-400 overflow-hidden"
-          >
-            <span className="relative z-10 flex items-center justify-center gap-2 sm:gap-3">
-              <div className="w-8 sm:w-12 h-8 sm:w-12 bg-gradient-to-br from-amber-500 to-red-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
-                <Play size={16} className="sm:size-5 text-white ml-1" />
-              </div>
-              <span className="text-sm sm:text-base">{watchLabel}</span>
             </span>
           </button>
 
@@ -220,30 +204,6 @@ export function Hero() {
         </div>
       </div>
 
-      {isVideoPlaying && (
-        <div 
-          className="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-[fadeIn_0.3s_ease-out]"
-          onClick={() => setIsVideoPlaying(false)}
-        >
-          <button
-            className="absolute top-8 right-8 w-14 h-14 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 transition-all border-2 border-white/30"
-            onClick={() => setIsVideoPlaying(false)}
-          >
-            <span className="text-white text-2xl">×</span>
-          </button>
-          <div className="max-w-6xl w-full aspect-video bg-neutral-900 rounded-3xl overflow-hidden shadow-2xl border border-white/10">
-            <div className="w-full h-full flex items-center justify-center text-white">
-              <div className="text-center">
-                <div className="w-24 h-24 bg-gradient-to-br from-amber-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl">
-                  <Play size={48} className="text-white ml-2" />
-                </div>
-                <p className="text-xl text-neutral-300 mb-2">{videoCaption}</p>
-                <p className="text-neutral-500">{videoHint}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

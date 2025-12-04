@@ -439,7 +439,7 @@ export default function TempatWisata({ places }: { places?: any[] }) {
           <p className="text-amber-50/95 max-w-3xl mx-auto mb-8 leading-relaxed px-4 text-sm sm:text-base md:text-lg animate-[slideUp_1s_ease-out_0.4s_both] relative">
             <span className="relative inline-block">
               {text.heroDescription}
-              <div className="absolute -inset-4 bg-gradient-to-r from-amber-500/5 via-red-500/5 to-amber-500/5 blur-2xl -z-10 rounded-full"></div>
+              <span className="absolute -inset-4 bg-gradient-to-r from-amber-500/5 via-red-500/5 to-amber-500/5 blur-2xl -z-10 rounded-full"></span>
             </span>
           </p>
         </div>

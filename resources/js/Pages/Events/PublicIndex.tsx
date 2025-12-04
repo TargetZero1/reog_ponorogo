@@ -1,7 +1,7 @@
 import React from 'react';
 import { Layout } from '../../Components/Layout';
 import { SEO } from '../../Components/SEO';
-import { useTranslations } from '../../utils/translations';
+import { useTranslations, getLocalizedRoute } from '../../utils/translations';
 import { Calendar, MapPin, Ticket } from 'lucide-react';
 
 export default function PublicIndex({ events }: any) {
@@ -79,19 +79,18 @@ export default function PublicIndex({ events }: any) {
                   {/* Actions */}
                   <div className="flex gap-3 pt-4 border-t border-neutral-200">
                     <a 
-                      href={route('events.show', { locale, slug: e.slug || e.id })} 
+                      href={getLocalizedRoute('events.show', { slug: e.slug || e.id }, locale)} 
                       className="flex-1 text-center px-4 py-2 bg-neutral-100 text-red-950 font-semibold rounded-lg hover:bg-neutral-200 transition-colors text-sm"
                     >
                       {t('events.details')}
                     </a>
                     <button
                       onClick={() => {
-                        window.location.href = route('pesan.checkout', { 
-                          locale,
+                        window.location.href = getLocalizedRoute('pesan.checkout', { 
                           type: 'event', 
                           id: e.id,
                           attraction: e.title 
-                        });
+                        }, locale);
                       }}
                       className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold rounded-lg hover:from-red-700 hover:to-red-800 transition-all shadow-md hover:shadow-lg text-sm"
                     >

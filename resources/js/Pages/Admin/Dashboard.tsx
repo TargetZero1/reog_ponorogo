@@ -2,6 +2,7 @@ import React from 'react';
 import { BarChart3, ShoppingCart, Users, Zap, Calendar, TrendingUp, DollarSign, FileText } from 'lucide-react';
 import { Layout } from '../../Components/Layout';
 import { Link } from '@inertiajs/react';
+import { useTranslations, getLocalizedRoute } from '@/utils/translations';
 
 interface AdminDashboardProps {
   stats: {
@@ -23,6 +24,7 @@ interface AdminDashboardProps {
 }
 
 export default function Dashboard({ stats, recentOrders, ordersByMonth, revenueByAttraction, paymentStatusBreakdown }: AdminDashboardProps) {
+  const { locale } = useTranslations();
   const statCards = [
     {
       icon: ShoppingCart,
@@ -255,7 +257,7 @@ export default function Dashboard({ stats, recentOrders, ordersByMonth, revenueB
                   Recent Orders
                 </h2>
                 <Link
-                  href={route('admin.orders')}
+                  href={getLocalizedRoute('admin.orders', {}, locale)}
                   className="text-sm text-blue-600 hover:text-blue-700 font-semibold"
                 >
                   View All →

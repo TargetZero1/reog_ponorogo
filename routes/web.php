@@ -99,9 +99,13 @@ Route::prefix('{locale}')->where(['locale' => 'id|en'])->group(function () {
 
     // --- Admin Routes (with locale prefix) ---
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
-        Route::resource('events', EventController::class);
-        Route::resource('places', \App\Http\Controllers\PlaceController::class);
+        // Explicitly define resource routes to ensure parameter names match
+        // Note: Laravel resource routes use singular form by default, so 'events' becomes 'event'
+        // But we need to explicitly set parameters to ensure consistency
+        Route::resource('events', EventController::class)->parameters(['events' => 'event']);
+        Route::resource('places', \App\Http\Controllers\PlaceController::class)->parameters(['places' => 'place']);
         
+        // Custom routes that use {id} instead of {event}/{place}
         Route::patch('events/{id}/toggle-publish', [EventController::class, 'togglePublish'])->name('events.toggle-publish');
         Route::patch('places/{id}/toggle-publish', [\App\Http\Controllers\PlaceController::class, 'togglePublish'])->name('places.toggle-publish');
         
@@ -123,6 +127,11 @@ Route::prefix('{locale}')->where(['locale' => 'id|en'])->group(function () {
         Route::get('/reports', [BookingController::class, 'adminReports'])->name('reports');
         Route::get('/reports/export', [BookingController::class, 'adminExportReports'])->name('reports.export');
     });
+
+    // Optional GET logout under locale - just redirect to home to avoid loops
+    Route::get('/logout', function ($locale) {
+        return redirect("/{$locale}");
+    })->name('logout.get');
 });
 
 // Fallback route - redirect to default locale (id)
@@ -130,12 +139,31 @@ Route::get('/', function () {
     return redirect('/id');
 });
 
-// Logout (no locale needed)
+// Logout post handler - must be outside locale group to avoid redirect loops
 use Illuminate\Support\Facades\Auth;
-Route::post('/logout', function () {
+Route::post('/logout', function (Request $request) {
+    // Get locale from session BEFORE invalidating
+    $locale = $request->session()->get('locale', 'id');
+    
+    // Perform complete logout - order matters!
     Auth::logout();
-    request()->session()->invalidate();
-    request()->session()->regenerateToken();
+    
+    // Invalidate and regenerate session
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    
+    // Clear all session data
+    $request->session()->flush();
+    
+    // Force session save to ensure changes are persisted
+    $request->session()->save();
+    
+    // Redirect to home with locale - use 303 See Other for POST redirect
+    return redirect("/{$locale}", 303);
+})->name('logout')->middleware('web');
+
+// Graceful GET fallback (just redirect to locale home without performing logout logic)
+Route::get('/logout', function () {
     $locale = session('locale', 'id');
     return redirect("/{$locale}");
-})->name('logout');
+});

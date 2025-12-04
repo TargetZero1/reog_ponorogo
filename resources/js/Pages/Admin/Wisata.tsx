@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Layout } from '../../Components/Layout';
-import { usePage, router } from '@inertiajs/react';
+import { usePage, router, Link } from '@inertiajs/react';
 import { Plus, Edit, Trash2, Eye, EyeOff, Search, Filter, CheckSquare, Square } from 'lucide-react';
+import { useTranslations, getLocalizedRoute } from '@/utils/translations';
 
 interface WisataProps {
   places: any;
@@ -10,6 +11,7 @@ interface WisataProps {
 export default function Wisata({ places }: WisataProps) {
   const page = usePage();
   const { csrf_token } = page.props as any;
+  const { locale } = useTranslations();
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -37,8 +39,13 @@ export default function Wisata({ places }: WisataProps) {
   };
 
   const handleTogglePublish = async (id: number) => {
+    const placeId = Number(id);
+    if (!placeId || isNaN(placeId)) {
+      alert('Invalid place ID');
+      return;
+    }
     try {
-      const response = await fetch(route('admin.places.toggle-publish', id), {
+      const response = await fetch(getLocalizedRoute('admin.places.toggle-publish', { id: placeId }, locale), {
         method: 'PATCH',
         headers: {
           'X-CSRF-TOKEN': csrf_token,
@@ -55,8 +62,13 @@ export default function Wisata({ places }: WisataProps) {
 
   const handleDelete = async (id: number) => {
     if (!confirm('Hapus place ini?')) return;
+    const placeId = Number(id);
+    if (!placeId || isNaN(placeId)) {
+      alert('Invalid place ID');
+      return;
+    }
     try {
-      await fetch(route('admin.places.destroy', id), {
+      await fetch(getLocalizedRoute('admin.places.destroy', { place: placeId }, locale), {
         method: 'DELETE',
         headers: { 'X-CSRF-TOKEN': csrf_token },
       });
@@ -70,7 +82,7 @@ export default function Wisata({ places }: WisataProps) {
     if (selectedIds.length === 0) return;
     if (!confirm(`Hapus ${selectedIds.length} place(s)?`)) return;
     try {
-      await fetch(route('admin.places.bulk-delete'), {
+      await fetch(getLocalizedRoute('admin.places.bulk-delete', {}, locale), {
         method: 'POST',
         headers: {
           'X-CSRF-TOKEN': csrf_token,
@@ -88,7 +100,7 @@ export default function Wisata({ places }: WisataProps) {
   const handleBulkPublish = async (action: 'publish' | 'unpublish') => {
     if (selectedIds.length === 0) return;
     try {
-      await fetch(route('admin.places.bulk-publish'), {
+      await fetch(getLocalizedRoute('admin.places.bulk-publish', {}, locale), {
         method: 'POST',
         headers: {
           'X-CSRF-TOKEN': csrf_token,
@@ -104,7 +116,7 @@ export default function Wisata({ places }: WisataProps) {
   };
 
   const viewOnPublicSite = () => {
-    window.open(route('places.index'), '_blank');
+    window.open(getLocalizedRoute('places.index', {}, locale), '_blank');
   };
 
   return (
@@ -126,13 +138,13 @@ export default function Wisata({ places }: WisataProps) {
                   <Eye size={18} />
                   View Public Site
                 </button>
-                <a
-                  href={route('admin.places.create')}
+                <Link
+                  href={getLocalizedRoute('admin.places.create', {}, locale)}
                   className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 text-red-950 rounded-lg hover:from-amber-600 hover:to-amber-700 transition shadow-lg font-semibold"
                 >
                   <Plus size={18} />
                   Create Place
-                </a>
+                </Link>
               </div>
             </div>
 
@@ -229,24 +241,29 @@ export default function Wisata({ places }: WisataProps) {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredPlaces.map((p: any, idx: number) => (
+                  {filteredPlaces.map((p: any, idx: number) => {
+                    const placeId = Number(p.id);
+                    if (!placeId || isNaN(placeId)) {
+                      return null;
+                    }
+                    return (
                     <tr
                       key={idx}
                       className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
                     >
                       <td className="py-4 px-6">
                         <button
-                          onClick={() => toggleSelect(p.id)}
+                          onClick={() => toggleSelect(placeId)}
                           className="p-1 hover:bg-gray-100 rounded transition"
                         >
-                          {selectedIds.includes(p.id) ? (
+                          {selectedIds.includes(placeId) ? (
                             <CheckSquare size={18} className="text-red-600" />
                           ) : (
                             <Square size={18} className="text-gray-400" />
                           )}
                         </button>
                       </td>
-                      <td className="py-4 px-6 font-medium text-gray-900">#{p.id}</td>
+                      <td className="py-4 px-6 font-medium text-gray-900">#{placeId}</td>
                       <td className="py-4 px-6">
                         <div className="font-semibold text-gray-900">{p.name}</div>
                         {p.description && (
@@ -268,7 +285,7 @@ export default function Wisata({ places }: WisataProps) {
                       </td>
                       <td className="py-4 px-6 text-center">
                         <button
-                          onClick={() => handleTogglePublish(p.id)}
+                          onClick={() => handleTogglePublish(placeId)}
                           className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold transition ${
                             p.published
                               ? 'bg-green-100 text-green-800 hover:bg-green-200'
@@ -290,15 +307,15 @@ export default function Wisata({ places }: WisataProps) {
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex items-center justify-center gap-2">
-                          <a
-                            href={route('admin.places.edit', p.id)}
+                          <Link
+                            href={getLocalizedRoute('admin.places.edit', { place: placeId }, locale)}
                             className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
                             title="Edit"
                           >
                             <Edit size={18} />
-                          </a>
+                          </Link>
                           <button
-                            onClick={() => handleDelete(p.id)}
+                            onClick={() => handleDelete(placeId)}
                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
                             title="Delete"
                           >
@@ -307,7 +324,8 @@ export default function Wisata({ places }: WisataProps) {
                         </div>
                       </td>
                     </tr>
-                  ))}
+                  );
+                  })}
                   {filteredPlaces.length === 0 && (
                     <tr>
                       <td colSpan={8} className="py-12 text-center text-gray-500">
@@ -323,16 +341,16 @@ export default function Wisata({ places }: WisataProps) {
             </div>
 
             {/* Pagination */}
-            {places.last_page > 1 && (
+                      {places.last_page > 1 && (
               <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
                 <div className="flex items-center justify-between">
                   <p className="text-sm text-gray-600">
                     Showing {places.from} to {places.to} of {places.total} places
                   </p>
                   <div className="flex gap-2">
-                    {places.current_page > 1 && (
+                      {places.current_page > 1 && (
                       <button
-                        onClick={() => router.get(route('admin.places.index'), { page: places.current_page - 1 })}
+                        onClick={() => router.get(getLocalizedRoute('admin.places.index', {}, locale), { page: places.current_page - 1 })}
                         className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-white transition text-sm font-medium"
                       >
                         Previous
@@ -340,7 +358,7 @@ export default function Wisata({ places }: WisataProps) {
                     )}
                     {places.current_page < places.last_page && (
                       <button
-                        onClick={() => router.get(route('admin.places.index'), { page: places.current_page + 1 })}
+                        onClick={() => router.get(getLocalizedRoute('admin.places.index', {}, locale), { page: places.current_page + 1 })}
                         className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-white transition text-sm font-medium"
                       >
                         Next

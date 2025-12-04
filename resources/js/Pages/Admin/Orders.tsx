@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Eye, CheckCircle, Clock, XCircle, RefreshCw, Search, Filter, Download } from 'lucide-react';
-import { usePage, router } from '@inertiajs/react';
+import { usePage, router, Link } from '@inertiajs/react';
 import { Layout } from '../../Components/Layout';
+import { useTranslations, getLocalizedRoute } from '@/utils/translations';
 
 interface OrdersProps {
   orders: any;
@@ -11,6 +12,7 @@ interface OrdersProps {
 export default function Orders({ orders, filters }: OrdersProps) {
   const page = usePage();
   const { csrf_token } = page.props as any;
+  const { locale } = useTranslations();
 
   const [q, setQ] = useState(filters?.q || '');
   const [startDate, setStartDate] = useState(filters?.start_date || '');
@@ -24,7 +26,7 @@ export default function Orders({ orders, filters }: OrdersProps) {
     if (startDate) params.append('start_date', startDate);
     if (endDate) params.append('end_date', endDate);
     if (status) params.append('status', status);
-    return `${route('admin.orders.export')}?${params.toString()}`;
+    return `${getLocalizedRoute('admin.orders.export', {}, locale)}?${params.toString()}`;
   }
 
   function applyFilters() {
@@ -34,7 +36,7 @@ export default function Orders({ orders, filters }: OrdersProps) {
     if (endDate) params.end_date = endDate;
     if (status) params.status = status;
     
-    router.get(route('admin.orders'), params, {
+    router.get(getLocalizedRoute('admin.orders', {}, locale), params, {
       preserveState: true,
       preserveScroll: true,
     });
@@ -45,7 +47,7 @@ export default function Orders({ orders, filters }: OrdersProps) {
     
     setUpdatingStatus(id);
     try {
-      const response = await fetch(route('admin.orders.update_status', id), {
+      const response = await fetch(getLocalizedRoute('admin.orders.update_status', { id }, locale), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -200,8 +202,8 @@ export default function Orders({ orders, filters }: OrdersProps) {
               </div>
             </div>
             
-            <div className="overflow-x-auto">
-              <table className="w-full">
+            <div>
+              <table className="w-full table-fixed">
                 <thead className="bg-gradient-to-r from-red-950 to-red-900 text-white">
                   <tr>
                     <th className="text-left py-4 px-6 font-semibold">Order ID</th>
@@ -211,8 +213,8 @@ export default function Orders({ orders, filters }: OrdersProps) {
                     <th className="text-center py-4 px-6 font-semibold">Qty</th>
                     <th className="text-left py-4 px-6 font-semibold">Amount</th>
                     <th className="text-left py-4 px-6 font-semibold">Date</th>
-                    <th className="text-left py-4 px-6 font-semibold">Status</th>
-                    <th className="text-center py-4 px-6 font-semibold">Actions</th>
+                    <th className="text-left py-4 px-6 font-semibold w-40">Status</th>
+                    <th className="text-center py-4 px-6 font-semibold w-48">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -241,18 +243,18 @@ export default function Orders({ orders, filters }: OrdersProps) {
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex items-center justify-center gap-2">
-                          <a
-                            href={route('admin.orders.show', order.id)}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                          <Link
+                            href={getLocalizedRoute('admin.orders.show', { id: order.id }, locale)}
+                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition flex-shrink-0"
                             title="View Details"
                           >
                             <Eye size={18} />
-                          </a>
+                          </Link>
                           <select
                             value={order.payment_status}
                             onChange={(e) => updateStatus(order.id, e.target.value)}
                             disabled={updatingStatus === order.id}
-                            className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-2.5 py-1.5 border border-gray-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-red-500 focus:border-red-500 transition disabled:opacity-50 disabled:cursor-not-allowed min-w-[110px]"
                           >
                             <option value="pending">Pending</option>
                             <option value="completed">Completed</option>
@@ -260,7 +262,7 @@ export default function Orders({ orders, filters }: OrdersProps) {
                             <option value="refunded">Refunded</option>
                           </select>
                           {updatingStatus === order.id && (
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-600"></div>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-600 flex-shrink-0"></div>
                           )}
                         </div>
                       </td>
@@ -288,7 +290,7 @@ export default function Orders({ orders, filters }: OrdersProps) {
                   <div className="flex gap-2">
                     {orders.current_page > 1 && (
                       <button
-                        onClick={() => router.get(route('admin.orders'), { ...filters, page: orders.current_page - 1 })}
+                        onClick={() => router.get(getLocalizedRoute('admin.orders', {}, locale), { ...filters, page: orders.current_page - 1 })}
                         className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-white transition text-sm font-medium"
                       >
                         Previous
@@ -296,7 +298,7 @@ export default function Orders({ orders, filters }: OrdersProps) {
                     )}
                     {orders.current_page < orders.last_page && (
                       <button
-                        onClick={() => router.get(route('admin.orders'), { ...filters, page: orders.current_page + 1 })}
+                        onClick={() => router.get(getLocalizedRoute('admin.orders', {}, locale), { ...filters, page: orders.current_page + 1 })}
                         className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-white transition text-sm font-medium"
                       >
                         Next

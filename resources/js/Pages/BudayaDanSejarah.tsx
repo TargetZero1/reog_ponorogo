@@ -1,4 +1,4 @@
-import { Palette, UtensilsCrossed, BookOpen, Sparkles, Crown, Music, Clock, Award, Users, Heart } from 'lucide-react';
+import { Palette, UtensilsCrossed, BookOpen, Sparkles, Crown, Music, Clock, Award, Users, Heart, Facebook, Twitter, MessageCircle } from 'lucide-react';
 import { ImageWithFallback } from '../Components/figma/ImageWithFallback';
 import { Layout } from '../Components/Layout';
 import { SEO } from '../Components/SEO';

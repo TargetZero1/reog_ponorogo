@@ -1,6 +1,7 @@
 import React from 'react';
 import { BarChart3, TrendingUp, Download, FileSpreadsheet } from 'lucide-react';
 import { Layout } from '../../Components/Layout';
+import { useTranslations, getLocalizedRoute } from '@/utils/translations';
 
 interface AnalyticsProps {
   ticketsByAttraction: any[];
@@ -31,6 +32,7 @@ export default function Analytics({
   thisMonthRevenue,
   paymentStatusBreakdown,
 }: AnalyticsProps) {
+  const { locale } = useTranslations();
   return (
     <Layout>
       <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-8">
@@ -43,7 +45,7 @@ export default function Analytics({
           </div>
           <div className="flex gap-3">
             <a
-              href={route('admin.analytics.export')}
+              href={getLocalizedRoute('admin.analytics.export', {}, locale)}
               className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition shadow-md"
             >
               <Download size={18} />

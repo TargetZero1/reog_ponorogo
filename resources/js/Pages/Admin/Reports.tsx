@@ -1,6 +1,7 @@
 import React from 'react';
 import { TrendingUp, DollarSign, ShoppingCart, Users as UsersIcon, Download, FileSpreadsheet } from 'lucide-react';
 import { Layout } from '../../Components/Layout';
+import { useTranslations, getLocalizedRoute } from '@/utils/translations';
 
 interface ReportsProps {
   summary: {
@@ -14,6 +15,7 @@ interface ReportsProps {
 }
 
 export default function Reports({ summary, topAttractions, topCustomers }: ReportsProps) {
+  const { locale } = useTranslations();
   return (
     <Layout>
       <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-8">
@@ -26,7 +28,7 @@ export default function Reports({ summary, topAttractions, topCustomers }: Repor
           </div>
           <div className="flex gap-3">
             <a
-              href={route('admin.reports.export')}
+              href={getLocalizedRoute('admin.reports.export', {}, locale)}
               className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition shadow-md"
             >
               <Download size={18} />

@@ -1,4 +1,4 @@
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { Head, useForm, usePage, router } from '@inertiajs/react';
 import { Layout } from '@/Components/Layout';
 import { SEO } from '@/Components/SEO';
 import { LanguageSwitcher } from '@/Components/LanguageSwitcher';
@@ -7,9 +7,9 @@ import { User, Mail, Lock, Save, CheckCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 export default function Profile() {
-  const { auth } = usePage().props as any;
+  const page = usePage();
+  const { auth, csrf_token, flash } = page.props as any;
   const user = auth?.user;
-  const flash = (usePage().props as any).flash || {};
   const { t, locale } = useTranslations();
 
   const { data, setData, put, errors, processing } = useForm({
@@ -19,15 +19,15 @@ export default function Profile() {
     password_confirmation: '',
   });
 
-  const [success, setSuccess] = useState(flash.success || '');
+  const [success, setSuccess] = useState(flash?.success || '');
   const [showPasswordFields, setShowPasswordFields] = useState(false);
 
   useEffect(() => {
-    if (flash.success) {
+    if (flash?.success) {
       setSuccess(flash.success);
       setTimeout(() => setSuccess(''), 5000);
     }
-  }, [flash.success]);
+  }, [flash?.success]);
 
   function submit(e: any) {
     e.preventDefault();
@@ -174,6 +174,28 @@ export default function Profile() {
                 )}
               </div>
             </form>
+            
+            {/* Logout Button */}
+            <div className="mt-6 pt-6 border-t border-gray-200">
+              <form 
+                method="POST" 
+                action="/logout" 
+                className="inline"
+                onSubmit={(e) => {
+                  // Let form submit naturally - browser will handle redirect
+                  // This ensures full page reload and session clearing
+                }}
+              >
+                <input type="hidden" name="_token" value={csrf_token} />
+                <button
+                  type="submit"
+                  className="flex items-center gap-2 px-6 py-3 bg-gray-600 text-white rounded-lg font-semibold hover:bg-gray-700 transition shadow-md"
+                >
+                  <Lock size={18} />
+                  {t('nav.logout')}
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>

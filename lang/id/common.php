@@ -12,7 +12,7 @@ return [
         'register' => 'Daftar',
         'profile' => 'Profil',
         'logout' => 'Keluar',
-        'admin_label' => 'Admin',
+        'admin_label' => 'ADMIN',
         'events' => 'Acara',
         'dashboard' => 'Dashboard',
         'analytics' => 'Analitik',
@@ -155,6 +155,34 @@ return [
         'share' => 'Bagikan',
         'copy_link' => 'Salin Link',
         'link_copied' => 'Tersalin!',
+    ],
+
+    'footer' => [
+        'tagline' => 'Warisan Budaya Indonesia',
+        'description' => 'Portal resmi informasi dan promosi Reog Ponorogo. Melestarikan dan memperkenalkan kesenian tradisional Indonesia ke seluruh dunia.',
+        'quick_links' => [
+            'title' => 'Navigasi Cepat',
+            'home' => 'Beranda',
+            'about_reog' => 'Tentang Reog',
+            'types' => 'Jenis Reog',
+            'culture' => 'Budaya & Sejarah',
+            'places' => 'Tempat Wisata',
+        ],
+        'contact' => [
+            'title' => 'Hubungi Kami',
+        ],
+        'address' => 'Jl. Raden Panji No 12, Ponorogo, Jawa Timur',
+        'inquiry' => [
+            'title' => 'Booking & Pertanyaan',
+            'description' => 'Ingin menyaksikan pertunjukan Reog atau memiliki pertanyaan? Hubungi kami!',
+            'name_placeholder' => 'Nama Lengkap',
+            'email_placeholder' => 'Email',
+            'message_placeholder' => 'Pesan Anda',
+            'submit' => 'Kirim Pesan',
+        ],
+        'copyright' => '© 2024 Reog Ponorogo. Dikembangkan untuk Tugas Akhir. All rights reserved.',
+        'privacy_policy' => 'Kebijakan Privasi',
+        'terms' => 'Syarat & Ketentuan',
     ],
 ];
 

@@ -1,25 +1,28 @@
 import { Facebook, Instagram, Youtube, Twitter, Mail, Phone, MapPin } from 'lucide-react';
+import { useTranslations, getLocalizedRoute } from '@/utils/translations';
 
 export function Footer() {
+  const { t, locale } = useTranslations();
+  
   const quickLinks = [
-    { label: 'Beranda', href: '#beranda' },
-    { label: 'Tentang Reog', href: '#reog' },
-    { label: 'Jenis Reog', href: '#jenis-reog' },
-    { label: 'Budaya & Sejarah', href: '#budaya' },
-    { label: 'Tempat Wisata', href: '#wisata' }
+    { label: t('footer.quick_links.home'), href: getLocalizedRoute('home', {}, locale) },
+    { label: t('footer.quick_links.about_reog'), href: '#reog' },
+    { label: t('footer.quick_links.types'), href: '#jenis-reog' },
+    { label: t('footer.quick_links.culture'), href: getLocalizedRoute('budaya', {}, locale) },
+    { label: t('footer.quick_links.places'), href: getLocalizedRoute('places.index', {}, locale) }
   ];
 
   const contacts = [
-    { icon: <Phone size={16} className="sm:size-4.5" />, text: '+62 352 461234', href: 'tel:+62352461234' },
+    { icon: <Phone size={16} className="sm:size-4.5" />, text: '+62882009759102', href: 'tel:+62882009759102' },
     { icon: <Mail size={16} className="sm:size-4.5" />, text: 'info@reogponorogo.com', href: 'mailto:info@reogponorogo.com' },
-    { icon: <MapPin size={16} className="sm:size-4.5" />, text: 'Jl. Reog No. 1, Ponorogo, Jawa Timur', href: '#' }
+    { icon: <MapPin size={16} className="sm:size-4.5" />, text: t('footer.address'), href: '#' }
   ];
 
   const socialMedia = [
-    { icon: <Facebook size={18} className="sm:size-5" />, href: '#', label: 'Facebook' },
-    { icon: <Instagram size={18} className="sm:size-5" />, href: '#', label: 'Instagram' },
-    { icon: <Youtube size={18} className="sm:size-5" />, href: '#', label: 'YouTube' },
-    { icon: <Twitter size={18} className="sm:size-5" />, href: '#', label: 'Twitter' }
+    { icon: <Facebook size={18} className="sm:size-5" />, href: 'https://www.facebook.com/ponorogokab', label: 'Facebook', target: '_blank', rel: 'noopener noreferrer' },
+    { icon: <Instagram size={18} className="sm:size-5" />, href: 'https://www.instagram.com/ponorogokab/', label: 'Instagram', target: '_blank', rel: 'noopener noreferrer' },
+    { icon: <Youtube size={18} className="sm:size-5" />, href: 'https://www.youtube.com/@ponorogokab', label: 'YouTube', target: '_blank', rel: 'noopener noreferrer' },
+    { icon: <Twitter size={18} className="sm:size-5" />, href: 'https://twitter.com/ponorogokab', label: 'Twitter', target: '_blank', rel: 'noopener noreferrer' }
   ];
 
   return (
@@ -35,12 +38,11 @@ export function Footer() {
               </div>
               <div className="min-w-0">
                 <h3 className="text-white text-sm sm:text-base font-semibold">Reog Ponorogo</h3>
-                <p className="text-amber-400 text-xs sm:text-sm">Warisan Budaya Indonesia</p>
+                <p className="text-amber-400 text-xs sm:text-sm">{t('footer.tagline')}</p>
               </div>
             </div>
             <p className="text-amber-50/80 mb-4 sm:mb-6 leading-relaxed max-w-md text-xs sm:text-sm">
-              Portal resmi informasi dan promosi Reog Ponorogo. 
-              Melestarikan dan memperkenalkan kesenian tradisional Indonesia ke seluruh dunia.
+              {t('footer.description')}
             </p>
             
             {/* Social Media */}
@@ -49,6 +51,8 @@ export function Footer() {
                 <a
                   key={index}
                   href={social.href}
+                  target={social.target}
+                  rel={social.rel}
                   aria-label={social.label}
                   className="w-8 sm:w-10 h-8 sm:h-10 bg-white/10 hover:bg-amber-500 rounded-lg flex items-center justify-center transition-all hover:scale-110 hover:text-red-950 group"
                 >
@@ -60,7 +64,7 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-amber-400 mb-3 sm:mb-4 text-sm sm:text-base font-semibold">Navigasi Cepat</h4>
+            <h4 className="text-amber-400 mb-3 sm:mb-4 text-sm sm:text-base font-semibold">{t('footer.quick_links.title')}</h4>
             <ul className="space-y-1 sm:space-y-2">
               {quickLinks.map((link, index) => (
                 <li key={index}>
@@ -78,7 +82,7 @@ export function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h4 className="text-amber-400 mb-3 sm:mb-4 text-sm sm:text-base font-semibold">Hubungi Kami</h4>
+            <h4 className="text-amber-400 mb-3 sm:mb-4 text-sm sm:text-base font-semibold">{t('footer.contact.title')}</h4>
             <ul className="space-y-2 sm:space-y-3">
               {contacts.map((contact, index) => (
                 <li key={index}>
@@ -100,23 +104,23 @@ export function Footer() {
         {/* Inquiry Form Section */}
         <div className="border-t border-white/10 pt-8 mb-8">
           <div className="max-w-2xl">
-            <h4 className="text-amber-400 mb-4">Booking & Pertanyaan</h4>
+            <h4 className="text-amber-400 mb-4">{t('footer.inquiry.title')}</h4>
             <p className="text-amber-50/80 mb-4 text-sm">
-              Ingin menyaksikan pertunjukan Reog atau memiliki pertanyaan? Hubungi kami!
+              {t('footer.inquiry.description')}
             </p>
             <form className="grid sm:grid-cols-2 gap-4">
               <input
                 type="text"
-                placeholder="Nama Lengkap"
+                placeholder={t('footer.inquiry.name_placeholder')}
                 className="bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-amber-500"
               />
               <input
                 type="email"
-                placeholder="Email"
+                placeholder={t('footer.inquiry.email_placeholder')}
                 className="bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-amber-500"
               />
               <textarea
-                placeholder="Pesan Anda"
+                placeholder={t('footer.inquiry.message_placeholder')}
                 rows={3}
                 className="sm:col-span-2 bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none"
               ></textarea>
@@ -124,7 +128,7 @@ export function Footer() {
                 type="submit"
                 className="sm:col-span-2 bg-gradient-to-r from-amber-500 to-amber-600 text-red-950 py-3 rounded-lg hover:from-amber-400 hover:to-amber-500 transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
               >
-                Kirim Pesan
+                {t('footer.inquiry.submit')}
               </button>
             </form>
           </div>
@@ -133,11 +137,11 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-amber-50/60">
           <p>
-            © 2024 Reog Ponorogo. Dikembangkan untuk Tugas Akhir. All rights reserved.
+            {t('footer.copyright')}
           </p>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-amber-300 transition-colors">Kebijakan Privasi</a>
-            <a href="#" className="hover:text-amber-300 transition-colors">Syarat & Ketentuan</a>
+            <a href="#" className="hover:text-amber-300 transition-colors">{t('footer.privacy_policy')}</a>
+            <a href="#" className="hover:text-amber-300 transition-colors">{t('footer.terms')}</a>
           </div>
         </div>
       </div>

@@ -44,7 +44,7 @@ export function Navbar({ activeSection = '', setActiveSection = () => {} }: Navb
   ];
 
   const adminLinks = [
-    { id: 'admin-events', label: t('admin.events'), href: adminEventsRoute, isPage: true },
+    { id: 'admin-events', label: t('nav.manage_events'), href: adminEventsRoute, isPage: true },
   ];
 
   const scrollToSection = (id: string, href: string, isPage: boolean) => {
@@ -95,7 +95,7 @@ export function Navbar({ activeSection = '', setActiveSection = () => {} }: Navb
         }`}
       >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex items-center h-16 gap-6">
           <div className="flex-shrink-0 flex items-center gap-3">
             <a href={homeRoute} aria-label="Reog Ponorogo home" className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center shadow-lg">
@@ -113,7 +113,7 @@ export function Navbar({ activeSection = '', setActiveSection = () => {} }: Navb
             </a>
           </div>
 
-          <div className="hidden md:flex space-x-2 items-center">
+          <div className="hidden md:flex flex-1 items-center justify-center space-x-2">
             {navLinks.map((link) => (
               <button
                 key={link.id}
@@ -143,10 +143,16 @@ export function Navbar({ activeSection = '', setActiveSection = () => {} }: Navb
                     key={link.id}
                     onClick={() => scrollToSection(link.id, link.href, link.isPage)}
                     aria-current={activeSection === link.id ? 'page' : undefined}
-                    className={`px-4 py-2 rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 ${
+                    className={`px-4 py-2 rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 font-medium ${
                       activeSection === link.id
-                        ? 'bg-red-700 text-white'
-                        : 'text-red-700 hover:bg-red-100 hover:text-red-900'
+                        ? isAdminPage || isWhiteBackgroundPage
+                          ? 'bg-amber-500 text-red-950 shadow-lg'
+                          : 'bg-amber-500 text-red-950 shadow-lg'
+                        : isAdminPage || (isWhiteBackgroundPage && !scrolled)
+                          ? 'text-white hover:bg-white/20 hover:text-amber-200 drop-shadow-lg'
+                          : scrolled 
+                            ? 'text-red-950 hover:bg-amber-50 hover:text-red-800 drop-shadow-sm' 
+                            : 'text-white hover:bg-white/20 hover:text-amber-200 drop-shadow-lg'
                     }`}
                   >
                     {link.label}
@@ -154,9 +160,13 @@ export function Navbar({ activeSection = '', setActiveSection = () => {} }: Navb
                 ))}
               </>
             )}
+          </div>
+
+          <div className="hidden md:flex items-center">
             <ProfileDropdown scrolled={scrolled} isWhiteBackgroundPage={isAdminPage || isWhiteBackgroundPage} />
           </div>
-          <div className="md:hidden flex items-center gap-2">
+
+          <div className="md:hidden flex items-center gap-2 ml-auto">
             <ProfileDropdown scrolled={scrolled} isMobile={true} isWhiteBackgroundPage={false} />
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

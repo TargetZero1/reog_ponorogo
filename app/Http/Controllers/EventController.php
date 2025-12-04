@@ -7,6 +7,7 @@ use App\Models\Place;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class EventController extends Controller
 {
@@ -58,24 +59,76 @@ class EventController extends Controller
         return redirect()->route('admin.events.index')->with('success', 'Event created successfully!');
     }
 
-    public function show($id)
+    public function show($event)
     {
-        $event = Event::findOrFail($id);
-        return Inertia::render('Events/Show', [
-            'event' => $event,
+        // Log for debugging
+        Log::info('EventController@show called', [
+            'event_param' => $event,
+            'event_type' => gettype($event),
+            'request_url' => request()->url(),
+            'request_path' => request()->path(),
+            'route_params' => request()->route()->parameters(),
+            'all_params' => request()->all(),
         ]);
+        
+        // Get event ID from route parameter - Laravel resource routes use 'event' as parameter name
+        $eventId = $event;
+        
+        // If $event is the string "id", it means route binding failed - get ID from URL segment instead
+        if ($event === 'id' || $event === 'en') {
+            $pathSegments = explode('/', trim(request()->path(), '/'));
+            // Path format: {locale}/admin/events/{id}
+            // So segments are: [locale, admin, events, id]
+            if (count($pathSegments) >= 4 && $pathSegments[1] === 'admin' && $pathSegments[2] === 'events') {
+                $eventId = $pathSegments[3];
+            } else {
+                Log::error('EventController@show: Cannot extract event ID from path', [
+                    'path' => request()->path(),
+                    'segments' => $pathSegments,
+                ]);
+                abort(404, 'Event ID not found in URL');
+            }
+        }
+        
+        // Handle both route model binding and manual ID lookup
+        try {
+            $eventModel = $eventId instanceof Event ? $eventId : Event::findOrFail($eventId);
+            return Inertia::render('Events/Show', [
+                'event' => $eventModel,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('EventController@show error', [
+                'event_param' => $event,
+                'event_id' => $eventId,
+                'error' => $e->getMessage(),
+            ]);
+            abort(404, 'Event not found: ' . $eventId);
+        }
     }
 
     // Get detailed report for a past event
     public function getEventReport($id)
     {
-        $event = Event::findOrFail($id);
+        // Get event ID from route parameter
+        $eventId = $id;
+        if ($id === 'id' || $id === 'en') {
+            $pathSegments = explode('/', trim(request()->path(), '/'));
+            // Path format: {locale}/admin/events/{id}/report
+            // So segments are: [locale, admin, events, id, report]
+            if (count($pathSegments) >= 5 && $pathSegments[1] === 'admin' && $pathSegments[2] === 'events') {
+                $eventId = $pathSegments[3];
+            } else {
+                abort(404, 'Event ID not found in URL');
+            }
+        }
+        
+        $event = Event::findOrFail($eventId);
         
         // Get all tickets for this event (check by attraction_name matching event title or source_id)
-        $tickets = \App\Models\Ticket::where(function($query) use ($event, $id) {
+        $tickets = \App\Models\Ticket::where(function($query) use ($event, $eventId) {
                 $query->where('attraction_name', $event->title)
-                      ->orWhere(function($q) use ($id) {
-                          $q->where('source_id', $id)
+                      ->orWhere(function($q) use ($eventId) {
+                          $q->where('source_id', $eventId)
                             ->where('ticket_type', 'event');
                       });
             })
@@ -119,17 +172,41 @@ class EventController extends Controller
         return response()->json($report);
     }
 
-    public function edit($id)
+    public function edit($event)
     {
-        $event = Event::findOrFail($id);
+        // Get event ID from route parameter
+        $eventId = $event;
+        if ($event === 'id' || $event === 'en') {
+            $pathSegments = explode('/', trim(request()->path(), '/'));
+            if (count($pathSegments) >= 5 && $pathSegments[1] === 'admin' && $pathSegments[2] === 'events') {
+                $eventId = $pathSegments[3];
+            } else {
+                abort(404, 'Event ID not found in URL');
+            }
+        }
+        
+        // Handle both route model binding and manual ID lookup
+        $eventModel = $eventId instanceof Event ? $eventId : Event::findOrFail($eventId);
         return Inertia::render('Events/Edit', [
-            'event' => $event,
+            'event' => $eventModel,
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $event)
     {
-        $event = Event::findOrFail($id);
+        // Get event ID from route parameter
+        $eventId = $event;
+        if ($event === 'id' || $event === 'en') {
+            $pathSegments = explode('/', trim(request()->path(), '/'));
+            if (count($pathSegments) >= 4 && $pathSegments[1] === 'admin' && $pathSegments[2] === 'events') {
+                $eventId = $pathSegments[3];
+            } else {
+                abort(404, 'Event ID not found in URL');
+            }
+        }
+        
+        // Handle both route model binding and manual ID lookup
+        $eventModel = $eventId instanceof Event ? $eventId : Event::findOrFail($eventId);
 
         $data = $request->validate([
             'title' => 'required|string|max:255',
@@ -141,24 +218,49 @@ class EventController extends Controller
             'published' => 'nullable|boolean',
         ]);
 
-        $data['slug'] = Str::slug($data['title'] ?? $event->title);
+        $data['slug'] = Str::slug($data['title'] ?? $eventModel->title);
 
-        $event->update($data);
+        $eventModel->update($data);
 
         return redirect()->route('admin.events.index')->with('success', 'Event updated successfully!');
     }
 
-    public function destroy($id)
+    public function destroy($event)
     {
-        $event = Event::findOrFail($id);
-        $event->delete();
-        return redirect()->route('admin.events.index');
+        // Get event ID from route parameter
+        $eventId = $event;
+        if ($event === 'id' || $event === 'en') {
+            $pathSegments = explode('/', trim(request()->path(), '/'));
+            if (count($pathSegments) >= 4 && $pathSegments[1] === 'admin' && $pathSegments[2] === 'events') {
+                $eventId = $pathSegments[3];
+            } else {
+                abort(404, 'Event ID not found in URL');
+            }
+        }
+        
+        // Handle both route model binding and manual ID lookup
+        $eventModel = $eventId instanceof Event ? $eventId : Event::findOrFail($eventId);
+        $eventModel->delete();
+        return redirect()->route('admin.events.index', ['locale' => request()->route('locale')]);
     }
 
     // Toggle publish status for an event
     public function togglePublish(Request $request, $id)
     {
-        $event = Event::findOrFail($id);
+        // Get event ID from route parameter
+        $eventId = $id;
+        if ($id === 'id' || $id === 'en') {
+            $pathSegments = explode('/', trim(request()->path(), '/'));
+            // Path format: {locale}/admin/events/{id}/toggle-publish
+            // So segments are: [locale, admin, events, id, toggle-publish]
+            if (count($pathSegments) >= 5 && $pathSegments[1] === 'admin' && $pathSegments[2] === 'events') {
+                $eventId = $pathSegments[3];
+            } else {
+                abort(404, 'Event ID not found in URL');
+            }
+        }
+        
+        $event = Event::findOrFail($eventId);
         $event->update(['published' => !$event->published]);
         return response()->json(['success' => true, 'published' => $event->published]);
     }

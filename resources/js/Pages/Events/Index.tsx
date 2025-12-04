@@ -1,7 +1,8 @@
-import { router } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
 import React, { useState } from 'react';
 import { Layout } from '../../Components/Layout';
-import { Trash2, Edit, Eye, Plus, Calendar, MapPin, Users, BarChart3, X, TrendingUp, DollarSign, Ticket, UserCheck, Percent } from 'lucide-react';
+import { Trash2, Edit, Eye, Plus, Calendar, MapPin, Users, BarChart3, X } from 'lucide-react';
+import { useTranslations, getLocalizedRoute } from '@/utils/translations';
 
 export default function Index(props: any) {
   const upcomingEvents = props.upcomingEvents || { data: [] };
@@ -10,20 +11,28 @@ export default function Index(props: any) {
   const [tab, setTab] = React.useState<'events' | 'places'>('events');
   const [selectedEventReport, setSelectedEventReport] = useState<any>(null);
   const [loadingReport, setLoadingReport] = useState<number | null>(null);
+  const { locale } = useTranslations();
+  const page = usePage();
+  const { csrf_token } = page.props as any;
 
   function deleteEvent(id: number) {
     if (!confirm('Yakin ingin menghapus event ini?')) return;
-    router.delete(route('admin.events.destroy', id));
+    router.delete(getLocalizedRoute('admin.events.destroy', { event: id }, locale));
   }
 
   function togglePublish(id: number, currentStatus: boolean) {
-    router.patch(route('admin.events.toggle-publish', id), {}, { preserveScroll: true });
+    router.patch(getLocalizedRoute('admin.events.toggle-publish', { id }, locale), {}, { preserveScroll: true });
   }
 
   async function loadEventReport(eventId: number) {
     setLoadingReport(eventId);
     try {
-      const response = await fetch(route('admin.events.report', eventId));
+      const eventIdNum = Number(eventId);
+      if (!eventIdNum || isNaN(eventIdNum)) {
+        alert('Invalid event ID');
+        return;
+      }
+      const response = await fetch(getLocalizedRoute('admin.events.report', { id: eventIdNum }, locale));
       const data = await response.json();
       setSelectedEventReport(data);
     } catch (error) {
@@ -34,6 +43,13 @@ export default function Index(props: any) {
   }
 
   function EventCard({ e, isPast = false }: { e: any; isPast?: boolean }) {
+    // Ensure ID is valid
+    const eventId = Number(e.id);
+    if (!eventId || isNaN(eventId)) {
+      console.error('Invalid event ID:', e.id, e);
+      return null;
+    }
+
     return (
       <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition overflow-hidden border-l-4 border-red-600 group">
         {/* Header */}
@@ -103,11 +119,11 @@ export default function Index(props: any) {
           {isPast ? (
             <>
               <button
-                onClick={() => loadEventReport(e.id)}
-                disabled={loadingReport === e.id}
+                onClick={() => loadEventReport(eventId)}
+                disabled={loadingReport === eventId}
                 className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded font-semibold text-sm hover:from-blue-600 hover:to-blue-700 transition disabled:opacity-50"
               >
-                {loadingReport === e.id ? (
+                {loadingReport === eventId ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                     Loading...
@@ -121,21 +137,21 @@ export default function Index(props: any) {
               </button>
               <div className="flex gap-2">
                 <a
-                  href={route('admin.events.show', e.id)}
+                  href={getLocalizedRoute('admin.events.show', { event: eventId }, locale)}
                   className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-blue-50 text-blue-700 rounded font-semibold text-sm hover:bg-blue-100 transition"
                 >
                   <Eye size={16} />
                   Lihat
                 </a>
                 <a
-                  href={route('admin.events.edit', e.id)}
+                  href={getLocalizedRoute('admin.events.edit', { event: eventId }, locale)}
                   className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-green-50 text-green-700 rounded font-semibold text-sm hover:bg-green-100 transition"
                 >
                   <Edit size={16} />
                   Edit
                 </a>
                 <button
-                  onClick={() => deleteEvent(e.id)}
+                  onClick={() => deleteEvent(eventId)}
                   className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-red-50 text-red-700 rounded font-semibold text-sm hover:bg-red-100 transition"
                 >
                   <Trash2 size={16} />
@@ -147,21 +163,21 @@ export default function Index(props: any) {
             <>
               <div className="flex gap-2">
                 <a
-                  href={route('admin.events.show', e.id)}
+                  href={getLocalizedRoute('admin.events.show', { event: eventId }, locale)}
                   className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-blue-50 text-blue-700 rounded font-semibold text-sm hover:bg-blue-100 transition"
                 >
                   <Eye size={16} />
                   Lihat
                 </a>
                 <a
-                  href={route('admin.events.edit', e.id)}
+                  href={getLocalizedRoute('admin.events.edit', { event: eventId }, locale)}
                   className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-green-50 text-green-700 rounded font-semibold text-sm hover:bg-green-100 transition"
                 >
                   <Edit size={16} />
                   Edit
                 </a>
                 <button
-                  onClick={() => deleteEvent(e.id)}
+                  onClick={() => deleteEvent(eventId)}
                   className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-red-50 text-red-700 rounded font-semibold text-sm hover:bg-red-100 transition"
                 >
                   <Trash2 size={16} />
@@ -169,7 +185,7 @@ export default function Index(props: any) {
                 </button>
               </div>
               <button
-                onClick={() => togglePublish(e.id, e.published)}
+                onClick={() => togglePublish(eventId, e.published)}
                 className={`w-full flex items-center justify-center gap-2 px-3 py-2 rounded font-semibold text-sm transition ${
                   e.published
                     ? 'bg-yellow-50 text-yellow-700 hover:bg-yellow-100'
@@ -180,7 +196,7 @@ export default function Index(props: any) {
               </button>
               {e.published && e.slug && (
                 <a
-                  href={route('events.show', e.slug)}
+                  href={getLocalizedRoute('events.show', { slug: e.slug }, locale)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-purple-50 text-purple-700 rounded font-semibold text-sm hover:bg-purple-100 transition"
@@ -203,7 +219,7 @@ export default function Index(props: any) {
         <div className="max-w-7xl mx-auto px-4 pt-8 pb-6">
           <div className="bg-gradient-to-r from-[#6b0000] via-[#7b0b0b] to-[#8b0b0b] text-white rounded-xl shadow-lg py-8 px-6">
             <h1 className="text-4xl font-bold mb-2">Kelola Pertunjukan Reog</h1>
-            <p className="text-red-100">Manage all events and performances for Reog Ponorogo</p>
+                <p className="text-white">Manage all events and performances for Reog Ponorogo</p>
           </div>
         </div>
 
@@ -217,7 +233,7 @@ export default function Index(props: any) {
             <div className="flex items-center gap-3">
               {tab === 'events' && (
                 <a
-                  href={route('events.index')}
+                  href={getLocalizedRoute('events.index', {}, locale)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg font-semibold hover:bg-blue-100 transition border border-blue-200"
@@ -228,7 +244,7 @@ export default function Index(props: any) {
               )}
               {tab === 'events' ? (
                 <a
-                  href={route('admin.events.create')}
+                  href={getLocalizedRoute('admin.events.create', {}, locale)}
                   className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-red-950 rounded-lg font-semibold hover:from-amber-400 hover:to-amber-500 transition shadow-lg"
                 >
                   <Plus size={20} />
@@ -236,7 +252,7 @@ export default function Index(props: any) {
                 </a>
               ) : (
                 <a
-                  href={route('admin.places.create')}
+                  href={getLocalizedRoute('admin.places.create', {}, locale)}
                   className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-red-950 rounded-lg font-semibold hover:from-amber-400 hover:to-amber-500 transition shadow-lg"
                 >
                   <Plus size={20} />
@@ -250,7 +266,7 @@ export default function Index(props: any) {
           {tab === 'events' && (
             <div className="mb-6 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
               <p className="text-sm text-blue-800">
-                <strong>Info:</strong> Hanya event yang dipublikasikan dan belum lewat tanggalnya yang akan muncul di halaman publik (<a href={route('events.index')} target="_blank" rel="noopener noreferrer" className="underline font-semibold">/events</a>). 
+                <strong>Info:</strong> Hanya event yang dipublikasikan dan belum lewat tanggalnya yang akan muncul di halaman publik (<a href={getLocalizedRoute('events.index', {}, locale)} target="_blank" rel="noopener noreferrer" className="underline font-semibold">/events</a>). 
                 Event yang sudah lewat akan otomatis masuk ke Past Events.
               </p>
             </div>
@@ -271,7 +287,7 @@ export default function Index(props: any) {
                     <div className="text-gray-400 mb-4 text-6xl">📅</div>
                     <p className="text-gray-600 text-lg mb-4">Belum ada upcoming event</p>
                     <a
-                      href={route('admin.events.create')}
+                      href={getLocalizedRoute('admin.events.create', {}, locale)}
                       className="inline-block px-6 py-2 bg-amber-500 text-red-950 rounded-lg font-semibold hover:bg-amber-600"
                     >
                       Buat Event Baru
@@ -314,7 +330,7 @@ export default function Index(props: any) {
                 <div className="text-gray-400 mb-4 text-6xl">📍</div>
                 <p className="text-gray-600 text-lg mb-4">Belum ada tempat wisata</p>
                 <a
-                  href={route('admin.places.create')}
+                  href={getLocalizedRoute('admin.places.create', {}, locale)}
                   className="inline-block px-6 py-2 bg-amber-500 text-red-950 rounded-lg font-semibold hover:bg-amber-600"
                 >
                   Buat Place Pertama
@@ -344,11 +360,27 @@ export default function Index(props: any) {
                     </div>
                     <div className="bg-gray-50 px-4 py-3 space-y-2 border-t border-gray-100">
                       <div className="flex gap-2">
-                        <a href={route('admin.places.edit', p.id)} className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-green-50 text-green-700 rounded font-semibold text-sm hover:bg-green-100 transition"><Edit size={16} />Edit</a>
-                        <button onClick={() => { if (confirm('Yakin ingin menghapus?')) { router.delete(route('admin.places.destroy', p.id)); } }} className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-red-50 text-red-700 rounded font-semibold text-sm hover:bg-red-100 transition"><Trash2 size={16} />Hapus</button>
+                        <a
+                          href={getLocalizedRoute('admin.places.edit', { place: p.id }, locale)}
+                          className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-green-50 text-green-700 rounded font-semibold text-sm hover:bg-green-100 transition"
+                        >
+                          <Edit size={16} />
+                          Edit
+                        </a>
+                        <button
+                          onClick={() => {
+                            if (confirm('Yakin ingin menghapus?')) {
+                              router.delete(getLocalizedRoute('admin.places.destroy', { place: p.id }, locale));
+                            }
+                          }}
+                          className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-red-50 text-red-700 rounded font-semibold text-sm hover:bg-red-100 transition"
+                        >
+                          <Trash2 size={16} />
+                          Hapus
+                        </button>
                       </div>
                       <button
-                        onClick={() => router.patch(route('admin.places.toggle-publish', p.id), {}, { preserveScroll: true })}
+                        onClick={() => router.patch(getLocalizedRoute('admin.places.toggle-publish', { id: p.id }, locale), {}, { preserveScroll: true })}
                         className={`w-full flex items-center justify-center gap-2 px-3 py-2 rounded font-semibold text-sm transition ${
                           p.published
                             ? 'bg-yellow-50 text-yellow-700 hover:bg-yellow-100'
@@ -376,19 +408,8 @@ export default function Index(props: any) {
             className="bg-white rounded-3xl max-w-5xl w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-[slideUp_0.3s_ease-out]"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-red-950 to-red-900 text-white p-6 rounded-t-3xl flex items-center justify-between z-10">
-              <div>
-                <h2 className="text-2xl font-bold mb-1">{selectedEventReport.event.title}</h2>
-                <p className="text-red-100 text-sm">
-                  {new Date(selectedEventReport.event.date).toLocaleDateString('id-ID', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
-                </p>
-              </div>
+            <div className="sticky top-0 bg-gradient-to-r from-red-600 to-amber-500 text-white p-6 flex items-center justify-between rounded-t-3xl">
+              <h2 className="text-2xl font-bold">Event Report: {selectedEventReport.event?.title}</h2>
               <button
                 onClick={() => setSelectedEventReport(null)}
                 className="p-2 hover:bg-white/20 rounded-lg transition"
@@ -396,108 +417,54 @@ export default function Index(props: any) {
                 <X size={24} />
               </button>
             </div>
-
-            {/* Report Content */}
-            <div className="p-6">
-              {/* Key Metrics */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 border border-blue-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Ticket size={20} className="text-blue-600" />
-                    <span className="text-sm font-semibold text-blue-800">Tickets Sold</span>
-                  </div>
-                  <p className="text-2xl font-bold text-blue-900">{selectedEventReport.total_tickets_sold}</p>
+            <div className="p-6 space-y-6">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl">
+                  <p className="text-blue-600 text-sm font-semibold">Total Tickets Sold</p>
+                  <p className="text-3xl font-bold text-blue-900">{selectedEventReport.total_tickets_sold || 0}</p>
                 </div>
-                <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 border border-green-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <DollarSign size={20} className="text-green-600" />
-                    <span className="text-sm font-semibold text-green-800">Total Revenue</span>
-                  </div>
-                  <p className="text-2xl font-bold text-green-900">
-                    Rp {Number(selectedEventReport.total_revenue).toLocaleString('id-ID')}
-                  </p>
+                <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl">
+                  <p className="text-green-600 text-sm font-semibold">Total Revenue</p>
+                  <p className="text-3xl font-bold text-green-900">Rp {Number(selectedEventReport.total_revenue || 0).toLocaleString('id-ID')}</p>
                 </div>
-                <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 border border-purple-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <UserCheck size={20} className="text-purple-600" />
-                    <span className="text-sm font-semibold text-purple-800">Unique Buyers</span>
-                  </div>
-                  <p className="text-2xl font-bold text-purple-900">{selectedEventReport.unique_buyers}</p>
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-xl">
+                  <p className="text-purple-600 text-sm font-semibold">Total Orders</p>
+                  <p className="text-3xl font-bold text-purple-900">{selectedEventReport.total_orders || 0}</p>
                 </div>
-                <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-4 border border-amber-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Percent size={20} className="text-amber-600" />
-                    <span className="text-sm font-semibold text-amber-800">Capacity</span>
-                  </div>
-                  <p className="text-2xl font-bold text-amber-900">
-                    {selectedEventReport.capacity_utilization.toFixed(1)}%
-                  </p>
+                <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-4 rounded-xl">
+                  <p className="text-amber-600 text-sm font-semibold">Unique Buyers</p>
+                  <p className="text-3xl font-bold text-amber-900">{selectedEventReport.unique_buyers || 0}</p>
                 </div>
               </div>
-
-              {/* Payment Status Breakdown */}
-              <div className="mb-8">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Payment Status Breakdown</h3>
-                <div className="grid md:grid-cols-2 gap-4">
-                  {Object.entries(selectedEventReport.payment_status_breakdown).map(([status, count]: [string, any]) => (
-                    <div key={status} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-semibold text-gray-700 capitalize">{status}</span>
-                        <span className="text-lg font-bold text-gray-900">{count} tickets</span>
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        Revenue: Rp {Number(selectedEventReport.revenue_by_status[status] || 0).toLocaleString('id-ID')}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Tickets List */}
-              <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Detail Orders ({selectedEventReport.total_orders})</h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead className="bg-gray-100 border-b-2 border-gray-200">
-                      <tr>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Order ID</th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Customer</th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Email</th>
-                        <th className="text-center py-3 px-4 font-semibold text-gray-700">Qty</th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Amount</th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Status</th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-700">Date</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {selectedEventReport.tickets.map((ticket: any) => (
-                        <tr key={ticket.id} className="border-b border-gray-100 hover:bg-gray-50">
-                          <td className="py-3 px-4 font-medium text-gray-900">#{ticket.id}</td>
-                          <td className="py-3 px-4 text-gray-700">{ticket.user_name}</td>
-                          <td className="py-3 px-4 text-gray-600 text-xs">{ticket.user_email}</td>
-                          <td className="py-3 px-4 text-center font-semibold">{ticket.quantity}</td>
-                          <td className="py-3 px-4 font-semibold text-green-600">
-                            Rp {Number(ticket.total_price).toLocaleString('id-ID')}
-                          </td>
-                          <td className="py-3 px-4">
-                            <span className={`inline-block px-2 py-1 rounded text-xs font-semibold ${
-                              ticket.payment_status === 'completed' ? 'bg-green-100 text-green-700' :
-                              ticket.payment_status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                              ticket.payment_status === 'cancelled' ? 'bg-red-100 text-red-700' :
-                              'bg-gray-100 text-gray-700'
-                            }`}>
-                              {ticket.payment_status}
-                            </span>
-                          </td>
-                          <td className="py-3 px-4 text-gray-600 text-xs">
-                            {new Date(ticket.created_at).toLocaleDateString('id-ID')}
-                          </td>
+              {selectedEventReport.tickets && selectedEventReport.tickets.length > 0 && (
+                <div>
+                  <h3 className="text-xl font-bold mb-4">Ticket Details</h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-gray-100">
+                        <tr>
+                          <th className="px-4 py-2 text-left">Customer</th>
+                          <th className="px-4 py-2 text-left">Email</th>
+                          <th className="px-4 py-2 text-left">Quantity</th>
+                          <th className="px-4 py-2 text-left">Total Price</th>
+                          <th className="px-4 py-2 text-left">Status</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {selectedEventReport.tickets.map((ticket: any, idx: number) => (
+                          <tr key={idx} className="border-b">
+                            <td className="px-4 py-2">{ticket.user_name}</td>
+                            <td className="px-4 py-2">{ticket.user_email}</td>
+                            <td className="px-4 py-2">{ticket.quantity}</td>
+                            <td className="px-4 py-2">Rp {Number(ticket.total_price).toLocaleString('id-ID')}</td>
+                            <td className="px-4 py-2">{ticket.payment_status}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

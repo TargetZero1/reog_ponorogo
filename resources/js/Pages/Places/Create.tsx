@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { usePage, router } from '@inertiajs/react';
 import { Layout } from '../../Components/Layout';
 import { Plus, X, Save, ArrowLeft } from 'lucide-react';
+import { useTranslations, getLocalizedRoute } from '@/utils/translations';
 
 export default function CreatePlace() {
   const page = usePage();
   const { csrf_token } = page.props as any;
+  const { locale } = useTranslations();
   const [formData, setFormData] = useState({
     name: '',
     category: '',
@@ -24,9 +26,9 @@ export default function CreatePlace() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.post(route('admin.places.store'), formData, {
+    router.post(getLocalizedRoute('admin.places.store', {}, locale), formData, {
       onSuccess: () => {
-        router.visit(route('admin.places.index'));
+        router.visit(getLocalizedRoute('admin.places.index', {}, locale));
       },
     });
   };
@@ -52,7 +54,7 @@ export default function CreatePlace() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-6 flex items-center gap-4">
             <a
-              href={route('admin.places.index')}
+              href={getLocalizedRoute('admin.places.index', {}, locale)}
               className="p-2 hover:bg-white rounded-lg transition"
             >
               <ArrowLeft size={24} className="text-gray-600" />
@@ -292,7 +294,7 @@ export default function CreatePlace() {
             {/* Actions */}
             <div className="flex items-center justify-end gap-4 pt-6 border-t">
               <a
-                href={route('admin.places.index')}
+                href={getLocalizedRoute('admin.places.index', {}, locale)}
                 className="px-6 py-2 text-gray-600 hover:text-gray-800 transition"
               >
                 Cancel

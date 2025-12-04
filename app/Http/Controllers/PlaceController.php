@@ -55,17 +55,41 @@ class PlaceController extends Controller
         return redirect()->route('admin.places.index')->with('success', 'Place created');
     }
 
-    public function edit($id)
+    public function edit($place)
     {
-        $place = Place::findOrFail($id);
+        // Get place ID from route parameter
+        $placeId = $place;
+        if ($place === 'id' || $place === 'en') {
+            $pathSegments = explode('/', trim(request()->path(), '/'));
+            if (count($pathSegments) >= 5 && $pathSegments[1] === 'admin' && $pathSegments[2] === 'places') {
+                $placeId = $pathSegments[3];
+            } else {
+                abort(404, 'Place ID not found in URL');
+            }
+        }
+        
+        // Handle both route model binding and manual ID lookup
+        $placeModel = $placeId instanceof Place ? $placeId : Place::findOrFail($placeId);
         return Inertia::render('Places/Edit', [
-            'place' => $place,
+            'place' => $placeModel,
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $place)
     {
-        $place = Place::findOrFail($id);
+        // Get place ID from route parameter
+        $placeId = $place;
+        if ($place === 'id' || $place === 'en') {
+            $pathSegments = explode('/', trim(request()->path(), '/'));
+            if (count($pathSegments) >= 4 && $pathSegments[1] === 'admin' && $pathSegments[2] === 'places') {
+                $placeId = $pathSegments[3];
+            } else {
+                abort(404, 'Place ID not found in URL');
+            }
+        }
+        
+        // Handle both route model binding and manual ID lookup
+        $placeModel = $placeId instanceof Place ? $placeId : Place::findOrFail($placeId);
 
         $data = $request->validate([
             'name' => 'required|string|max:255',
@@ -92,22 +116,47 @@ class PlaceController extends Controller
             }
         }
 
-        $place->update($data);
+        $placeModel->update($data);
 
         return redirect()->route('admin.places.index')->with('success', 'Place updated');
     }
 
-    public function destroy($id)
+    public function destroy($place)
     {
-        $place = Place::findOrFail($id);
-        $place->delete();
-        return redirect()->route('admin.places.index')->with('success', 'Place deleted');
+        // Get place ID from route parameter
+        $placeId = $place;
+        if ($place === 'id' || $place === 'en') {
+            $pathSegments = explode('/', trim(request()->path(), '/'));
+            if (count($pathSegments) >= 4 && $pathSegments[1] === 'admin' && $pathSegments[2] === 'places') {
+                $placeId = $pathSegments[3];
+            } else {
+                abort(404, 'Place ID not found in URL');
+            }
+        }
+        
+        // Handle both route model binding and manual ID lookup
+        $placeModel = $placeId instanceof Place ? $placeId : Place::findOrFail($placeId);
+        $placeModel->delete();
+        return redirect()->route('admin.places.index', ['locale' => request()->route('locale')])->with('success', 'Place deleted');
     }
 
     // Toggle publish status for a place
     public function togglePublish(Request $request, $id)
     {
-        $place = Place::findOrFail($id);
+        // Get place ID from route parameter
+        $placeId = $id;
+        if ($id === 'id' || $id === 'en') {
+            $pathSegments = explode('/', trim(request()->path(), '/'));
+            // Path format: {locale}/admin/places/{id}/toggle-publish
+            // So segments are: [locale, admin, places, id, toggle-publish]
+            if (count($pathSegments) >= 5 && $pathSegments[1] === 'admin' && $pathSegments[2] === 'places') {
+                $placeId = $pathSegments[3];
+            } else {
+                abort(404, 'Place ID not found in URL');
+            }
+        }
+        
+        $place = Place::findOrFail($placeId);
         $place->update(['published' => !$place->published]);
         return response()->json(['success' => true, 'published' => $place->published]);
     }

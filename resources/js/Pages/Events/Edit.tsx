@@ -1,8 +1,10 @@
 import { useForm } from '@inertiajs/react';
 import { Layout } from '../../Components/Layout';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Eye } from 'lucide-react';
+import { useTranslations, getLocalizedRoute } from '@/utils/translations';
 
 export default function Edit(props: any) {
+  const { locale } = useTranslations();
   const event = props.event || {};
   const { data, setData, put, errors, processing } = useForm({
     title: event.title || '',
@@ -16,7 +18,7 @@ export default function Edit(props: any) {
 
   function submit(e: any) {
     e.preventDefault();
-    put(route('admin.events.update', event.id));
+    put(getLocalizedRoute('admin.events.update', { event: event.id }, locale));
   }
 
   return (
@@ -25,14 +27,23 @@ export default function Edit(props: any) {
         {/* Header */}
         <div className="max-w-4xl mx-auto px-4 pt-8 pb-6">
           <div className="bg-gradient-to-r from-[#6b0000] via-[#7b0b0b] to-[#8b0b0b] text-white rounded-xl shadow-lg py-8 px-6">
-            <div className="flex items-center gap-4">
-              <a href={route('admin.events.index')} className="p-2 hover:bg-white/20 rounded-lg transition">
-                <ArrowLeft size={24} />
-              </a>
-              <div>
-                <h1 className="text-3xl font-bold">Edit Event</h1>
-                <p className="text-red-100">Ubah informasi pertunjukan Reog</p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <a href={getLocalizedRoute('admin.events.index', {}, locale)} className="p-2 hover:bg-white/20 rounded-lg transition">
+                  <ArrowLeft size={24} />
+                </a>
+                <div>
+                  <h1 className="text-3xl font-bold">Edit Event</h1>
+                  <p className="text-red-100">Ubah informasi pertunjukan Reog</p>
+                </div>
               </div>
+              <a
+                href={getLocalizedRoute('admin.events.show', { event: event.id }, locale)}
+                className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition backdrop-blur-sm"
+              >
+                <Eye size={18} />
+                View Event
+              </a>
             </div>
           </div>
         </div>
@@ -144,7 +155,7 @@ export default function Edit(props: any) {
                 {processing ? 'Menyimpan...' : 'Simpan Perubahan'}
               </button>
               <a
-                href={route('admin.events.index')}
+                href={getLocalizedRoute('admin.events.index', {}, locale)}
                 className="flex-1 px-6 py-3 bg-gray-200 text-gray-800 rounded-lg font-bold hover:bg-gray-300 transition text-center"
               >
                 Batal

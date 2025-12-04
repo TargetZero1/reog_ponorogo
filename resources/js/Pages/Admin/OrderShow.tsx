@@ -1,6 +1,7 @@
-import React from 'react';
-import { usePage } from '@inertiajs/react';
+import React, { useState } from 'react';
+import { usePage, router, Link } from '@inertiajs/react';
 import { Layout } from '../../Components/Layout';
+import { useTranslations, getLocalizedRoute } from '@/utils/translations';
 
 interface OrderShowProps {
   order: any;
@@ -9,6 +10,39 @@ interface OrderShowProps {
 export default function OrderShow({ order }: OrderShowProps) {
   const page = usePage();
   const { csrf_token } = page.props as any;
+  const { locale } = useTranslations();
+
+  const [updatingStatus, setUpdatingStatus] = useState(false);
+  const [currentStatus, setCurrentStatus] = useState(order.payment_status);
+
+  async function updateStatus(newStatus: string) {
+    if (updatingStatus) return;
+    if (!confirm(`Update order status to "${newStatus}"?`)) return;
+
+    setUpdatingStatus(true);
+    try {
+      const response = await fetch(getLocalizedRoute('admin.orders.update_status', { id: order.id }, locale), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': csrf_token,
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (response.ok) {
+        setCurrentStatus(newStatus);
+        router.reload({ only: ['order'] });
+      } else {
+        alert('Failed to update status.');
+      }
+    } catch (e) {
+      alert('Failed to update status.');
+    } finally {
+      setUpdatingStatus(false);
+    }
+  }
 
   return (
     <Layout>
@@ -41,18 +75,26 @@ export default function OrderShow({ order }: OrderShowProps) {
         </div>
 
         <div className="mt-6 flex items-center space-x-3">
-          <form method="POST" action={`/admin/orders/${order.id}/status`}>
-            <input type="hidden" name="_token" value={csrf_token} />
-            <select name="status" defaultValue={order.payment_status} className="border rounded px-3 py-2 mr-2">
-              <option value="pending">pending</option>
-              <option value="completed">completed</option>
-              <option value="cancelled">cancelled</option>
-              <option value="refunded">refunded</option>
-            </select>
-            <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">Update Status</button>
-          </form>
+          <select 
+            value={currentStatus}
+            onChange={(e) => updateStatus(e.target.value)}
+            disabled={updatingStatus}
+            className="border rounded px-3 py-2 mr-2 disabled:opacity-50"
+          >
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="refunded">Refunded</option>
+          </select>
+          <button 
+            onClick={() => updateStatus(currentStatus)} 
+            disabled={updatingStatus}
+            className="bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
+          >
+            {updatingStatus ? 'Updating...' : 'Update Status'}
+          </button>
 
-          <a href={route('admin.orders')} className="text-sm text-gray-600">Back to orders</a>
+          <Link href={getLocalizedRoute('admin.orders', {}, locale)} className="text-sm text-gray-600 hover:text-gray-800">← Back to orders</Link>
         </div>
         </div>
       </div>

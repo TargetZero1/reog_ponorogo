@@ -12,7 +12,7 @@ return [
         'register' => 'Register',
         'profile' => 'Profile',
         'logout' => 'Logout',
-        'admin_label' => 'Admin',
+        'admin_label' => 'ADMIN',
         'events' => 'Events',
         'dashboard' => 'Dashboard',
         'analytics' => 'Analytics',
@@ -155,6 +155,34 @@ return [
         'share' => 'Share',
         'copy_link' => 'Copy Link',
         'link_copied' => 'Copied!',
+    ],
+
+    'footer' => [
+        'tagline' => 'Indonesian Cultural Heritage',
+        'description' => 'Official information and promotion portal for Reog Ponorogo. Preserving and introducing Indonesian traditional arts to the world.',
+        'quick_links' => [
+            'title' => 'Quick Navigation',
+            'home' => 'Home',
+            'about_reog' => 'About Reog',
+            'types' => 'Reog Characters',
+            'culture' => 'Culture & History',
+            'places' => 'Tourist Attractions',
+        ],
+        'contact' => [
+            'title' => 'Contact Us',
+        ],
+        'address' => 'Jl. Raden Panji No 12, Ponorogo, East Java',
+        'inquiry' => [
+            'title' => 'Booking & Inquiries',
+            'description' => 'Want to watch a Reog performance or have questions? Contact us!',
+            'name_placeholder' => 'Full Name',
+            'email_placeholder' => 'Email',
+            'message_placeholder' => 'Your Message',
+            'submit' => 'Send Message',
+        ],
+        'copyright' => '© 2024 Reog Ponorogo. Developed for Final Project. All rights reserved.',
+        'privacy_policy' => 'Privacy Policy',
+        'terms' => 'Terms & Conditions',
     ],
 ];
 

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, usePage } from '@inertiajs/react';
+import React, { useState, useRef } from 'react';
+import { Link, usePage, router } from '@inertiajs/react';
 import { UserCircle, LogOut, BarChart3, Users, ShoppingCart, FileText, Home, MapPin } from 'lucide-react';
 import { useTranslations, getLocalizedRoute } from '@/utils/translations';
 
@@ -20,6 +20,33 @@ export function ProfileDropdown({ scrolled, isMobile = false, isWhiteBackgroundP
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
+  };
+
+  const handleLogout = (e?: React.MouseEvent) => {
+    e?.preventDefault();
+    setIsOpen(false);
+    
+    // Create a hidden form and submit it to ensure proper session invalidation
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/logout';
+    form.style.display = 'none';
+    
+    const tokenInput = document.createElement('input');
+    tokenInput.type = 'hidden';
+    tokenInput.name = '_token';
+    tokenInput.value = csrf_token;
+    form.appendChild(tokenInput);
+    
+    // Add method spoofing for POST
+    const methodInput = document.createElement('input');
+    methodInput.type = 'hidden';
+    methodInput.name = '_method';
+    methodInput.value = 'POST';
+    form.appendChild(methodInput);
+    
+    document.body.appendChild(form);
+    form.submit();
   };
 
   const dropdownClasses = `absolute right-0 mt-2 w-56 rounded-md shadow-lg ${useWhiteTheme ? 'bg-white ring-1 ring-black ring-opacity-5' : 'bg-red-900'} focus:outline-none`;
@@ -54,7 +81,6 @@ export function ProfileDropdown({ scrolled, isMobile = false, isWhiteBackgroundP
               <>
                 <div className={`px-4 py-3 text-xs ${useWhiteTheme ? 'text-gray-500 border-b border-gray-200' : 'text-amber-100 border-b border-red-700'}`}>
                   {user.name || user.email}
-                  {isAdmin && <span className="ml-2 inline-block bg-red-600 text-white px-2 py-0.5 rounded text-xs">ADMIN</span>}
                 </div>
 
                 {/* User Section */}
@@ -162,15 +188,10 @@ export function ProfileDropdown({ scrolled, isMobile = false, isWhiteBackgroundP
                   </>
                 )}
 
-                <form
-                  method="POST"
-                  action="/logout"
-                  onSubmit={() => setIsOpen(false)}
-                  className={`${useWhiteTheme ? 'border-gray-200' : 'border-red-700'} border-t`}
-                >
-                  <input type="hidden" name="_token" value={csrf_token} />
+                <div className={`${useWhiteTheme ? 'border-gray-200' : 'border-red-700'} border-t`}>
                   <button
-                    type="submit"
+                    type="button"
+                    onClick={handleLogout}
                     className={`${linkClasses} w-full text-left flex items-center gap-2`}
                     role="menuitem"
                     tabIndex={-1}
@@ -179,7 +200,7 @@ export function ProfileDropdown({ scrolled, isMobile = false, isWhiteBackgroundP
                     <LogOut size={16} />
                     {t('nav.logout')}
                   </button>
-                </form>
+                </div>
               </>
             ) : (
               <>

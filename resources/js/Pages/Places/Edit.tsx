@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { usePage, router } from '@inertiajs/react';
 import { Layout } from '../../Components/Layout';
 import { Plus, X, Save, ArrowLeft, Eye } from 'lucide-react';
+import { useTranslations, getLocalizedRoute } from '@/utils/translations';
 
 export default function EditPlace({ place }: { place: any }) {
   const page = usePage();
   const { csrf_token } = page.props as any;
+  const { locale } = useTranslations();
   
   const [formData, setFormData] = useState({
     name: place.name || '',
@@ -25,9 +27,9 @@ export default function EditPlace({ place }: { place: any }) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.patch(route('admin.places.update', place.id), formData, {
+    router.patch(getLocalizedRoute('admin.places.update', { place: place.id }, locale), formData, {
       onSuccess: () => {
-        router.visit(route('admin.places.index'));
+        router.visit(getLocalizedRoute('admin.places.index', {}, locale));
       },
     });
   };
@@ -49,7 +51,7 @@ export default function EditPlace({ place }: { place: any }) {
 
   const viewOnPublicSite = () => {
     if (place.published) {
-      window.open(route('places.index'), '_blank');
+      window.open(getLocalizedRoute('places.index', {}, locale), '_blank');
     } else {
       alert('Place must be published to view on public site');
     }
@@ -61,7 +63,7 @@ export default function EditPlace({ place }: { place: any }) {
         <div className="max-w-4xl mx-auto">
           <div className="mb-6 flex items-center gap-4">
             <a
-              href={route('admin.places.index')}
+              href={getLocalizedRoute('admin.places.index', {}, locale)}
               className="p-2 hover:bg-white rounded-lg transition"
             >
               <ArrowLeft size={24} className="text-gray-600" />
@@ -310,7 +312,7 @@ export default function EditPlace({ place }: { place: any }) {
             {/* Actions */}
             <div className="flex items-center justify-end gap-4 pt-6 border-t">
               <a
-                href={route('admin.places.index')}
+                href={getLocalizedRoute('admin.places.index', {}, locale)}
                 className="px-6 py-2 text-gray-600 hover:text-gray-800 transition"
               >
                 Cancel

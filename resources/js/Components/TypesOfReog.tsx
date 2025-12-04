@@ -203,7 +203,9 @@ export function TypesOfReog() {
                   alt={type.name}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
-                <div className={bsolute inset-0 bg-gradient-to-t  opacity-60 group-hover:opacity-40 transition-opacity duration-500}></div>
+                <div
+                  className={`absolute inset-0 bg-gradient-to-t ${type.color} opacity-60 group-hover:opacity-40 transition-opacity duration-500`}
+                ></div>
                 
                 {/* Role Badge */}
                 <div className="absolute top-4 sm:top-6 right-4 sm:right-6 bg-white/95 backdrop-blur-sm px-3 sm:px-4 py-1 sm:py-2 rounded-full shadow-lg transform group-hover:scale-110 transition-transform text-xs sm:text-sm">
@@ -211,7 +213,9 @@ export function TypesOfReog() {
                 </div>
 
                 {/* Decorative element */}
-                <div className={bsolute -bottom-6 -left-6 w-24 h-24 bg-gradient-to-br  rounded-full blur-2xl opacity-50 group-hover:opacity-70 transition-opacity}></div>
+                <div
+                  className={`absolute -bottom-6 -left-6 w-24 h-24 bg-gradient-to-br ${type.color} rounded-full blur-2xl opacity-50 group-hover:opacity-70 transition-opacity`}
+                ></div>
               </div>
 
               {/* Content */}
@@ -224,7 +228,11 @@ export function TypesOfReog() {
                 </p>
 
                 {/* Expandable details */}
-                <div className={overflow-hidden transition-all duration-500 }>
+                <div
+                  className={`overflow-hidden transition-all duration-500 ${
+                    expandedCard === index ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
+                  }`}
+                >
                   <div className="pt-4 border-t border-neutral-200">
                     <p className="text-neutral-600 text-sm leading-relaxed italic">
                       {type.details}
@@ -233,7 +241,11 @@ export function TypesOfReog() {
                 </div>
                 
                 {/* Decorative line */}
-                <div className={h-1 bg-gradient-to-r  mt-6 rounded-full transition-all duration-500 }></div>
+                <div
+                  className={`h-1 bg-gradient-to-r ${type.color} mt-6 rounded-full transition-all duration-500 ${
+                    expandedCard === index ? 'w-full' : 'w-16'
+                  }`}
+                ></div>
               </div>
 
               {/* Hover indicator */}
@@ -243,7 +255,9 @@ export function TypesOfReog() {
             </div>
 
             {/* Glow effect */}
-            <div className={bsolute inset-0 bg-gradient-to-br  rounded-3xl blur-2xl opacity-0 group-hover:opacity-20 transition-opacity -z-10}></div>
+            <div
+              className={`absolute inset-0 bg-gradient-to-br ${type.color} rounded-3xl blur-2xl opacity-0 group-hover:opacity-20 transition-opacity -z-10`}
+            ></div>
           </div>
         ))}
       </div>

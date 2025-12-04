@@ -50,13 +50,17 @@ class BookingController extends Controller
 
         Auth::login($user);
         $request->session()->regenerate();
+        
+        // Get locale from route or session
+        $locale = $request->route('locale') ?? session('locale', 'id');
+        session(['locale' => $locale]);
 
         // After register, continue to checkout if attraction is present
         if (!empty($data['attraction'])) {
-            return redirect()->to('/pesan-ticket/checkout?attraction=' . urlencode($data['attraction']))->with('success', 'Pendaftaran berhasil! Silakan lanjutkan pemesanan.');
+            return redirect()->route('pesan.checkout', ['locale' => $locale, 'attraction' => $data['attraction']])->with('success', 'Pendaftaran berhasil! Silakan lanjutkan pemesanan.');
         }
 
-        return redirect()->to('/')->with('success', 'Pendaftaran berhasil!');
+        return redirect()->route('home', ['locale' => $locale])->with('success', 'Pendaftaran berhasil!');
     }
 
     public function login(Request $request)
@@ -68,14 +72,19 @@ class BookingController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            
+            // Get locale from route or session
+            $locale = $request->route('locale') ?? session('locale', 'id');
+            session(['locale' => $locale]);
 
             // Check if there's an attraction parameter to redirect to checkout
             $attraction = $request->query('attraction');
             if ($attraction) {
-                return redirect()->to('/pesan-ticket/checkout?attraction=' . urlencode($attraction))->with('success', 'Login berhasil!');
+                return redirect()->route('pesan.checkout', ['locale' => $locale, 'attraction' => $attraction])->with('success', 'Login berhasil!');
             }
 
-            return redirect()->intended('/')->with('success', 'Login berhasil!');
+            // Redirect to home with locale
+            return redirect()->route('home', ['locale' => $locale])->with('success', 'Login berhasil!');
         }
 
         return back()->withErrors(['email' => 'Email atau password salah'])->onlyInput('email');
@@ -407,7 +416,20 @@ class BookingController extends Controller
     // Show single order
     public function adminOrderShow($id)
     {
-        $ticket = Ticket::with('user')->findOrFail($id);
+        // Get order ID from route parameter
+        $orderId = $id;
+        if ($id === 'id' || $id === 'en') {
+            $pathSegments = explode('/', trim(request()->path(), '/'));
+            // Path format: {locale}/admin/orders/{id}
+            // So segments are: [locale, admin, orders, id]
+            if (count($pathSegments) >= 4 && $pathSegments[1] === 'admin' && $pathSegments[2] === 'orders') {
+                $orderId = $pathSegments[3];
+            } else {
+                abort(404, 'Order ID not found in URL');
+            }
+        }
+        
+        $ticket = Ticket::with('user')->findOrFail($orderId);
         return Inertia::render('Admin/OrderShow', [
             'order' => $ticket,
         ]);
@@ -416,15 +438,29 @@ class BookingController extends Controller
     // Update order status (e.g., refund, cancel, complete)
     public function adminUpdateOrderStatus(Request $request, $id)
     {
+        // Get order ID from route parameter
+        $orderId = $id;
+        if ($id === 'id' || $id === 'en') {
+            $pathSegments = explode('/', trim(request()->path(), '/'));
+            // Path format: {locale}/admin/orders/{id}/status
+            // So segments are: [locale, admin, orders, id, status]
+            if (count($pathSegments) >= 5 && $pathSegments[1] === 'admin' && $pathSegments[2] === 'orders') {
+                $orderId = $pathSegments[3];
+            } else {
+                abort(404, 'Order ID not found in URL');
+            }
+        }
+        
         $data = $request->validate([
             'status' => 'required|string|in:pending,completed,cancelled,refunded'
         ]);
 
-        $ticket = Ticket::findOrFail($id);
+        $ticket = Ticket::findOrFail($orderId);
         $ticket->payment_status = $data['status'];
         $ticket->save();
 
-        return redirect()->route('admin.orders')->with('success', 'Status pesanan diperbarui.');
+        $locale = request()->route('locale') ?? 'id';
+        return redirect()->route('admin.orders', ['locale' => $locale])->with('success', 'Status pesanan diperbarui.');
     }
 
     // Helper function to generate PDF

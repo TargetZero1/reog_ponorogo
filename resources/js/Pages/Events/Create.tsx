@@ -1,8 +1,10 @@
 import { useForm } from '@inertiajs/react';
 import { Layout } from '../../Components/Layout';
 import { ArrowLeft } from 'lucide-react';
+import { useTranslations, getLocalizedRoute } from '@/utils/translations';
 
 export default function Create() {
+  const { locale } = useTranslations();
   const { data, setData, post, errors, processing } = useForm({
     title: '',
     description: '',
@@ -15,7 +17,7 @@ export default function Create() {
 
   function submit(e: any) {
     e.preventDefault();
-    post(route('admin.events.store'));
+    post(getLocalizedRoute('admin.events.store', {}, locale));
   }
   return (
     <Layout>
@@ -24,7 +26,7 @@ export default function Create() {
         <div className="max-w-4xl mx-auto px-4 pt-8 pb-6">
           <div className="bg-gradient-to-r from-[#6b0000] via-[#7b0b0b] to-[#8b0b0b] text-white rounded-xl shadow-lg py-8 px-6">
             <div className="flex items-center gap-4">
-              <a href={route('admin.events.index')} className="p-2 hover:bg-white/20 rounded-lg transition">
+              <a href={getLocalizedRoute('admin.events.index', {}, locale)} className="p-2 hover:bg-white/20 rounded-lg transition">
                 <ArrowLeft size={24} />
               </a>
               <div>
@@ -142,7 +144,7 @@ export default function Create() {
                 {processing ? 'Membuat...' : 'Buat Event'}
               </button>
               <a
-                href={route('admin.events.index')}
+                href={getLocalizedRoute('admin.events.index', {}, locale)}
                 className="flex-1 px-6 py-3 bg-gray-200 text-gray-800 rounded-lg font-bold hover:bg-gray-300 transition text-center"
               >
                 Batal

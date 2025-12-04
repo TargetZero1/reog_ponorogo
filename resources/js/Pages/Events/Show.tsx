@@ -1,7 +1,7 @@
 import { Layout } from '../../Components/Layout';
 import { SEO } from '../../Components/SEO';
 import { ShareButtons } from '../../Components/ShareButtons';
-import { useTranslations } from '../../utils/translations';
+import { useTranslations, getLocalizedRoute } from '../../utils/translations';
 import { Ticket, Calendar, MapPin } from 'lucide-react';
 
 export default function Show(props: any) {
@@ -28,7 +28,7 @@ export default function Show(props: any) {
           {/* Hero Section */}
           <div className="mb-8 md:mb-12">
             <a 
-              href={route('events.index', { locale })} 
+              href={getLocalizedRoute('events.index', {}, locale)} 
               className="inline-flex items-center gap-2 text-amber-600 hover:text-amber-700 font-semibold mb-6 transition-colors"
             >
               ← {t('common.back')} {t('nav.events')}
@@ -73,12 +73,11 @@ export default function Show(props: any) {
                 </div>
                 <button
                   onClick={() => {
-                    window.location.href = route('pesan.checkout', { 
-                      locale,
+                    window.location.href = getLocalizedRoute('pesan.checkout', { 
                       type: 'event', 
                       id: event.id,
                       attraction: event.title 
-                    });
+                    }, locale);
                   }}
                   className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold rounded-lg hover:from-red-700 hover:to-red-800 transition-all shadow-lg hover:shadow-xl"
                 >

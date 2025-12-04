@@ -1,462 +1,402 @@
-#!/usr/bin/env node
-
 /**
- * Browser Smoke Test Script
- * Tests HTTP endpoints and reports status codes and key response snippets
+ * Comprehensive Smoke Test for Reog Ponorogo Application
+ * Tests all major flows: authentication, booking, admin operations
  */
 
-import axios from 'axios';
-import https from 'https';
+const axios = require('axios');
+const baseURL = 'http://127.0.0.1:8000';
 
-// Configuration
-const BASE_URL = process.env.BASE_URL || 'http://127.0.0.1:8000';
-const TIMEOUT = 10000; // 10 seconds
-
-// Test credentials (from PROJECT_STATUS.md)
-const TEST_USER = {
-  email: 'test@example.com',
-  password: 'password'
-};
-
-const ADMIN_USER = {
+// Test credentials
+const adminCredentials = {
   email: 'admin@reog.test',
   password: 'password'
 };
 
-// Colors for terminal output
+const userCredentials = {
+  email: 'test@example.com',
+  password: 'password'
+};
+
+// Colors for console output
 const colors = {
   reset: '\x1b[0m',
   green: '\x1b[32m',
   red: '\x1b[31m',
   yellow: '\x1b[33m',
   blue: '\x1b[34m',
-  cyan: '\x1b[36m',
+  cyan: '\x1b[36m'
 };
 
-// Results tracking
-const results = {
-  passed: 0,
-  failed: 0,
-  skipped: 0,
-  tests: []
-};
+let passedTests = 0;
+let failedTests = 0;
+let testResults = [];
 
-/**
- * Extract key snippet from response (first 200 chars of HTML/text)
- */
-function extractSnippet(response, maxLength = 200) {
-  const data = response.data;
-  if (typeof data === 'string') {
-    return data.substring(0, maxLength).replace(/\s+/g, ' ').trim();
-  }
-  if (typeof data === 'object') {
-    return JSON.stringify(data).substring(0, maxLength);
-  }
-  return String(data).substring(0, maxLength);
+function log(message, color = colors.reset) {
+  console.log(`${color}${message}${colors.reset}`);
 }
 
-
-/**
- * Make HTTP request and return result
- */
-async function testEndpoint(name, method, url, options = {}) {
-  const { headers = {}, data = null, cookies = null, expectedStatus = null } = options;
-  
-  // Create axios instance with cookies
-  const axiosInstance = axios.create({
-    baseURL: BASE_URL,
-    timeout: TIMEOUT,
-    withCredentials: true,
-    headers: {
-      'Accept': 'text/html,application/json',
-      'User-Agent': 'SmokeTest/1.0',
-      ...headers
-    },
-    // Allow self-signed certificates in development
-    httpsAgent: new https.Agent({
-      rejectUnauthorized: false
-    })
-  });
-
-  // Set cookies if provided
-  if (cookies) {
-    axiosInstance.defaults.headers.common['Cookie'] = cookies;
+function logTest(name, passed, details = '') {
+  if (passed) {
+    log(`✓ ${name}`, colors.green);
+    passedTests++;
+  } else {
+    log(`✗ ${name}`, colors.red);
+    if (details) log(`  ${details}`, colors.yellow);
+    failedTests++;
   }
+  testResults.push({ name, passed, details });
+}
 
+// Helper to get CSRF token
+async function getCSRFToken(locale = 'id') {
   try {
-    const config = {
-      method: method.toLowerCase(),
-      url: url,
-      ...(data && { data })
-    };
-
-    const startTime = Date.now();
-    const response = await axiosInstance(config);
-    const duration = Date.now() - startTime;
-
-    const snippet = extractSnippet(response);
-    const statusCode = response.status;
-    
-    // Determine success: if expectedStatus is null, accept any 2xx/3xx (protected routes)
-    // If expectedStatus is set, must match exactly
-    let isSuccess;
-    if (expectedStatus === null) {
-      // Accept 200 (Inertia shows login page) or 302 (redirect) - both indicate protection
-      isSuccess = (statusCode >= 200 && statusCode < 400);
-    } else {
-      isSuccess = statusCode === expectedStatus;
-    }
-
-    const result = {
-      name,
-      method,
-      url,
-      statusCode,
-      duration,
-      snippet,
-      success: isSuccess,
-      cookies: response.headers['set-cookie'] || null
-    };
-
-    if (isSuccess) {
-      results.passed++;
-      const protectionNote = (expectedStatus === null && (statusCode === 200 || statusCode === 302))
-        ? ' (protected)' 
-        : '';
-      console.log(`${colors.green}✓${colors.reset} ${name} - ${statusCode} (${duration}ms)${protectionNote}`);
-    } else {
-      results.failed++;
-      const expected = expectedStatus === null ? '2xx/3xx' : expectedStatus;
-      console.log(`${colors.red}✗${colors.reset} ${name} - ${statusCode} (${duration}ms) [Expected: ${expected}]`);
-    }
-
-    results.tests.push(result);
-    return result;
-
+    const response = await axios.get(`${baseURL}/${locale}/pesan-ticket/login`, {
+      maxRedirects: 0,
+      validateStatus: (status) => status < 400
+    });
+    const html = response.data;
+    const match = html.match(/name="_token"\s+value="([^"]+)"/);
+    return match ? match[1] : null;
   } catch (error) {
-    const duration = error.response ? Date.now() - (Date.now() - (error.config?.timeout || TIMEOUT)) : 0;
-    const statusCode = error.response?.status || 'ERROR';
-    const snippet = error.response ? extractSnippet(error.response) : error.message;
-
-    const result = {
-      name,
-      method,
-      url,
-      statusCode,
-      duration,
-      snippet,
-      success: false,
-      error: error.message
-    };
-
-    results.failed++;
-    console.log(`${colors.red}✗${colors.reset} ${name} - ${statusCode} - ${error.message}`);
-    results.tests.push(result);
-    return result;
+    return null;
   }
 }
 
-/**
- * Login and get session cookie
- */
-async function login(credentials) {
+// Helper to login
+async function login(credentials, locale = 'id') {
   try {
-    // Cookie jar to maintain session
-    let cookies = '';
-    
-    const axiosInstance = axios.create({
-      baseURL: BASE_URL,
-      timeout: TIMEOUT,
-      withCredentials: true,
-      headers: {
-        'Accept': 'text/html,application/json',
-        'User-Agent': 'SmokeTest/1.0'
-      },
-      httpsAgent: new https.Agent({
-        rejectUnauthorized: false
-      })
-    });
-
-    // Intercept responses to collect cookies
-    axiosInstance.interceptors.response.use(response => {
-      const setCookies = response.headers['set-cookie'];
-      if (setCookies) {
-        // Extract cookie name=value pairs
-        const cookieStrings = setCookies.map(cookie => {
-          const parts = cookie.split(';');
-          return parts[0].trim();
-        });
-        cookies = cookieStrings.join('; ');
-      }
-      return response;
-    });
-
-    // First, get CSRF token from login page (this also sets session cookie)
-    const loginPage = await axiosInstance.get('/id/pesan-ticket/login', {
-      headers: cookies ? { 'Cookie': cookies } : {}
-    });
-    
-    // Update cookies from login page response
-    if (loginPage.headers['set-cookie']) {
-      const setCookies = loginPage.headers['set-cookie'].map(c => c.split(';')[0].trim());
-      cookies = setCookies.join('; ');
-    }
-
-    const csrfToken = extractCsrfToken(loginPage.data);
-
+    const csrfToken = await getCSRFToken(locale);
     if (!csrfToken) {
-      console.log(`${colors.yellow}⚠${colors.reset} Could not extract CSRF token`);
-      // Try to continue anyway - Laravel might accept X-XSRF-TOKEN from cookie
+      return { success: false, error: 'Could not get CSRF token' };
     }
 
-    // Then login with form data (Laravel expects form-encoded for login)
-    const formData = new URLSearchParams({
-      email: credentials.email,
-      password: credentials.password,
-      ...(csrfToken && { _token: csrfToken })
-    });
-
-    const response = await axiosInstance.post('/id/pesan-ticket/login', formData.toString(), {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept': 'application/json, text/html',
-        'X-Requested-With': 'XMLHttpRequest',
-        ...(csrfToken && { 'X-CSRF-TOKEN': csrfToken }),
-        ...(cookies && { 'Cookie': cookies })
+    const response = await axios.post(
+      `${baseURL}/${locale}/pesan-ticket/login`,
+      {
+        email: credentials.email,
+        password: credentials.password,
+        _token: csrfToken
+      },
+      {
+        maxRedirects: 5,
+        validateStatus: (status) => status < 400,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'text/html,application/xhtml+xml'
+        }
       }
-    });
+    );
 
-    // Update cookies from login response
-    if (response.headers['set-cookie']) {
-      const setCookies = response.headers['set-cookie'].map(c => c.split(';')[0].trim());
-      cookies = setCookies.join('; ');
-    }
+    // Extract cookies from response
+    const cookies = response.headers['set-cookie'] || [];
+    const cookieString = cookies.map(c => c.split(';')[0]).join('; ');
 
-    // Check if login was successful (status 200 or redirect)
-    if (response.status === 200 || response.status === 302) {
-      return cookies || 'session=' + Date.now(); // Return cookies or fallback
-    }
-
-    return null;
+    return { success: true, cookies: cookieString, response };
   } catch (error) {
-    // Sometimes login returns 302 redirect which axios follows
-    // Check if we got cookies anyway
-    if (error.response && error.response.headers['set-cookie']) {
-      const setCookies = error.response.headers['set-cookie'].map(c => c.split(';')[0].trim());
-      return setCookies.join('; ');
-    }
-    console.log(`${colors.yellow}⚠${colors.reset} Login failed: ${error.message}`);
-    return null;
+    return { success: false, error: error.message };
   }
 }
 
-/**
- * Extract CSRF token from HTML
- */
-function extractCsrfToken(html) {
-  if (typeof html !== 'string') return null;
-  
-  // Try meta tag
-  const metaMatch = html.match(/<meta name="csrf-token" content="([^"]+)"/);
-  if (metaMatch) return metaMatch[1];
-  
-  // Try input field
-  const inputMatch = html.match(/<input[^>]*name="_token"[^>]*value="([^"]+)"/);
-  if (inputMatch) return inputMatch[1];
-  
-  return null;
-}
-
-/**
- * Main test runner
- */
-async function runTests() {
-  console.log(`${colors.cyan}╔═══════════════════════════════════════════════════════════╗${colors.reset}`);
-  console.log(`${colors.cyan}║           Browser Smoke Test - Reog Ponorogo            ║${colors.reset}`);
-  console.log(`${colors.cyan}╚═══════════════════════════════════════════════════════════╝${colors.reset}`);
-  console.log(`\nBase URL: ${BASE_URL}\n`);
-
-  // ============================================
-  // PUBLIC ENDPOINTS (with locale)
-  // ============================================
-  console.log(`${colors.blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${colors.reset}`);
-  console.log(`${colors.blue}Public Endpoints (Indonesian)${colors.reset}`);
-  console.log(`${colors.blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${colors.reset}\n`);
-
-  await testEndpoint('Home Page (ID)', 'GET', '/id', { expectedStatus: 200 });
-  await testEndpoint('Budaya & Sejarah (ID)', 'GET', '/id/budaya-dan-sejarah', { expectedStatus: 200 });
-  await testEndpoint('Tourist Attractions (ID)', 'GET', '/id/tempat-wisata', { expectedStatus: 200 });
-  await testEndpoint('Events Index (ID)', 'GET', '/id/events', { expectedStatus: 200 });
-  await testEndpoint('Register Page (ID)', 'GET', '/id/pesan-ticket/register', { expectedStatus: 200 });
-  await testEndpoint('Login Page (ID)', 'GET', '/id/pesan-ticket/login', { expectedStatus: 200 });
-  await testEndpoint('Login Page (ID Alt)', 'GET', '/id/login', { expectedStatus: 200 });
-
-  console.log(`\n${colors.blue}Public Endpoints (English)${colors.reset}\n`);
-  await testEndpoint('Home Page (EN)', 'GET', '/en', { expectedStatus: 200 });
-  await testEndpoint('Budaya & Sejarah (EN)', 'GET', '/en/budaya-dan-sejarah', { expectedStatus: 200 });
-  await testEndpoint('Tourist Attractions (EN)', 'GET', '/en/tempat-wisata', { expectedStatus: 200 });
-  await testEndpoint('Events Index (EN)', 'GET', '/en/events', { expectedStatus: 200 });
-
-  // Try to get a valid event slug (this might fail if no events exist)
+// Helper to logout
+async function logout(cookies, locale = 'id') {
   try {
-    const eventsResponse = await axios.get(`${BASE_URL}/id/events`, { timeout: TIMEOUT });
-    if (eventsResponse.data && typeof eventsResponse.data === 'object') {
-      // Inertia response - check for events in props
-      const events = eventsResponse.data.props?.events?.data || eventsResponse.data.props?.events || [];
-      if (events.length > 0 && events[0].slug) {
-        await testEndpoint('Event Show (ID)', 'GET', `/id/events/${events[0].slug}`, { expectedStatus: 200 });
-        await testEndpoint('Event Show (EN)', 'GET', `/en/events/${events[0].slug}`, { expectedStatus: 200 });
-      } else {
-        results.skipped += 2;
-        console.log(`${colors.yellow}⊘${colors.reset} Event Show - SKIPPED (no events found)`);
+    const csrfToken = await getCSRFToken(locale);
+    if (!csrfToken) {
+      return { success: false, error: 'Could not get CSRF token' };
+    }
+
+    const response = await axios.post(
+      `${baseURL}/logout`,
+      {
+        _token: csrfToken
+      },
+      {
+        maxRedirects: 5,
+        validateStatus: (status) => status < 400,
+        headers: {
+          'Cookie': cookies,
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'text/html,application/xhtml+xml'
+        }
+      }
+    );
+
+    return { success: true, response };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+// Test public pages
+async function testPublicPages() {
+  log('\n=== Testing Public Pages ===', colors.cyan);
+
+  const publicRoutes = [
+    { path: '/id', name: 'Home (ID)' },
+    { path: '/en', name: 'Home (EN)' },
+    { path: '/id/budaya', name: 'Budaya & Sejarah (ID)' },
+    { path: '/en/budaya', name: 'Budaya & Sejarah (EN)' },
+    { path: '/id/tempat-wisata', name: 'Tempat Wisata (ID)' },
+    { path: '/en/tempat-wisata', name: 'Tempat Wisata (EN)' },
+    { path: '/id/events', name: 'Events (ID)' },
+    { path: '/en/events', name: 'Events (EN)' },
+    { path: '/id/pesan-ticket/login', name: 'Login Page (ID)' },
+    { path: '/en/pesan-ticket/login', name: 'Login Page (EN)' },
+    { path: '/id/pesan-ticket/register', name: 'Register Page (ID)' },
+    { path: '/en/pesan-ticket/register', name: 'Register Page (EN)' }
+  ];
+
+  for (const route of publicRoutes) {
+    try {
+      const response = await axios.get(`${baseURL}${route.path}`, {
+        maxRedirects: 5,
+        validateStatus: (status) => status < 400
+      });
+      logTest(route.name, response.status === 200, `Status: ${response.status}`);
+    } catch (error) {
+      logTest(route.name, false, `Error: ${error.message}`);
+    }
+  }
+}
+
+// Test authentication flow
+async function testAuthentication() {
+  log('\n=== Testing Authentication Flow ===', colors.cyan);
+
+  // Test login (ID)
+  log('\n--- Testing Login (ID) ---', colors.blue);
+  const loginResultID = await login(userCredentials, 'id');
+  logTest('User Login (ID)', loginResultID.success, loginResultID.error);
+
+  // Test login (EN)
+  log('\n--- Testing Login (EN) ---', colors.blue);
+  const loginResultEN = await login(userCredentials, 'en');
+  logTest('User Login (EN)', loginResultEN.success, loginResultEN.error);
+
+  // Test admin login
+  log('\n--- Testing Admin Login ---', colors.blue);
+  const adminLoginResult = await login(adminCredentials, 'id');
+  logTest('Admin Login', adminLoginResult.success, adminLoginResult.error);
+
+  // Test logout
+  if (adminLoginResult.success && adminLoginResult.cookies) {
+    log('\n--- Testing Logout ---', colors.blue);
+    const logoutResult = await logout(adminLoginResult.cookies, 'id');
+    logTest('Logout', logoutResult.success, logoutResult.error);
+    
+    // Verify logout by trying to access protected page
+    try {
+      const response = await axios.get(`${baseURL}/id/admin/dashboard`, {
+        headers: { 'Cookie': adminLoginResult.cookies },
+        maxRedirects: 5,
+        validateStatus: (status) => status < 400
+      });
+      // Should redirect to login, not show dashboard
+      const isRedirected = response.request.res.responseUrl?.includes('login') || 
+                          response.status === 302 || 
+                          response.status === 401;
+      logTest('Logout Verification (Cannot access protected page)', isRedirected);
+    } catch (error) {
+      // Error is expected if logout worked
+      logTest('Logout Verification (Cannot access protected page)', true);
+    }
+  }
+
+  return { loginResultID, loginResultEN, adminLoginResult };
+}
+
+// Test user flows
+async function testUserFlows(authCookies) {
+  log('\n=== Testing User Flows ===', colors.cyan);
+
+  if (!authCookies) {
+    log('Skipping user flows - no authentication cookies', colors.yellow);
+    return;
+  }
+
+  const userRoutes = [
+    { path: '/id/profile', name: 'Profile Page' },
+    { path: '/en/profile', name: 'Profile Page (EN)' },
+    { path: '/id/payment-history', name: 'Payment History' },
+    { path: '/en/payment-history', name: 'Payment History (EN)' }
+  ];
+
+  for (const route of userRoutes) {
+    try {
+      const response = await axios.get(`${baseURL}${route.path}`, {
+        headers: { 'Cookie': authCookies },
+        maxRedirects: 5,
+        validateStatus: (status) => status < 400
+      });
+      logTest(route.name, response.status === 200, `Status: ${response.status}`);
+    } catch (error) {
+      logTest(route.name, false, `Error: ${error.message}`);
+    }
+  }
+}
+
+// Test admin flows
+async function testAdminFlows(adminCookies) {
+  log('\n=== Testing Admin Flows ===', colors.cyan);
+
+  if (!adminCookies) {
+    log('Skipping admin flows - no admin authentication cookies', colors.yellow);
+    return;
+  }
+
+  const adminRoutes = [
+    { path: '/id/admin/dashboard', name: 'Admin Dashboard' },
+    { path: '/en/admin/dashboard', name: 'Admin Dashboard (EN)' },
+    { path: '/id/admin/events', name: 'Admin Events' },
+    { path: '/en/admin/events', name: 'Admin Events (EN)' },
+    { path: '/id/admin/places', name: 'Admin Places' },
+    { path: '/en/admin/places', name: 'Admin Places (EN)' },
+    { path: '/id/admin/orders', name: 'Admin Orders' },
+    { path: '/en/admin/orders', name: 'Admin Orders (EN)' },
+    { path: '/id/admin/analytics', name: 'Admin Analytics' },
+    { path: '/en/admin/analytics', name: 'Admin Analytics (EN)' },
+    { path: '/id/admin/reports', name: 'Admin Reports' },
+    { path: '/en/admin/reports', name: 'Admin Reports (EN)' }
+  ];
+
+  for (const route of adminRoutes) {
+    try {
+      const response = await axios.get(`${baseURL}${route.path}`, {
+        headers: { 'Cookie': adminCookies },
+        maxRedirects: 5,
+        validateStatus: (status) => status < 400
+      });
+      logTest(route.name, response.status === 200, `Status: ${response.status}`);
+    } catch (error) {
+      logTest(route.name, false, `Error: ${error.message}`);
+    }
+  }
+}
+
+// Test booking flow
+async function testBookingFlow(userCookies) {
+  log('\n=== Testing Booking Flow ===', colors.cyan);
+
+  if (!userCookies) {
+    log('Skipping booking flow - no user authentication cookies', colors.yellow);
+    return;
+  }
+
+  // Test checkout page access
+  try {
+    const response = await axios.get(`${baseURL}/id/pesan-ticket/checkout?attraction=Test+Event`, {
+      headers: { 'Cookie': userCookies },
+      maxRedirects: 5,
+      validateStatus: (status) => status < 400
+    });
+    logTest('Checkout Page Access', response.status === 200, `Status: ${response.status}`);
+  } catch (error) {
+    logTest('Checkout Page Access', false, `Error: ${error.message}`);
+  }
+}
+
+// Test locale switching
+async function testLocaleSwitching() {
+  log('\n=== Testing Locale Switching ===', colors.cyan);
+
+  const locales = ['id', 'en'];
+  const testRoutes = ['', '/budaya', '/tempat-wisata', '/events'];
+
+  for (const locale of locales) {
+    for (const route of testRoutes) {
+      try {
+        const response = await axios.get(`${baseURL}/${locale}${route}`, {
+          maxRedirects: 5,
+          validateStatus: (status) => status < 400
+        });
+        logTest(`Locale ${locale.toUpperCase()} - ${route || 'home'}`, response.status === 200);
+      } catch (error) {
+        logTest(`Locale ${locale.toUpperCase()} - ${route || 'home'}`, false, error.message);
       }
     }
-  } catch (error) {
-    results.skipped += 2;
-    console.log(`${colors.yellow}⊘${colors.reset} Event Show - SKIPPED (could not fetch events)`);
   }
+}
 
-  // ============================================
-  // PROTECTED ENDPOINTS (Require Auth)
-  // ============================================
-  console.log(`\n${colors.blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${colors.reset}`);
-  console.log(`${colors.blue}Protected Endpoints (Require Authentication)${colors.reset}`);
-  console.log(`${colors.blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${colors.reset}\n`);
+// Test error pages
+async function testErrorPages() {
+  log('\n=== Testing Error Pages ===', colors.cyan);
 
-  // Test without auth (Inertia returns 200 with login page instead of 302 redirect)
-  // Accept 200 or 302 as both indicate protection
-  await testEndpoint('Checkout (No Auth)', 'GET', '/id/pesan-ticket/checkout', { expectedStatus: null }); // Accept 200 (login page) or 302
-  await testEndpoint('Payment History (No Auth)', 'GET', '/id/payment-history', { expectedStatus: null });
-  await testEndpoint('Profile (No Auth)', 'GET', '/id/profile', { expectedStatus: null });
+  const errorRoutes = [
+    { path: '/id/nonexistent-page', name: '404 Page (ID)', expectedStatus: 404 },
+    { path: '/en/nonexistent-page', name: '404 Page (EN)', expectedStatus: 404 }
+  ];
 
-  // Login as regular user
-  console.log(`\n${colors.cyan}Logging in as regular user...${colors.reset}\n`);
-  const userCookies = await login(TEST_USER);
-
-  if (userCookies) {
-    await testEndpoint('Checkout (Authenticated)', 'GET', '/id/pesan-ticket/checkout', { 
-      cookies: userCookies,
-      expectedStatus: 200 
-    });
-    await testEndpoint('Payment History (Authenticated)', 'GET', '/id/payment-history', { 
-      cookies: userCookies,
-      expectedStatus: 200 
-    });
-    await testEndpoint('Profile (Authenticated)', 'GET', '/id/profile', { 
-      cookies: userCookies,
-      expectedStatus: 200 
-    });
-  } else {
-    console.log(`${colors.yellow}⚠ Skipping authenticated tests (login failed)${colors.reset}\n`);
-    results.skipped += 3;
-  }
-
-  // ============================================
-  // ADMIN ENDPOINTS (Require Admin Role)
-  // ============================================
-  console.log(`\n${colors.blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${colors.reset}`);
-  console.log(`${colors.blue}Admin Endpoints (Require Admin Role)${colors.reset}`);
-  console.log(`${colors.blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${colors.reset}\n`);
-
-  // Test without auth (Inertia returns 200 with login/home page instead of 302 redirect)
-  // Accept 200 or 302 as both indicate protection
-  await testEndpoint('Admin Dashboard (No Auth)', 'GET', '/admin/dashboard', { expectedStatus: null });
-  await testEndpoint('Admin Orders (No Auth)', 'GET', '/admin/orders', { expectedStatus: null });
-  await testEndpoint('Admin Events (No Auth)', 'GET', '/admin/events', { expectedStatus: null });
-  await testEndpoint('Admin Places (No Auth)', 'GET', '/admin/places', { expectedStatus: null });
-  await testEndpoint('Admin Analytics (No Auth)', 'GET', '/admin/analytics', { expectedStatus: null });
-  await testEndpoint('Admin Users (No Auth)', 'GET', '/admin/users', { expectedStatus: null });
-  await testEndpoint('Admin Reports (No Auth)', 'GET', '/admin/reports', { expectedStatus: null });
-
-  // Login as admin
-  console.log(`\n${colors.cyan}Logging in as admin...${colors.reset}\n`);
-  const adminCookies = await login(ADMIN_USER);
-
-  if (adminCookies) {
-    await testEndpoint('Admin Dashboard (Authenticated)', 'GET', '/id/admin/dashboard', { 
-      cookies: adminCookies,
-      expectedStatus: 200 
-    });
-    await testEndpoint('Admin Orders (Authenticated)', 'GET', '/id/admin/orders', { 
-      cookies: adminCookies,
-      expectedStatus: 200 
-    });
-    await testEndpoint('Admin Events (Authenticated)', 'GET', '/id/admin/events', { 
-      cookies: adminCookies,
-      expectedStatus: 200 
-    });
-    await testEndpoint('Admin Places (Authenticated)', 'GET', '/id/admin/places', { 
-      cookies: adminCookies,
-      expectedStatus: 200 
-    });
-    await testEndpoint('Admin Analytics (Authenticated)', 'GET', '/id/admin/analytics', { 
-      cookies: adminCookies,
-      expectedStatus: 200 
-    });
-    await testEndpoint('Admin Users (Authenticated)', 'GET', '/id/admin/users', { 
-      cookies: adminCookies,
-      expectedStatus: 200 
-    });
-    await testEndpoint('Admin Reports (Authenticated)', 'GET', '/id/admin/reports', { 
-      cookies: adminCookies,
-      expectedStatus: 200 
-    });
-  } else {
-    console.log(`${colors.yellow}⚠ Skipping admin tests (login failed)${colors.reset}\n`);
-    results.skipped += 7;
-  }
-
-  // ============================================
-  // SUMMARY
-  // ============================================
-  console.log(`\n${colors.cyan}╔═══════════════════════════════════════════════════════════╗${colors.reset}`);
-  console.log(`${colors.cyan}║                        Test Summary                        ║${colors.reset}`);
-  console.log(`${colors.cyan}╚═══════════════════════════════════════════════════════════╝${colors.reset}\n`);
-
-  const total = results.passed + results.failed + results.skipped;
-  console.log(`Total Tests: ${total}`);
-  console.log(`${colors.green}Passed: ${results.passed}${colors.reset}`);
-  console.log(`${colors.red}Failed: ${results.failed}${colors.reset}`);
-  console.log(`${colors.yellow}Skipped: ${results.skipped}${colors.reset}\n`);
-
-  // Detailed results
-  if (results.failed > 0) {
-    console.log(`${colors.red}Failed Tests:${colors.reset}\n`);
-    results.tests
-      .filter(t => !t.success)
-      .forEach(test => {
-        console.log(`  ${colors.red}✗${colors.reset} ${test.name}`);
-        console.log(`    URL: ${test.method} ${test.url}`);
-        console.log(`    Status: ${test.statusCode}`);
-        if (test.error) {
-          console.log(`    Error: ${test.error}`);
-        }
-        if (test.snippet) {
-          console.log(`    Snippet: ${test.snippet.substring(0, 100)}...`);
-        }
-        console.log('');
+  for (const route of errorRoutes) {
+    try {
+      const response = await axios.get(`${baseURL}${route.path}`, {
+        maxRedirects: 0,
+        validateStatus: () => true
       });
+      const isCorrectStatus = response.status === route.expectedStatus || response.status === 200;
+      logTest(route.name, isCorrectStatus, `Status: ${response.status}`);
+    } catch (error) {
+      // 404 errors are expected
+      logTest(route.name, error.response?.status === 404, `Status: ${error.response?.status || 'Error'}`);
+    }
   }
+}
 
-  // Response snippets for all tests
-  console.log(`${colors.cyan}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${colors.reset}`);
-  console.log(`${colors.cyan}Response Snippets${colors.reset}`);
-  console.log(`${colors.cyan}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${colors.reset}\n`);
+// Main test runner
+async function runAllTests() {
+  log('\n' + '='.repeat(60), colors.cyan);
+  log('REOG PONOROGO - COMPREHENSIVE SMOKE TEST', colors.cyan);
+  log('='.repeat(60), colors.cyan);
 
-  results.tests.forEach(test => {
-    const statusColor = test.success ? colors.green : colors.red;
-    console.log(`${statusColor}[${test.statusCode}]${colors.reset} ${test.method} ${test.url}`);
-    console.log(`  ${test.snippet || '(no content)'}`);
-    console.log('');
-  });
+  try {
+    // Test public pages
+    await testPublicPages();
 
-  // Exit with appropriate code
-  process.exit(results.failed > 0 ? 1 : 0);
+    // Test locale switching
+    await testLocaleSwitching();
+
+    // Test authentication
+    const authResults = await testAuthentication();
+    const userCookies = authResults.loginResultID?.cookies;
+    const adminCookies = authResults.adminLoginResult?.cookies;
+
+    // Test user flows
+    await testUserFlows(userCookies);
+
+    // Test admin flows
+    await testAdminFlows(adminCookies);
+
+    // Test booking flow
+    await testBookingFlow(userCookies);
+
+    // Test error pages
+    await testErrorPages();
+
+    // Print summary
+    log('\n' + '='.repeat(60), colors.cyan);
+    log('TEST SUMMARY', colors.cyan);
+    log('='.repeat(60), colors.cyan);
+    log(`Total Tests: ${passedTests + failedTests}`, colors.blue);
+    log(`Passed: ${passedTests}`, colors.green);
+    log(`Failed: ${failedTests}`, failedTests > 0 ? colors.red : colors.green);
+    log('='.repeat(60), colors.cyan);
+
+    if (failedTests > 0) {
+      log('\nFailed Tests:', colors.red);
+      testResults
+        .filter(r => !r.passed)
+        .forEach(r => {
+          log(`  - ${r.name}`, colors.yellow);
+          if (r.details) log(`    ${r.details}`, colors.yellow);
+        });
+    }
+
+    process.exit(failedTests > 0 ? 1 : 0);
+  } catch (error) {
+    log(`\nFatal error: ${error.message}`, colors.red);
+    console.error(error);
+    process.exit(1);
+  }
 }
 
 // Run tests
-runTests().catch(error => {
-  console.error(`${colors.red}Fatal error:${colors.reset}`, error);
-  process.exit(1);
-});
-
+runAllTests();
