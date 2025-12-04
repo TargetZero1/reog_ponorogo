@@ -141,6 +141,7 @@ Route::get('/', function () {
 
 // Logout post handler - must be outside locale group to avoid redirect loops
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 Route::post('/logout', function (Request $request) {
     // Get locale from session BEFORE invalidating
     $locale = $request->session()->get('locale', 'id');
@@ -155,12 +156,19 @@ Route::post('/logout', function (Request $request) {
     // Clear all session data
     $request->session()->flush();
     
-    // Force session save to ensure changes are persisted
-    $request->session()->save();
-    
     // Redirect to login page with locale - use 303 See Other for POST redirect
-    // Use direct URL instead of route() to avoid any route resolution issues
-    return redirect("/{$locale}/pesan-ticket/login", 303);
+    $response = redirect("/{$locale}/pesan-ticket/login", 303);
+    
+    // Add cache-busting headers to prevent browser caching
+    $response->header('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate, private');
+    $response->header('Pragma', 'no-cache');
+    $response->header('Expires', '0');
+    
+    // Explicitly delete session cookie to force browser to forget session
+    $sessionName = config('session.cookie', 'reogheritage-session');
+    $response->cookie($sessionName, null, -1, '/', null, false, true);
+    
+    return $response;
 })->name('logout')->middleware('web');
 
 // Graceful GET fallback (just redirect to locale home without performing logout logic)

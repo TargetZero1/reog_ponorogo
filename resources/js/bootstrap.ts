@@ -21,6 +21,9 @@ const detectLocale = () => {
   return 'id';
 };
 
+// Routes that should NOT have locale parameter
+const nonLocalizedRoutes = ['logout'];
+
 const originalRoute = route;
 
 (window as any).route = (name: any, params?: any, absolute?: any, config?: any) => {
@@ -30,11 +33,14 @@ const originalRoute = route;
     processedParams = {};
   }
 
-  if (typeof processedParams === 'object' && !Array.isArray(processedParams)) {
-    processedParams = {
-      ...processedParams,
-      locale: processedParams.locale || detectLocale(),
-    };
+  // Skip adding locale for routes that don't need it
+  if (!nonLocalizedRoutes.includes(name)) {
+    if (typeof processedParams === 'object' && !Array.isArray(processedParams)) {
+      processedParams = {
+        ...processedParams,
+        locale: processedParams.locale || detectLocale(),
+      };
+    }
   }
 
   return (originalRoute as any)(name, processedParams, absolute, config);

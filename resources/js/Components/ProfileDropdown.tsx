@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Link, usePage, router } from '@inertiajs/react';
 import { UserCircle, LogOut, BarChart3, Users, ShoppingCart, FileText, Home, MapPin } from 'lucide-react';
 import { useTranslations, getLocalizedRoute } from '@/utils/translations';
@@ -17,36 +17,10 @@ export function ProfileDropdown({ scrolled, isMobile = false, isWhiteBackgroundP
   const user = auth?.user;
   const isAdmin = user?.role === 'admin';
   const { t, locale } = useTranslations();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
-  };
-
-  const handleLogout = (e?: React.MouseEvent) => {
-    e?.preventDefault();
-    setIsOpen(false);
-    
-    // Create a hidden form and submit it to ensure proper session invalidation
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = '/logout';
-    form.style.display = 'none';
-    
-    const tokenInput = document.createElement('input');
-    tokenInput.type = 'hidden';
-    tokenInput.name = '_token';
-    tokenInput.value = csrf_token;
-    form.appendChild(tokenInput);
-    
-    // Add method spoofing for POST
-    const methodInput = document.createElement('input');
-    methodInput.type = 'hidden';
-    methodInput.name = '_method';
-    methodInput.value = 'POST';
-    form.appendChild(methodInput);
-    
-    document.body.appendChild(form);
-    form.submit();
   };
 
   const dropdownClasses = `absolute right-0 mt-2 w-56 rounded-md shadow-lg ${useWhiteTheme ? 'bg-white ring-1 ring-black ring-opacity-5' : 'bg-red-900'} focus:outline-none`;
@@ -190,15 +164,19 @@ export function ProfileDropdown({ scrolled, isMobile = false, isWhiteBackgroundP
 
                 <div className={`${useWhiteTheme ? 'border-gray-200' : 'border-red-700'} border-t`}>
                   <button
-                    type="button"
-                    onClick={handleLogout}
-                    className={`${linkClasses} w-full text-left flex items-center gap-2`}
+                    onClick={() => {
+                      setIsOpen(false);
+                      setIsLoggingOut(true);
+                      router.post(route('logout'));
+                    }}
+                    disabled={isLoggingOut}
+                    className={`${linkClasses} w-full text-left flex items-center gap-2 hover:cursor-pointer disabled:opacity-50`}
                     role="menuitem"
                     tabIndex={-1}
                     id="menu-item-logout"
                   >
                     <LogOut size={16} />
-                    {t('nav.logout')}
+                    {isLoggingOut ? 'Logging out...' : t('nav.logout')}
                   </button>
                 </div>
               </>
