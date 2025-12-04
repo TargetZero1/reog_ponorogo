@@ -135,19 +135,16 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-amber-50/60">
+        <div className="border-t border-white/10 pt-6 sm:pt-8 pb-0 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-xs sm:text-sm text-amber-50/60">
           <p>
             {t('footer.copyright')}
           </p>
-          <div className="flex gap-6">
+          <div className="flex gap-4 sm:gap-6">
             <a href="#" className="hover:text-amber-300 transition-colors">{t('footer.privacy_policy')}</a>
             <a href="#" className="hover:text-amber-300 transition-colors">{t('footer.terms')}</a>
           </div>
         </div>
       </div>
-
-      {/* Decorative Bottom */}
-      <div className="h-2 bg-gradient-to-r from-amber-600 via-red-600 to-amber-600"></div>
     </footer>
   );
 }

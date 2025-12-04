@@ -78,16 +78,16 @@ export default function Dashboard({ stats, recentOrders, ordersByMonth, revenueB
 
   return (
     <Layout>
-      <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen p-6 md:p-8 pt-20">
+      <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen p-3 sm:p-4 md:p-6 pt-16 sm:pt-20">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
-            <p className="text-gray-600">Welcome back! Here's an overview of your business.</p>
+          <div className="mb-4 sm:mb-6">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">Admin Dashboard</h1>
+            <p className="text-gray-600 text-sm sm:text-base">Welcome back! Here's an overview of your business.</p>
           </div>
 
           {/* Stat Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 md:mb-8">
             {statCards.map((card, idx) => {
               const Icon = card.icon;
               const formattedChange = card.changeType === 'currency' 

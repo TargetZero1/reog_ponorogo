@@ -31,14 +31,22 @@ export function ProfileDropdown({ scrolled, isMobile = false, isWhiteBackgroundP
     <div className="relative">
       <button
         onClick={toggleDropdown}
-        className={`flex items-center justify-center w-10 h-10 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400 ${
-          useWhiteTheme ? 'bg-amber-500 text-red-950' : 'bg-red-800 text-amber-50'
+        className={`flex items-center justify-center w-10 h-10 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400 overflow-hidden ${
+          useWhiteTheme ? 'bg-amber-500 text-red-950 ring-2 ring-amber-600' : 'bg-red-800 text-amber-50 ring-2 ring-amber-400'
         }`}
         aria-label="User profile menu"
         aria-haspopup="true"
         aria-expanded={isOpen}
       >
-        <UserCircle size={24} />
+        {user?.profile_picture ? (
+          <img 
+            src={user.profile_picture} 
+            alt={user.name || 'Profile'} 
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <UserCircle size={24} />
+        )}
       </button>
 
       {isOpen && (

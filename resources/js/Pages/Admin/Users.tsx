@@ -9,12 +9,12 @@ interface UsersProps {
 export default function Users({ users }: UsersProps) {
   return (
     <Layout>
-      <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-8">
+      <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-4 md:p-6 pt-16 sm:pt-20">
         <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900">Users Management</h1>
-          <p className="text-gray-600 mt-2">View and manage all registered users</p>
+        <div className="mb-4 sm:mb-6 md:mb-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">Users Management</h1>
+          <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">View and manage all registered users</p>
         </div>
 
         {/* Users Table */}

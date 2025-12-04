@@ -46,11 +46,11 @@ export default function OrderShow({ order }: OrderShowProps) {
 
   return (
     <Layout>
-      <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-8">
-        <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-2xl font-bold mb-4">Order #{order.id}</h1>
+      <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-4 md:p-6 pt-16 sm:pt-20">
+        <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-4 sm:p-6">
+        <h1 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Order #{order.id}</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
           <div>
             <p className="text-sm text-neutral-600">Customer</p>
             <p className="font-semibold">{order.user?.name || 'Unknown'}</p>

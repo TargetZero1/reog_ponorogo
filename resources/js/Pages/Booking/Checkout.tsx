@@ -45,9 +45,9 @@ export default function Checkout({ attraction, pricePerTicket, ticketType, sourc
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50 flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8">
-        <h2 className="text-2xl font-bold mb-4">Pesan Tiket</h2>
+    <div className="min-h-screen bg-neutral-50 flex items-center justify-center px-3 py-4">
+      <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-4 sm:p-6">
+        <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Pesan Tiket</h2>
         <p className="text-sm text-neutral-600 mb-2">Attraction: <span className="font-semibold">{attraction || '—'}</span></p>
         <p className="text-sm text-neutral-600 mb-4">Harga per tiket: <span className="font-semibold">Rp {Number(pricePerTicket).toLocaleString('id-ID')}</span></p>
 
@@ -60,7 +60,7 @@ export default function Checkout({ attraction, pricePerTicket, ticketType, sourc
           </div>
         )}
 
-        <form ref={formRef} onSubmit={submit} method="POST" action={route('pesan.create')} className="space-y-4">
+        <form ref={formRef} onSubmit={submit} method="POST" action={route('pesan.create')} className="space-y-3">
           <input type="hidden" name="_token" value={csrf_token as string} />
           <input type="hidden" name="attraction" value={attraction || ''} />
           <input type="hidden" name="ticket_type" value={ticketType || ''} />
@@ -68,7 +68,7 @@ export default function Checkout({ attraction, pricePerTicket, ticketType, sourc
           <input type="hidden" name="quantity" value={Math.max(1, Math.min(10, Math.floor(Number(quantity)) || 1))} />
 
           <div>
-            <label className="block text-sm font-medium text-neutral-700">Jumlah Tiket</label>
+            <label className="block text-sm font-medium text-neutral-700 mb-1">Jumlah Tiket</label>
             <input
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
@@ -81,7 +81,7 @@ export default function Checkout({ attraction, pricePerTicket, ticketType, sourc
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-neutral-700">Tanggal Kunjungan</label>
+            <label className="block text-sm font-medium text-neutral-700 mb-1">Tanggal Kunjungan</label>
             <input
               name="visit_date"
               value={visitDate}
@@ -96,14 +96,14 @@ export default function Checkout({ attraction, pricePerTicket, ticketType, sourc
 
           <input type="hidden" name="total_price" value={totalPrice} />
 
-          <div className="text-lg font-bold text-neutral-800 mt-4 bg-amber-50 p-3 rounded-md">
+          <div className="text-base sm:text-lg font-bold text-neutral-800 mt-3 bg-amber-50 p-2.5 sm:p-3 rounded-md">
             Total Pembayaran: Rp {totalPrice.toLocaleString('id-ID')}
           </div>
 
           <button
             type="submit"
             disabled={processing}
-            className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold py-3 rounded-lg hover:from-red-700 hover:to-red-800 transition disabled:opacity-50 mt-6 flex items-center justify-center"
+            className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold py-2.5 sm:py-3 rounded-lg hover:from-red-700 hover:to-red-800 transition disabled:opacity-50 mt-4 flex items-center justify-center text-sm sm:text-base"
           >
             {processing ? 'Memproses...' : 'Pesan via WhatsApp'}
           </button>

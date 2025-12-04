@@ -72,23 +72,23 @@ export default function App() {
         <section id="beranda" className="scroll-mt-16 -mt-16 relative">
           <Hero />
         </section>
-        <section id="reog" className="py-24 bg-white relative overflow-hidden scroll-mt-16">
+        <section id="reog" className="py-8 sm:py-12 md:py-16 lg:py-20 bg-white relative overflow-hidden scroll-mt-16">
           <ContainerBackground index={0} />
           <ReogSection />
         </section>
-        <section id="jenis-reog" className="py-24 bg-gradient-to-b from-neutral-50 to-white relative overflow-hidden scroll-mt-16">
+        <section id="jenis-reog" className="py-8 sm:py-12 md:py-16 lg:py-20 bg-gradient-to-b from-neutral-50 to-white relative overflow-hidden scroll-mt-16">
           <ContainerBackground index={1} />
           <TypesOfReog />
         </section>
-        <section id="video" className="py-24 bg-white text-gray-900 scroll-mt-16 relative overflow-hidden">
+        <section id="video" className="py-8 sm:py-12 md:py-16 lg:py-20 bg-white text-gray-900 scroll-mt-16 relative overflow-hidden">
           <ContainerBackground index={2} />
           <VideoSection />
         </section>
-        <section id="galeri" className="py-24 bg-white scroll-mt-16">
+        <section id="galeri" className="py-8 sm:py-12 md:py-16 lg:py-20 bg-white scroll-mt-16">
           <ContainerBackground index={4} />
           <GallerySection />
         </section>
-        <section id="testimoni" className="py-24 bg-gradient-to-br from-red-950 via-red-900 to-red-950 scroll-mt-16 relative overflow-hidden">
+        <section id="testimoni" className="py-8 sm:py-12 md:py-16 lg:py-20 bg-gradient-to-br from-red-950 via-red-900 to-red-950 scroll-mt-16 relative overflow-hidden">
           <ContainerBackground index={6} />
           <TestimonialsSection />
         </section>

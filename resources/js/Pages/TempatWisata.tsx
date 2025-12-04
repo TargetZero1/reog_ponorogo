@@ -394,7 +394,7 @@ export default function TempatWisata({ places }: { places?: any[] }) {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 text-center px-3 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+        <div className="relative z-10 text-center px-3 sm:px-4 lg:px-6 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500 text-red-950 px-4 sm:px-8 py-2 sm:py-4 rounded-full mb-10 sm:mb-12 md:mb-16 shadow-lg sm:shadow-2xl animate-[slideDown_1s_ease-out] border-2 border-amber-400/50 backdrop-blur-sm relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
             <Sparkles size={18} className="sm:size-6 animate-[spin_4s_linear_infinite] relative z-10" />
@@ -421,12 +421,12 @@ export default function TempatWisata({ places }: { places?: any[] }) {
       </div>
 
       {/* Attractions Section */}
-      <div className="py-12 md:py-24 bg-white text-gray-900 relative overflow-hidden">
+      <div className="py-8 sm:py-12 md:py-16 bg-white text-gray-900 relative overflow-hidden">
         <ContainerBackground index={5} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-8 md:mb-12">
-            <div className="inline-flex items-center gap-2 bg-amber-500 text-red-950 px-3 sm:px-4 py-2 rounded-full mb-3 sm:mb-4 shadow-lg font-semibold text-xs sm:text-sm">
-              <Camera size={16} className="sm:size-5" />
+            <div className="inline-flex items-center gap-2 bg-amber-500 text-red-950 px-4 py-2 rounded-full mb-4 shadow-lg font-semibold text-sm">
+              <Camera size={18} />
               <span>{text.gridTag}</span>
             </div>
             <h2 className="text-red-950 mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl font-bold">{text.gridHeading}</h2>
@@ -449,7 +449,7 @@ export default function TempatWisata({ places }: { places?: any[] }) {
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-                  <div className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-amber-500 text-red-950 px-2 sm:px-3 py-1 rounded-full shadow-lg text-xs sm:text-sm font-semibold">
+                  <div className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-amber-500 text-red-950 px-3 py-1 rounded-full shadow-lg text-sm font-semibold">
                     {attraction.category}
                   </div>
                   <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-white/90 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-full flex items-center gap-1 text-xs sm:text-sm">
@@ -509,7 +509,7 @@ export default function TempatWisata({ places }: { places?: any[] }) {
               onClick={() => setSelectedAttraction(null)}
             >
               <div 
-                className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-[slideUp_0.3s_ease-out]"
+                className="bg-white rounded-2xl sm:rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-[slideUp_0.3s_ease-out]"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="relative h-80 overflow-hidden rounded-t-3xl">
@@ -648,9 +648,9 @@ export default function TempatWisata({ places }: { places?: any[] }) {
 
           <div className="bg-gradient-to-br from-red-950 to-red-800 rounded-2xl p-8 md:p-12 text-center shadow-2xl">
             <div className="max-w-3xl mx-auto">
-              <div className="inline-flex items-center gap-2 bg-amber-500 text-red-950 px-4 py-2 rounded-full mb-6">
-                <MapPin size={20} />
-                <span className="font-semibold">{text.ctaTag}</span>
+              <div className="inline-flex items-center gap-2 bg-amber-500 text-red-950 px-4 py-2 rounded-full mb-4 shadow-lg font-semibold text-sm">
+                <MapPin size={18} />
+                <span>{text.ctaTag}</span>
               </div>
               
               <h3 className="text-white mb-4 text-2xl md:text-3xl font-bold">{text.ctaHeading}</h3>

@@ -180,7 +180,7 @@ return [
             'message_placeholder' => 'Your Message',
             'submit' => 'Send Message',
         ],
-        'copyright' => '© 2024 Reog Ponorogo. Developed for Final Project. All rights reserved.',
+        'copyright' => '© 2025 Reog Ponorogo. All rights reserved.',
         'privacy_policy' => 'Privacy Policy',
         'terms' => 'Terms & Conditions',
     ],

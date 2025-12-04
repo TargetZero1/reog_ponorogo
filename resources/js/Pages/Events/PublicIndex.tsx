@@ -15,23 +15,23 @@ export default function PublicIndex({ events }: any) {
         description={t('events.subtitle')}
         keywords="Events Reog Ponorogo, Acara Budaya, Pertunjukan Tradisional, Grebeg Suro, Festival Reog"
       />
-      <div className="py-12 md:py-16 bg-gradient-to-b from-white via-neutral-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="py-6 sm:py-8 md:py-12 bg-gradient-to-b from-white via-neutral-50 to-white">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
           {/* Header */}
-          <div className="text-center mb-12 md:mb-16">
+          <div className="text-center mb-6 sm:mb-8 md:mb-12">
             <div className="inline-flex items-center gap-2 bg-amber-500 text-red-950 px-4 py-2 rounded-full mb-4 shadow-lg font-semibold text-sm">
               <Calendar size={18} />
               <span>{t('events.title')}</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-red-950 mb-4">{t('events.title')}</h1>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-red-950 mb-3 sm:mb-4">{t('events.title')}</h1>
+            <p className="text-gray-600 text-sm sm:text-base md:text-lg max-w-2xl mx-auto px-3">
               {t('events.subtitle')}
             </p>
-            <div className="w-24 h-1 bg-gradient-to-r from-amber-500 to-red-600 mx-auto mt-6 rounded-full"></div>
+            <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-amber-500 to-red-600 mx-auto mt-4 sm:mt-6 rounded-full"></div>
           </div>
 
           {/* Events Grid */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:gap-5 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
             {events.data.map((e: any, index: number) => (
               <div 
                 key={e.id} 

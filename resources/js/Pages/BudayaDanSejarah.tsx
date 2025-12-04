@@ -352,12 +352,11 @@ export default function BudayaDanSejarah() {
           </div>
         </div>
 
-        <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+        <div className="relative z-10 text-center px-3 sm:px-4 lg:px-6 max-w-4xl mx-auto">
           {/* UNESCO Badge */}
-            <div className="inline-flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500 text-red-950 px-4 sm:px-8 py-2 sm:py-4 rounded-full mb-10 sm:mb-12 md:mb-16 shadow-lg sm:shadow-2xl animate-[slideDown_1s_ease-out] border-2 border-amber-400/50 backdrop-blur-sm relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
-            <Sparkles size={18} className="sm:size-6 animate-[spin_4s_linear_infinite] relative z-10" />
-            <span className="tracking-wide relative z-10 text-sm sm:text-base font-semibold">{heroContent.badge}</span>
+            <div className="inline-flex items-center gap-2 bg-amber-500 text-red-950 px-4 py-2 rounded-full mb-4 shadow-lg font-semibold text-sm">
+            <Sparkles size={18} />
+            <span>{heroContent.badge}</span>
             <Sparkles size={18} className="sm:size-6 animate-[spin_4s_linear_infinite_reverse] relative z-10" />
           </div>
 
@@ -375,7 +374,7 @@ export default function BudayaDanSejarah() {
           </p>
 
           {/* Quick Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 max-w-4xl mx-auto animate-[slideUp_1s_ease-out_0.6s_both]">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 max-w-3xl mx-auto animate-[slideUp_1s_ease-out_0.6s_both]">
             {stats.map((stat, index) => (
               <div
                 key={index}
@@ -393,12 +392,12 @@ export default function BudayaDanSejarah() {
       </div>
 
       {/* Cultural Aspects Section */}
-      <div className="py-12 md:py-20 bg-gradient-to-br from-amber-50 via-white to-red-50 relative overflow-hidden">
+      <div className="py-8 sm:py-12 md:py-16 bg-gradient-to-br from-amber-50 via-white to-red-50 relative overflow-hidden">
         <ContainerBackground index={3} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12 md:mb-16">
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-red-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full mb-4 sm:mb-6 shadow-lg font-semibold text-sm sm:text-base">
-              <Palette size={18} className="sm:size-6" />
+            <div className="inline-flex items-center gap-2 bg-amber-500 text-red-950 px-4 py-2 rounded-full mb-4 shadow-lg font-semibold text-sm">
+              <Palette size={18} />
               <span>{sectionContent.aspectsTag}</span>
             </div>
             <h2 className="text-red-950 mb-4 sm:mb-6 text-3xl sm:text-4xl md:text-5xl font-bold">
@@ -477,8 +476,8 @@ export default function BudayaDanSejarah() {
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12 md:mb-16">
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 text-red-950 px-4 sm:px-6 py-2 sm:py-3 rounded-full mb-4 sm:mb-6 shadow-lg font-semibold text-sm sm:text-base">
-              <Clock size={18} className="sm:size-6" />
+            <div className="inline-flex items-center gap-2 bg-amber-500 text-red-950 px-4 py-2 rounded-full mb-4 shadow-lg font-semibold text-sm">
+              <Clock size={18} />
               <span>{sectionContent.timelineTag}</span>
                 </div>
             <h2 className="text-amber-300 mb-4 sm:mb-6 text-3xl sm:text-4xl md:text-5xl font-bold">

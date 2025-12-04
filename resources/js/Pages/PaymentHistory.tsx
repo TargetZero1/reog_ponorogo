@@ -33,7 +33,7 @@ export default function PaymentHistory({ payments }: PaymentHistoryProps) {
         title={`${t('payment_history.title')} - Reog Ponorogo`}
         description={t('payment_history.subtitle')}
       />
-      <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-red-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-red-50 py-4 sm:py-6 md:py-8 px-3 sm:px-4 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="bg-white rounded-2xl shadow-lg p-8">
             <div className="flex items-center gap-3 mb-6">

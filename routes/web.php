@@ -93,12 +93,29 @@ Route::prefix('{locale}')->where(['locale' => 'id|en'])->group(function () {
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:6|confirmed',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
+        
         $user->name = $data['name'];
         $user->email = $data['email'];
+        
         if (!empty($data['password'])) {
             $user->password = Hash::make($data['password']);
         }
+        
+        // Handle profile picture upload
+        if ($request->hasFile('profile_picture')) {
+            // Delete old profile picture if exists
+            if ($user->profile_picture && file_exists(public_path($user->profile_picture))) {
+                unlink(public_path($user->profile_picture));
+            }
+            
+            $image = $request->file('profile_picture');
+            $filename = time() . '_' . str_replace(' ', '_', $user->name) . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images/profiles'), $filename);
+            $user->profile_picture = '/images/profiles/' . $filename;
+        }
+        
         $user->save();
         FacadesAuth::setUser($user);
         return redirect()->back()->with('success', trans('profile.success'));

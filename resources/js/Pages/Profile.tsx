@@ -3,7 +3,7 @@ import { Layout } from '@/Components/Layout';
 import { SEO } from '@/Components/SEO';
 import { LanguageSwitcher } from '@/Components/LanguageSwitcher';
 import { useTranslations } from '@/utils/translations';
-import { User, Mail, Lock, Save, CheckCircle } from 'lucide-react';
+import { User, Mail, Lock, Save, CheckCircle, Upload, X, Camera } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 export default function Profile() {
@@ -17,10 +17,12 @@ export default function Profile() {
     email: user?.email || '',
     password: '',
     password_confirmation: '',
+    profile_picture: null as File | null,
   });
 
   const [success, setSuccess] = useState(flash?.success || '');
   const [showPasswordFields, setShowPasswordFields] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(user?.profile_picture || null);
 
   useEffect(() => {
     if (flash?.success) {
@@ -29,9 +31,36 @@ export default function Profile() {
     }
   }, [flash?.success]);
 
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      setData('profile_picture', file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function removeImage() {
+    setData('profile_picture', null);
+    setPreviewUrl(null);
+  }
+
   function submit(e: any) {
     e.preventDefault();
-    put(route('profile.update', { locale }), {
+    
+    // Use POST with _method for file uploads
+    router.post(route('profile.update', { locale }), {
+      _method: 'PUT',
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      password_confirmation: data.password_confirmation,
+      profile_picture: data.profile_picture,
+    }, {
+      forceFormData: true,
       onSuccess: () => {
         setShowPasswordFields(false);
         setData('password', '');
@@ -73,6 +102,58 @@ export default function Profile() {
           {/* Profile Form */}
           <div className="bg-white rounded-2xl shadow-lg p-8">
             <form onSubmit={submit} className="space-y-6">
+              {/* Profile Picture Upload */}
+              <div>
+                <label className="block text-sm font-semibold text-red-950 mb-3 flex items-center gap-2">
+                  <Camera size={16} />
+                  {locale === 'en' ? 'Profile Picture' : 'Foto Profil'}
+                </label>
+                <div className="flex items-center gap-4">
+                  {/* Current or Preview Image */}
+                  <div className="relative">
+                    {previewUrl ? (
+                      <img 
+                        src={previewUrl} 
+                        alt="Profile" 
+                        className="w-24 h-24 rounded-full object-cover border-4 border-red-100"
+                      />
+                    ) : (
+                      <div className="w-24 h-24 rounded-full bg-gradient-to-br from-red-100 to-amber-100 flex items-center justify-center border-4 border-red-100">
+                        <User size={40} className="text-red-400" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Upload/Change Button */}
+                  <div className="flex-1">
+                    <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                      <Upload size={18} />
+                      {previewUrl ? (locale === 'en' ? 'Change Photo' : 'Ganti Foto') : (locale === 'en' ? 'Upload Photo' : 'Upload Foto')}
+                      <input 
+                        type="file" 
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="hidden"
+                      />
+                    </label>
+                    {previewUrl && (
+                      <button
+                        type="button"
+                        onClick={removeImage}
+                        className="ml-2 inline-flex items-center gap-1 px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+                      >
+                        <X size={16} />
+                        {locale === 'en' ? 'Remove' : 'Hapus'}
+                      </button>
+                    )}
+                    <p className="text-xs text-gray-500 mt-2">
+                      {locale === 'en' ? 'JPG, PNG or GIF. Max 10MB.' : 'JPG, PNG atau GIF. Maksimal 10MB.'}
+                    </p>
+                  </div>
+                </div>
+                {errors.profile_picture && <p className="text-red-600 text-sm mt-2 font-medium">{errors.profile_picture}</p>}
+              </div>
+
               {/* Name Field */}
               <div>
                 <label className="block text-sm font-semibold text-red-950 mb-2 flex items-center gap-2">

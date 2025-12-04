@@ -113,41 +113,40 @@ export function Navbar({ activeSection = '', setActiveSection = () => {} }: Navb
             </a>
           </div>
 
-          <div className="hidden md:flex flex-1 items-center justify-center space-x-2">
-            {navLinks.map((link) => (
-              <button
-                key={link.id}
-                onClick={() => scrollToSection(link.id, link.href, link.isPage)}
-                aria-current={activeSection === link.id ? 'page' : undefined}
-                className={`px-4 py-2 rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 font-medium ${
-                  activeSection === link.id
-                    ? isAdminPage || isWhiteBackgroundPage
+          <div className="hidden md:flex flex-1 items-center justify-center">
+            <div className="flex items-center space-x-1">
+              {navLinks.map((link) => (
+                <button
+                  key={link.id}
+                  onClick={() => scrollToSection(link.id, link.href, link.isPage)}
+                  aria-current={activeSection === link.id ? 'page' : undefined}
+                  className={`px-4 py-2 rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 font-medium whitespace-nowrap ${
+                    activeSection === link.id
                       ? 'bg-amber-500 text-red-950 shadow-lg'
-                      : 'bg-amber-500 text-red-950 shadow-lg'
-                    : isAdminPage || (isWhiteBackgroundPage && !scrolled)
-                      ? 'text-white hover:bg-white/20 hover:text-amber-200 drop-shadow-lg'
-                      : scrolled 
-                        ? 'text-red-950 hover:bg-amber-50 hover:text-red-800 drop-shadow-sm' 
-                        : 'text-white hover:bg-white/20 hover:text-amber-200 drop-shadow-lg'
-                }`}
-              >
-                {link.label}
-              </button>
-            ))}
+                      : isAdminPage || (isWhiteBackgroundPage && !scrolled)
+                        ? 'text-white hover:bg-white/20 hover:text-amber-200 drop-shadow-lg'
+                        : scrolled 
+                          ? 'text-red-950 hover:bg-amber-50 hover:text-red-800 drop-shadow-sm' 
+                          : 'text-white hover:bg-white/20 hover:text-amber-200 drop-shadow-lg'
+                  }`}
+                >
+                  {link.label}
+                </button>
+              ))}
+            </div>
+            
             {/* Admin section */}
             {user?.role === 'admin' && (
-              <>
-                <span className="ml-4 px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-bold uppercase tracking-wider">{t('nav.admin_label')}</span>
+              <div className="flex items-center ml-4 pl-4 border-l border-white/30">
+                <span className="px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-bold uppercase tracking-wider mr-2">{t('nav.admin_label')}</span>
                 {adminLinks.map((link) => (
                   <button
                     key={link.id}
                     onClick={() => scrollToSection(link.id, link.href, link.isPage)}
                     aria-current={activeSection === link.id ? 'page' : undefined}
-                    className={`px-4 py-2 rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 font-medium ${
+                    className={`px-4 py-2 rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 font-medium whitespace-nowrap ${
                       activeSection === link.id
-                        ? isAdminPage || isWhiteBackgroundPage
-                          ? 'bg-amber-500 text-red-950 shadow-lg'
-                          : 'bg-amber-500 text-red-950 shadow-lg'
+                        ? 'bg-amber-500 text-red-950 shadow-lg'
                         : isAdminPage || (isWhiteBackgroundPage && !scrolled)
                           ? 'text-white hover:bg-white/20 hover:text-amber-200 drop-shadow-lg'
                           : scrolled 
@@ -158,7 +157,7 @@ export function Navbar({ activeSection = '', setActiveSection = () => {} }: Navb
                     {link.label}
                   </button>
                 ))}
-              </>
+              </div>
             )}
           </div>
 

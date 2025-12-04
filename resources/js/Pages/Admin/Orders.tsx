@@ -117,7 +117,7 @@ export default function Orders({ orders, filters }: OrdersProps) {
 
   return (
     <Layout>
-      <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen p-6 md:p-8">
+      <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen p-3 sm:p-4 md:p-6 pt-16 sm:pt-20">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-8">

@@ -180,7 +180,7 @@ return [
             'message_placeholder' => 'Pesan Anda',
             'submit' => 'Kirim Pesan',
         ],
-        'copyright' => '© 2024 Reog Ponorogo. Dikembangkan untuk Tugas Akhir. All rights reserved.',
+        'copyright' => '© 2025 Reog Ponorogo. All rights reserved.',
         'privacy_policy' => 'Kebijakan Privasi',
         'terms' => 'Syarat & Ketentuan',
     ],

@@ -49,21 +49,21 @@ export default function Edit(props: any) {
     <Layout>
       <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-red-50 -mt-6">
         {/* Header */}
-        <div className="max-w-4xl mx-auto px-4 pt-8 pb-6">
-          <div className="bg-gradient-to-r from-[#6b0000] via-[#7b0b0b] to-[#8b0b0b] text-white rounded-xl shadow-lg py-8 px-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <a href={getLocalizedRoute('admin.events.index', {}, locale)} className="p-2 hover:bg-white/20 rounded-lg transition">
-                  <ArrowLeft size={24} />
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 pt-16 sm:pt-20 pb-4 sm:pb-6">
+          <div className="bg-gradient-to-r from-[#6b0000] via-[#7b0b0b] to-[#8b0b0b] text-white rounded-lg sm:rounded-xl shadow-lg py-4 sm:py-6 md:py-8 px-4 sm:px-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <a href={getLocalizedRoute('admin.events.index', {}, locale)} className="p-1.5 sm:p-2 hover:bg-white/20 rounded-lg transition">
+                  <ArrowLeft size={20} className="sm:size-6" />
                 </a>
                 <div>
-                  <h1 className="text-3xl font-bold">Edit Event</h1>
-                  <p className="text-red-100">Ubah informasi pertunjukan Reog</p>
+                  <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">Edit Event</h1>
+                  <p className="text-red-100 text-sm sm:text-base">Ubah informasi pertunjukan Reog</p>
                 </div>
               </div>
               <a
                 href={getLocalizedRoute('admin.events.show', { event: event.id }, locale)}
-                className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition backdrop-blur-sm"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition backdrop-blur-sm text-sm sm:text-base"
               >
                 <Eye size={18} />
                 View Event
@@ -73,8 +73,8 @@ export default function Edit(props: any) {
         </div>
 
         {/* Form */}
-        <div className="max-w-4xl mx-auto px-4 py-12">
-          <form onSubmit={submit} className="bg-white rounded-xl shadow-lg p-8 border border-red-100">
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8">
+          <form onSubmit={submit} className="bg-white rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-6 md:p-8 border border-red-100">
             {/* Image Upload */}
             <div className="mb-6">
               <label className="block text-sm font-semibold text-red-950 mb-2">Event Image</label>
