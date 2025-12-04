@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, usePage, router } from '@inertiajs/react';
 import { UserCircle, LogOut, BarChart3, Users, ShoppingCart, FileText, Home, MapPin } from 'lucide-react';
+import { useTranslations, getLocalizedRoute } from '@/utils/translations';
 
 interface ProfileDropdownProps {
   scrolled: boolean;
@@ -15,6 +16,7 @@ export function ProfileDropdown({ scrolled, isMobile = false, isWhiteBackgroundP
   const { auth } = usePage().props as any;
   const user = auth?.user;
   const isAdmin = user?.role === 'admin';
+  const { t, locale } = useTranslations();
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -23,7 +25,7 @@ export function ProfileDropdown({ scrolled, isMobile = false, isWhiteBackgroundP
   const handleLogout = (e?: React.MouseEvent) => {
     e?.preventDefault();
     // ✅ FIXED: Use named route for logout
-    router.post(route('logout'));
+    router.post(getLocalizedRoute('logout', {}, locale));
     setIsOpen(false);
   };
 
@@ -66,22 +68,22 @@ export function ProfileDropdown({ scrolled, isMobile = false, isWhiteBackgroundP
                 {!isAdmin && (
                   <>
                     <Link
-                      href={route('profile')}
+                      href={getLocalizedRoute('profile', {}, locale)}
                       className={linkClasses}
                       role="menuitem"
                       tabIndex={-1}
                       id="menu-item-profile"
                     >
-                      Profile
+                      {t('profile.title')}
                     </Link>
                     <Link
-                      href={route('payment.history')}
+                      href={getLocalizedRoute('payment.history', {}, locale)}
                       className={linkClasses}
                       role="menuitem"
                       tabIndex={-1}
                       id="menu-item-orders"
                     >
-                      My Orders
+                      {t('payment_history.title')}
                     </Link>
                   </>
                 )}
@@ -90,79 +92,79 @@ export function ProfileDropdown({ scrolled, isMobile = false, isWhiteBackgroundP
                 {isAdmin && (
                   <>
                     <Link
-                      href={route('profile')}
+                      href={getLocalizedRoute('profile', {}, locale)}
                       className={linkClasses}
                       role="menuitem"
                       tabIndex={-1}
                       id="menu-item-admin-profile"
                     >
-                      Admin Profile
+                      {t('profile.as_admin')}
                     </Link>
                     <div className={sectionHeaderClasses} role="none">
-                      Admin Panel
+                      {t('nav.admin_label')}
                     </div>
                     <Link
-                      href={route('admin.dashboard')}
+                      href={getLocalizedRoute('admin.dashboard', {}, locale)}
                       className={adminLinkClasses}
                       role="menuitem"
                       tabIndex={-1}
                     >
                       <Home size={16} />
-                      Dashboard
+                      {t('nav.dashboard')}
                     </Link>
                     <Link
-                      href={route('admin.analytics')}
+                      href={getLocalizedRoute('admin.analytics', {}, locale)}
                       className={adminLinkClasses}
                       role="menuitem"
                       tabIndex={-1}
                     >
                       <BarChart3 size={16} />
-                      Analytics
+                      {t('nav.analytics')}
                     </Link>
                     <Link
-                      href={route('admin.orders')}
+                      href={getLocalizedRoute('admin.orders', {}, locale)}
                       className={adminLinkClasses}
                       role="menuitem"
                       tabIndex={-1}
                     >
                       <ShoppingCart size={16} />
-                      Orders
+                      {t('nav.orders')}
                     </Link>
                     <Link
-                      href={route('admin.users')}
+                      href={getLocalizedRoute('admin.users', {}, locale)}
                       className={adminLinkClasses}
                       role="menuitem"
                       tabIndex={-1}
                     >
                       <Users size={16} />
-                      Users
+                      {t('nav.users')}
                     </Link>
                     <Link
-                      href={route('admin.reports')}
+                      href={getLocalizedRoute('admin.reports', {}, locale)}
                       className={adminLinkClasses}
                       role="menuitem"
                       tabIndex={-1}
                     >
                       <FileText size={16} />
-                      Reports
+                      {t('nav.reports')}
                     </Link>
                     <Link
-                      href={route('admin.events.index')}
+                      href={getLocalizedRoute('admin.events.index', {}, locale)}
                       className={adminLinkClasses}
                       role="menuitem"
                       tabIndex={-1}
                     >
                       <BarChart3 size={16} />
-                      Manage Events
+                      {t('nav.manage_events')}
                     </Link>
                     <Link
-                      href={route('admin.places.index')}
+                      href={getLocalizedRoute('admin.places.index', {}, locale)}
                       className={adminLinkClasses}
                       role="menuitem"
                       tabIndex={-1}
                     >
                       <MapPin size={16} />
-                      Manage Wisata
+                      {t('nav.manage_places')}
                     </Link>
                   </>
                 )}
@@ -175,28 +177,28 @@ export function ProfileDropdown({ scrolled, isMobile = false, isWhiteBackgroundP
                   id="menu-item-logout"
                 >
                   <LogOut size={16} />
-                  Logout
+                  {t('nav.logout')}
                 </button>
               </>
             ) : (
               <>
                 <Link
-                  href={route('pesan.login')}
+                  href={getLocalizedRoute('pesan.login', {}, locale)}
                   className={linkClasses}
                   role="menuitem"
                   tabIndex={-1}
                   id="menu-item-login"
                 >
-                  Login
+                  {t('nav.login')}
                 </Link>
                 <Link
-                  href={route('pesan.register')}
+                  href={getLocalizedRoute('pesan.register', {}, locale)}
                   className={linkClasses}
                   role="menuitem"
                   tabIndex={-1}
                   id="menu-item-register"
                 >
-                  Register
+                  {t('nav.register')}
                 </Link>
               </>
             )}

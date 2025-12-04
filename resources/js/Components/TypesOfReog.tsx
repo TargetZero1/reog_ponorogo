@@ -1,59 +1,172 @@
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useState } from 'react';
+import { useTranslations } from '@/utils/translations';
 
 export function TypesOfReog() {
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
+  const { locale } = useTranslations();
 
-  const reogTypes = [
-    {
-      name: 'Dadak Merak',
-      role: 'Pusat Pertunjukan',
-      description: 'Topeng raksasa berbentuk kepala harimau dengan mahkota bulu merak yang menjulang tinggi. Beratnya mencapai 50-60 kg dan ditarikan dengan gigitan gigi.',
-      details: 'Penari Dadak Merak harus memiliki kekuatan fisik yang luar biasa dan stamina tinggi. Mahkota bulu merak yang megah melambangkan keindahan alam dan kekuatan spiritual.',
-      color: 'from-green-500 to-blue-500',
-      image: 'https://images.unsplash.com/photo-1760133453014-c8df5dcc0007?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRvbmVzaWFuJTIwdHJhZGl0aW9uYWwlMjBtYXNrfGVufDF8fHx8MTc2MzEwMDE1Nnww&ixlib=rb-4.1.0&q=80&w=1080'
-    },
-    {
-      name: 'Warok',
-      role: 'Penari Utama',
-      description: 'Penari pria yang mengenakan pakaian hitam dengan sabuk merah. Warok adalah sosok sakti dan dihormati, merupakan simbol kekuatan spiritual dan fisik.',
-      details: 'Dalam tradisi Reog, Warok dianggap memiliki ilmu kanuragan dan kesaktian. Mereka adalah pelindung masyarakat dan guru spiritual yang dihormati.',
-      color: 'from-red-600 to-black',
-      image: 'https://images.unsplash.com/photo-1698824554771-293b5dcc42db?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRvbmVzaWFuJTIwdHJhZGl0aW9uYWwlMjBkYW5jZSUyMHBlcmZvcm1hbmNlfGVufDF8fHx8MTc2MzEwMDE1NXww&ixlib=rb-4.1.0&q=80&w=1080'
-    },
-    {
-      name: 'Jathil',
-      role: 'Penari Pendukung',
-      description: 'Penari wanita yang mengenakan kostum berkuda-kuda dari anyaman bambu. Gerakan lincah dan gemulai mewakili pasukan berkuda dalam cerita.',
-      details: 'Jathil menampilkan tarian yang energik dengan gerakan berkuda. Kostum mereka penuh warna dan hiasan yang indah, melambangkan keanggunan dan kelincahan.',
-      color: 'from-pink-500 to-red-500',
-      image: 'https://images.unsplash.com/photo-1720260991096-09620ead91cb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRvbmVzaWFuJTIwY3VsdHVyYWwlMjBoZXJpdGFnZXxlbnwxfHx8fDE3NjMxMDAxNTV8MA&ixlib=rb-4.1.0&q=80&w=1080'
-    },
-    {
-      name: 'Bujang Ganong',
-      role: 'Tokoh Pelawak',
-      description: 'Tokoh badut dengan topeng wajah merah yang lucu. Bertugas menghibur penonton dengan gerakan dan dialog yang jenaka sebagai penyeimbang suasana.',
-      details: 'Bujang Ganong memberikan relief komedi di tengah pertunjukan yang intens. Improvisasi dan interaksi dengan penonton menjadi daya tarik khasnya.',
-      color: 'from-orange-500 to-amber-500',
-      image: 'https://images.unsplash.com/photo-1760133453014-c8df5dcc0007?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRvbmVzaWFuJTIwdHJhZGl0aW9uYWwlMjBtYXNrfGVufDF8fHx8MTc2MzEwMDE1Nnww&ixlib=rb-4.1.0&q=80&w=1080'
-    },
-    {
-      name: 'Kelono Sewandono',
-      role: 'Raja Protagonis',
-      description: 'Prabu atau raja yang menjadi tokoh utama dalam cerita. Mengenakan mahkota dan pakaian kerajaan, mewakili keagungan dan kepemimpinan.',
-      details: 'Sebagai karakter utama, Kelono Sewandono menampilkan gerakan yang anggun namun penuh wibawa, mencerminkan kepribadian seorang raja yang agung.',
-      color: 'from-amber-600 to-amber-800',
-      image: 'https://images.unsplash.com/photo-1698824554771-293b5dcc42db?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRvbmVzaWFuJTIwdHJhZGl0aW9uYWwlMjBkYW5jZSUyMHBlcmZvcm1hbmNlfGVufDF8fHx8MTc2MzEwMDE1NXww&ixlib=rb-4.1.0&q=80&w=1080'
-    },
-    {
-      name: 'Barongan',
-      role: 'Tokoh Mistis',
-      description: 'Sosok harimau atau singa mistis dengan warna merah yang melambangkan penjaga spiritual. Gerakannya liar dan penuh energi.',
-      details: 'Barongan dipercaya sebagai penjaga spiritual yang melindungi pertunjukan. Gerakan dinamis dan energetiknya menciptakan atmosfer mistis yang kuat.',
-      color: 'from-red-700 to-red-950',
-      image: 'https://images.unsplash.com/photo-1760133453014-c8df5dcc0007?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRvbmVzaWFuJTIwdHJhZGl0aW9uYWwlMjBtYXNrfGVufDF8fHx8MTc2MzEwMDE1Nnww&ixlib=rb-4.1.0&q=80&w=1080'
-    }
-  ];
+  const reogTypes =
+    locale === 'en'
+      ? [
+          {
+            name: 'Dadak Merak',
+            role: 'Centerpiece Performer',
+            description:
+              'A towering tiger mask crowned with peacock feathers weighing up to 60 kg, carried with jaw strength.',
+            details:
+              'Dadak Merak dancers embody power and grace; the peacock crown symbolizes natures splendor and spiritual energy.',
+            color: 'from-green-500 to-blue-500',
+            image:
+              'https://images.unsplash.com/photo-1760133453014-c8df5dcc0007?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+          },
+          {
+            name: 'Warok',
+            role: 'Guardians',
+            description:
+              'Respected figures in black attire representing mystical strength, leadership, and protection.',
+            details:
+              'Warok are cultural mentors believed to possess supernatural abilities, safeguarding the troupe and community.',
+            color: 'from-red-600 to-black',
+            image:
+              'https://images.unsplash.com/photo-1698824554771-293b5dcc42db?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+          },
+          {
+            name: 'Jathil',
+            role: 'Horse Dancers',
+            description:
+              'Agile dancers with bamboo horse props portraying the cavalry with lively, elegant moves.',
+            details:
+              'Their vibrant costumes and dynamic choreography highlight the bravery and finesse of Ponorogos youth.',
+            color: 'from-pink-500 to-red-500',
+            image:
+              'https://images.unsplash.com/photo-1720260991096-09620ead91cb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+          },
+          {
+            name: 'Bujang Ganong',
+            role: 'Comic Relief',
+            description:
+              'A witty trickster in a red mask who improvises jokes and interacts directly with the audience.',
+            details:
+              'He lightens the mood, keeping the performance engaging with humor and spontaneous antics.',
+            color: 'from-orange-500 to-amber-500',
+            image:
+              'https://images.unsplash.com/photo-1760133453014-c8df5dcc0007?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+          },
+          {
+            name: 'Kelono Sewandono',
+            role: 'Protagonist King',
+            description:
+              'The regal hero seeking love, symbolizing wisdom, charisma, and noble leadership.',
+            details:
+              'His movements blend tenderness and authority, portraying the dignity of a legendary monarch.',
+            color: 'from-amber-600 to-amber-800',
+            image:
+              'https://images.unsplash.com/photo-1698824554771-293b5dcc42db?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+          },
+          {
+            name: 'Barongan',
+            role: 'Mystical Guardian',
+            description:
+              'A fiery lion or tiger spirit believed to shield the performance with ferocious energy.',
+            details:
+              'Barongans wild choreography amplifies the mystical aura and spiritual protection of Reog Ponorogo.',
+            color: 'from-red-700 to-red-950',
+            image:
+              'https://images.unsplash.com/photo-1760133453014-c8df5dcc0007?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+          },
+        ]
+      : [
+          {
+            name: 'Dadak Merak',
+            role: 'Pusat Pertunjukan',
+            description:
+              'Topeng harimau raksasa dengan mahkota bulu merak seberat 50-60 kg yang ditopang dengan kekuatan rahang.',
+            details:
+              'Penari Dadak Merak melambangkan ketangguhan dan kemegahan alam Ponorogo.',
+            color: 'from-green-500 to-blue-500',
+            image:
+              'https://images.unsplash.com/photo-1760133453014-c8df5dcc0007?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+          },
+          {
+            name: 'Warok',
+            role: 'Penari Utama',
+            description:
+              'Sosok sakti berpakaian hitam yang dihormati sebagai penjaga budaya dan spiritual.',
+            details:
+              'Warok dipercaya memiliki kesaktian dan menjadi pelindung paguyuban.',
+            color: 'from-red-600 to-black',
+            image:
+              'https://images.unsplash.com/photo-1698824554771-293b5dcc42db?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+          },
+          {
+            name: 'Jathil',
+            role: 'Penari Pendukung',
+            description:
+              'Penari berkostum kuda-kudaan anyaman bambu yang menggambarkan pasukan berkuda.',
+            details:
+              'Gerakannya lincah dan energik, menampilkan keanggunan sekaligus keberanian.',
+            color: 'from-pink-500 to-red-500',
+            image:
+              'https://images.unsplash.com/photo-1720260991096-09620ead91cb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+          },
+          {
+            name: 'Bujang Ganong',
+            role: 'Tokoh Pelawak',
+            description:
+              'Tokoh jenaka bertopeng merah yang menghibur penonton dengan improvisasi lucu.',
+            details:
+              'Memberi jeda komedi dan menghidupkan suasana dengan interaksi spontan.',
+            color: 'from-orange-500 to-amber-500',
+            image:
+              'https://images.unsplash.com/photo-1760133453014-c8df5dcc0007?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+          },
+          {
+            name: 'Kelono Sewandono',
+            role: 'Raja Protagonis',
+            description:
+              'Prabu utama yang berwibawa, mengenakan mahkota dan busana kerajaan.',
+            details:
+              'Gerakannya memadukan kelembutan dan ketegasan, mencerminkan kharisma pemimpin.',
+            color: 'from-amber-600 to-amber-800',
+            image:
+              'https://images.unsplash.com/photo-1698824554771-293b5dcc42db?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+          },
+          {
+            name: 'Barongan',
+            role: 'Tokoh Mistis',
+            description:
+              'Singa atau harimau merah yang dipercaya menjaga jalannya pertunjukan.',
+            details:
+              'Gerakannya liar dan penuh energi, menghadirkan suasana mistis nan kuat.',
+            color: 'from-red-700 to-red-950',
+            image:
+              'https://images.unsplash.com/photo-1760133453014-c8df5dcc0007?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+          },
+        ];
+
+  const sectionCopy =
+    locale === 'en'
+      ? {
+          badge: 'Characters & Elements',
+          title: 'Iconic Roles in Reog Ponorogo',
+          description:
+            'Each character carries deep symbolismfrom the fearless Warok to the majestic Dadak Merakcreating a powerful cultural narrative.',
+          harmonyTag: 'Perfect Harmony',
+          harmonyTitle: 'United in Grandeur',
+          harmonyText:
+            'These six characters weave a dramatic experience filled with heroism, humor, and mysticism. Their synergy makes every Reog performance unforgettable.',
+        }
+      : {
+          badge: 'Karakter & Elemen',
+          title: 'Jenis Karakter dalam Reog',
+          description:
+            'Setiap tokoh membawa makna filosofis, dari Warok yang sakti hingga kemegahan Dadak Merak, membentuk kisah budaya yang utuh.',
+          harmonyTag: 'Harmoni Sempurna',
+          harmonyTitle: 'Bersatu dalam Keindahan',
+          harmonyText:
+            'Enam karakter ini memadukan kepahlawanan, humor, dan nuansa mistis, menjadikan pertunjukan Reog selalu berkesan.',
+        };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -64,12 +177,11 @@ export function TypesOfReog() {
       {/* Section Header */}
       <div className="text-center mb-12 sm:mb-16 relative">
         <div className="inline-block bg-amber-500 text-red-950 px-4 sm:px-6 py-2 rounded-full mb-4 sm:mb-6 shadow-lg hover:shadow-xl transition-shadow font-semibold text-xs sm:text-sm">
-          Karakter & Elemen
+          {sectionCopy.badge}
         </div>
-        <h2 className="text-red-950 mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl font-bold">Jenis-Jenis Karakter dalam Reog</h2>
+        <h2 className="text-red-950 mb-3 sm:mb-4 text-2xl sm:text-3xl md:text-4xl font-bold">{sectionCopy.title}</h2>
         <p className="text-gray-700 max-w-3xl mx-auto leading-relaxed px-4 text-sm sm:text-base">
-          Setiap karakter dalam Reog Ponorogo memiliki peran dan makna filosofis yang mendalam. 
-          Mari kenali tokoh-tokoh yang menyusun pertunjukan megah ini.
+          {sectionCopy.description}
         </p>
         <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-amber-500 to-red-600 mx-auto mt-4 sm:mt-6 rounded-full"></div>
       </div>
@@ -91,7 +203,7 @@ export function TypesOfReog() {
                   alt={type.name}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
-                <div className={`absolute inset-0 bg-gradient-to-t ${type.color} opacity-60 group-hover:opacity-40 transition-opacity duration-500`}></div>
+                <div className={bsolute inset-0 bg-gradient-to-t  opacity-60 group-hover:opacity-40 transition-opacity duration-500}></div>
                 
                 {/* Role Badge */}
                 <div className="absolute top-4 sm:top-6 right-4 sm:right-6 bg-white/95 backdrop-blur-sm px-3 sm:px-4 py-1 sm:py-2 rounded-full shadow-lg transform group-hover:scale-110 transition-transform text-xs sm:text-sm">
@@ -99,7 +211,7 @@ export function TypesOfReog() {
                 </div>
 
                 {/* Decorative element */}
-                <div className={`absolute -bottom-6 -left-6 w-24 h-24 bg-gradient-to-br ${type.color} rounded-full blur-2xl opacity-50 group-hover:opacity-70 transition-opacity`}></div>
+                <div className={bsolute -bottom-6 -left-6 w-24 h-24 bg-gradient-to-br  rounded-full blur-2xl opacity-50 group-hover:opacity-70 transition-opacity}></div>
               </div>
 
               {/* Content */}
@@ -112,7 +224,7 @@ export function TypesOfReog() {
                 </p>
 
                 {/* Expandable details */}
-                <div className={`overflow-hidden transition-all duration-500 ${expandedCard === index ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
+                <div className={overflow-hidden transition-all duration-500 }>
                   <div className="pt-4 border-t border-neutral-200">
                     <p className="text-neutral-600 text-sm leading-relaxed italic">
                       {type.details}
@@ -121,7 +233,7 @@ export function TypesOfReog() {
                 </div>
                 
                 {/* Decorative line */}
-                <div className={`h-1 bg-gradient-to-r ${type.color} mt-6 rounded-full transition-all duration-500 ${expandedCard === index ? 'w-full' : 'w-16'}`}></div>
+                <div className={h-1 bg-gradient-to-r  mt-6 rounded-full transition-all duration-500 }></div>
               </div>
 
               {/* Hover indicator */}
@@ -131,7 +243,7 @@ export function TypesOfReog() {
             </div>
 
             {/* Glow effect */}
-            <div className={`absolute inset-0 bg-gradient-to-br ${type.color} rounded-3xl blur-2xl opacity-0 group-hover:opacity-20 transition-opacity -z-10`}></div>
+            <div className={bsolute inset-0 bg-gradient-to-br  rounded-3xl blur-2xl opacity-0 group-hover:opacity-20 transition-opacity -z-10}></div>
           </div>
         ))}
       </div>
@@ -146,14 +258,12 @@ export function TypesOfReog() {
 
         <div className="relative z-10">
           <div className="inline-flex items-center gap-2 bg-amber-500 text-red-950 px-4 py-2 rounded-full mb-6 shadow-lg">
-            <span>✨</span>
-            <span>Harmoni Sempurna</span>
+            <span></span>
+            <span>{sectionCopy.harmonyTag}</span>
           </div>
-          <h3 className="text-white mb-6">Bersatu dalam Keindahan</h3>
+          <h3 className="text-white mb-6">{sectionCopy.harmonyTitle}</h3>
           <p className="text-amber-50/90 max-w-3xl mx-auto leading-relaxed text-lg">
-            Keenam karakter ini bekerja bersama menciptakan narasi yang kuat dan penuh makna. 
-            Dari kekuatan Warok, kelincahan Jathil, hingga kemegahan Dadak Merak, 
-            semuanya menyatu dalam harmoni yang memukau dan menghipnotis setiap penonton.
+            {sectionCopy.harmonyText}
           </p>
         </div>
       </div>

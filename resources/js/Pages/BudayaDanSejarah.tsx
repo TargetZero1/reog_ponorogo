@@ -36,6 +36,18 @@ export default function BudayaDanSejarah() {
     };
   }, []);
 
+  type AspectKey = 'crafts' | 'culinary' | 'philosophy';
+
+  interface AspectContent {
+    title: string;
+    subtitle: string;
+    items: {
+      name: string;
+      description: string;
+      image: string;
+    }[];
+  }
+
   const heroContent = locale === 'en'
     ? {
         badge: 'Culture & Heritage',
@@ -64,14 +76,14 @@ export default function BudayaDanSejarah() {
     label: statsLabels[index]
   }));
 
-  const aspectsBase = [
+  const aspectsBase: { key: AspectKey; icon: JSX.Element; color: string; bgColor: string }[] = [
     { key: 'crafts', icon: <Palette size={32} />, color: 'from-purple-500 to-pink-500', bgColor: 'from-purple-50 to-pink-50' },
     { key: 'culinary', icon: <UtensilsCrossed size={32} />, color: 'from-orange-500 to-red-500', bgColor: 'from-orange-50 to-red-50' },
     { key: 'philosophy', icon: <BookOpen size={32} />, color: 'from-blue-500 to-cyan-500', bgColor: 'from-blue-50 to-cyan-50' }
   ];
 
-  const aspectsLocalized = locale === 'en'
-    ? {
+  const aspectsLocalized: Record<AspectKey, AspectContent> = locale === 'en'
+    ? ({
         crafts: {
           title: 'Local Crafts',
           subtitle: 'Traditional Crafts & Artistry',
@@ -83,7 +95,7 @@ export default function BudayaDanSejarah() {
             },
             {
               name: 'Bamboo Weaving',
-              description: 'Traditional bamboo crafts used for Jathil props and performance accessories, reflecting the community’s wisdom in sustainable living.',
+              description: "Traditional bamboo crafts used for Jathil props and performance accessories, reflecting the community's wisdom in sustainable living.",
               image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&q=80&auto=format'
             },
             {
@@ -104,7 +116,7 @@ export default function BudayaDanSejarah() {
             },
             {
               name: 'Nasi Pecel',
-              description: 'Rice with blanched vegetables and spicy peanut sauce. A staple dish that represents Ponorogo’s culinary identity.',
+              description: "Rice with blanched vegetables and spicy peanut sauce. A staple dish that represents Ponorogo's culinary identity.",
               image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&q=80&auto=format'
             },
             {
@@ -135,8 +147,8 @@ export default function BudayaDanSejarah() {
             }
           ]
         }
-      }
-    : {
+      } as Record<AspectKey, AspectContent>)
+    : ({
         crafts: {
           title: 'Kerajinan Lokal',
           subtitle: 'Traditional Crafts & Artistry',
@@ -200,7 +212,7 @@ export default function BudayaDanSejarah() {
             }
           ]
         }
-      };
+      } as Record<AspectKey, AspectContent>);
 
   const culturalAspects = aspectsBase.map((aspect) => ({
     icon: aspect.icon,
@@ -427,7 +439,7 @@ export default function BudayaDanSejarah() {
                   {/* Items Grid */}
                   <div className="p-6 md:p-8">
                 <div className="grid md:grid-cols-3 gap-6">
-                  {aspect.items.map((item, itemIndex) => (
+                  {aspect.items.map((item: { name: string; description: string; image: string }, itemIndex: number) => (
                     <div 
                       key={itemIndex}
                           className="group relative bg-gradient-to-br from-neutral-50 to-white rounded-2xl p-6 border border-neutral-200 hover:border-amber-300 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl"

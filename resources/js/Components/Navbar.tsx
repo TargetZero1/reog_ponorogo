@@ -156,7 +156,6 @@ export function Navbar({ activeSection = '', setActiveSection = () => {} }: Navb
             )}
             <ProfileDropdown scrolled={scrolled} isWhiteBackgroundPage={isAdminPage || isWhiteBackgroundPage} />
           </div>
-@@
           <div className="md:hidden flex items-center gap-2">
             <ProfileDropdown scrolled={scrolled} isMobile={true} isWhiteBackgroundPage={false} />
             <button

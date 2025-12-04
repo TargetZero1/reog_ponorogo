@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Head } from '@inertiajs/react';
 import { Navbar } from '../Components/Navbar';
 import { Hero } from '../Components/Hero';
 import { ReogSection } from '../Components/ReogSection';
@@ -11,9 +10,23 @@ import { Footer } from '../Components/Footer';
 import { ScrollToTop } from '../Components/ScrollToTop';
 import { ContainerBackground } from '../Components/ContainerBackground';
 import { SEO } from '../Components/SEO';
+import { useTranslations } from '../utils/translations';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState('beranda');
+  const { locale } = useTranslations();
+
+  const seoCopy = locale === 'en'
+    ? {
+        title: 'Reog Ponorogo - UNESCO Cultural Heritage',
+        description: "Discover the splendor of Reog Ponorogo, Indonesia's UNESCO-recognized living heritage. Explore performances, stories, and destinations.",
+        keywords: 'Reog Ponorogo, UNESCO, Cultural Heritage, Indonesia, Traditional Dance, Ponorogo'
+      }
+    : {
+        title: 'Reog Ponorogo - Warisan Budaya UNESCO',
+        description: 'Jelajahi kemegahan Reog Ponorogo sebagai Warisan Budaya Takbenda UNESCO. Temukan pertunjukan, sejarah, dan destinasi terbaik.',
+        keywords: 'Reog Ponorogo, UNESCO, Warisan Budaya, Indonesia, Tarian Tradisional, Ponorogo'
+      };
 
   useEffect(() => {
     const ids = ['beranda','reog','jenis-reog','video','budaya','galeri','wisata','testimoni'];
@@ -48,9 +61,9 @@ export default function App() {
   return (
     <>
       <SEO 
-        title="Reog Ponorogo - Warisan Budaya UNESCO 2025"
-        description="Sistem Informasi Warisan Budaya UNESCO Reog Ponorogo 2025. Jelajahi keindahan budaya, sejarah, dan pertunjukan Reog Ponorogo yang telah diakui sebagai Warisan Budaya Takbenda UNESCO."
-        keywords="Reog Ponorogo, UNESCO, Warisan Budaya, Indonesia, Tarian Tradisional, Budaya Jawa, Ponorogo, Cultural Heritage"
+        title={seoCopy.title}
+        description={seoCopy.description}
+        keywords={seoCopy.keywords}
       />
       <div className="min-h-screen bg-neutral-50">
         <Navbar activeSection={activeSection} setActiveSection={setActiveSection} />
