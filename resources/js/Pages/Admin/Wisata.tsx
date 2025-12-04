@@ -146,7 +146,7 @@ export default function Wisata({ places }: WisataProps) {
     <Layout>
       <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen p-3 sm:p-4 md:p-6 pt-16 sm:pt-20">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
+          {}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -171,7 +171,7 @@ export default function Wisata({ places }: WisataProps) {
               </div>
             </div>
 
-            {/* Search and Filters */}
+            {}
             <div className="bg-white rounded-xl shadow-lg p-4 mb-6">
               <div className="flex items-center gap-4">
                 <div className="relative flex-1">
@@ -187,7 +187,7 @@ export default function Wisata({ places }: WisataProps) {
               </div>
             </div>
 
-            {/* Bulk Actions */}
+            {}
             {selectedIds.length > 0 && (
               <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 flex items-center justify-between">
                 <span className="text-amber-800 font-semibold">
@@ -217,7 +217,7 @@ export default function Wisata({ places }: WisataProps) {
             )}
           </div>
 
-          {/* Places Table */}
+          {}
           <div className="bg-white rounded-xl shadow-lg overflow-hidden">
             <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-red-50 to-amber-50">
               <div className="flex items-center justify-between">
@@ -363,7 +363,7 @@ export default function Wisata({ places }: WisataProps) {
               </table>
             </div>
 
-            {/* Pagination */}
+            {}
                       {places.last_page > 1 && (
               <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
                 <div className="flex items-center justify-between">

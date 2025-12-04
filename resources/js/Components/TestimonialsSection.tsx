@@ -64,15 +64,15 @@ export function TestimonialsSection() {
         <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-amber-500 to-amber-400 mx-auto mt-4 sm:mt-6 rounded-full"></div>
       </div>
 
-      {/* Main Testimonial Carousel */}
+      {}
       <div className="relative mb-8 sm:mb-12">
         <div className="max-w-4xl mx-auto">
           <div className="bg-white/10 backdrop-blur-md rounded-3xl p-6 sm:p-8 md:p-12 shadow-2xl border border-white/20 relative overflow-hidden">
-            {/* Quote decoration */}
+            {}
             <Quote size={60} className="sm:size-20 absolute top-4 left-4 text-amber-500/20" />
             
             <div className="relative z-10">
-              {/* Avatar and info */}
+              {}
               <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
                 <div className="w-16 sm:w-20 h-16 sm:h-20 bg-gradient-to-br from-amber-500 to-amber-600 rounded-full flex items-center justify-center shadow-xl flex-shrink-0">
                   <span className="text-2xl sm:text-4xl">{testimonials[currentIndex].avatar}</span>
@@ -83,19 +83,19 @@ export function TestimonialsSection() {
                 </div>
               </div>
 
-              {/* Rating */}
+              {}
               <div className="flex gap-1 mb-4 sm:mb-6">
                 {[...Array(testimonials[currentIndex].rating)].map((_, i) => (
                   <Star key={i} size={16} className="sm:size-5 fill-amber-500 text-amber-500" />
                 ))}
               </div>
 
-              {/* Testimonial text */}
+              {}
               <p className="text-white/90 text-sm sm:text-base md:text-lg leading-relaxed mb-6 sm:mb-8 italic">
                 "{testimonials[currentIndex].text}"
               </p>
 
-              {/* Navigation dots */}
+              {}
               <div className="flex gap-2 justify-center">
                 {testimonials.map((_, index) => (
                   <button
@@ -113,7 +113,7 @@ export function TestimonialsSection() {
           </div>
         </div>
 
-        {/* Navigation buttons */}
+        {}
         <button
           onClick={prevTestimonial}
           className="absolute left-0 sm:-left-6 top-1/2 -translate-y-1/2 w-10 sm:w-12 h-10 sm:h-12 bg-amber-500 rounded-full flex items-center justify-center shadow-xl hover:bg-amber-400 transition-all hover:scale-110 text-red-950"
@@ -128,7 +128,7 @@ export function TestimonialsSection() {
         </button>
       </div>
 
-      {/* Small testimonial cards */}
+      {}
       <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
         {testimonials
           .filter((_, index) => index !== currentIndex)

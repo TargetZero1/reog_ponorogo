@@ -96,7 +96,7 @@ export function TouristAttractions() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* Section Header */}
+      {}
       <div className="text-center mb-12 sm:mb-16">
         <div className="inline-flex items-center gap-2 bg-amber-500 text-red-950 px-3 sm:px-4 py-2 rounded-full mb-3 sm:mb-4 shadow-lg font-semibold text-xs sm:text-sm">
           <Camera size={16} className="sm:size-5" />
@@ -110,14 +110,14 @@ export function TouristAttractions() {
         <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-amber-500 to-red-600 mx-auto mt-4 sm:mt-6 rounded-full"></div>
       </div>
 
-      {/* Attractions Grid */}
+      {}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-12 sm:mb-16">
         {attractions.map((attraction, index) => (
           <div 
             key={index}
             className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
           >
-            {/* Image */}
+            {}
             <div className="relative h-40 sm:h-56 overflow-hidden">
               <ImageWithFallback
                 src={attraction.image}
@@ -126,19 +126,19 @@ export function TouristAttractions() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
               
-              {/* Category Badge */}
+              {}
               <div className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-amber-500 text-red-950 px-2 sm:px-3 py-1 rounded-full shadow-lg text-xs sm:text-sm font-semibold">
                 <span>{attraction.category}</span>
               </div>
 
-              {/* Rating */}
+              {}
               <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-white/90 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-full flex items-center gap-1 text-xs sm:text-sm">
                 <Star size={14} className="sm:size-4 fill-amber-500 text-amber-500" />
                 <span className="text-red-950 font-semibold">{attraction.rating}</span>
               </div>
             </div>
 
-            {/* Content */}
+            {}
             <div className="p-4 sm:p-6">
               <h3 className="text-red-950 mb-2 text-base sm:text-lg font-bold group-hover:text-red-700 transition-colors">
                 {attraction.name}
@@ -148,7 +148,7 @@ export function TouristAttractions() {
                 {attraction.description}
               </p>
 
-              {/* Location & Hours */}
+              {}
               <div className="space-y-2 mb-4">
                 <div className="flex items-start gap-2 text-neutral-600">
                   <MapPin size={18} className="text-red-600 flex-shrink-0 mt-0.5" />
@@ -160,7 +160,7 @@ export function TouristAttractions() {
                 </div>
               </div>
 
-              {/* Highlights */}
+              {}
               <div className="border-t border-neutral-200 pt-4 mb-4">
                 <div className="flex flex-wrap gap-2">
                   {attraction.highlights.slice(0, 2).map((highlight, hIndex) => (
@@ -179,7 +179,7 @@ export function TouristAttractions() {
                 </div>
               </div>
 
-              {/* Button */}
+              {}
               <button 
                 onClick={() => setSelectedAttraction(index)}
                 className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white py-3 rounded-lg hover:from-red-700 hover:to-red-800 transition-all shadow-md hover:shadow-lg transform hover:scale-[1.02]"
@@ -191,7 +191,7 @@ export function TouristAttractions() {
         ))}
       </div>
 
-      {/* Detail Modal */}
+      {}
       {selectedData && (
         <div 
           className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-[fadeIn_0.3s_ease-out]"
@@ -201,7 +201,7 @@ export function TouristAttractions() {
             className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-[slideUp_0.3s_ease-out]"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Header Image */}
+            {}
             <div className="relative h-80 overflow-hidden rounded-t-3xl">
               <ImageWithFallback
                 src={selectedData.image}
@@ -210,7 +210,7 @@ export function TouristAttractions() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
               
-              {/* Close button */}
+              {}
               <button
                 onClick={() => setSelectedAttraction(null)}
                 className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all shadow-lg"
@@ -218,7 +218,7 @@ export function TouristAttractions() {
                 <X size={24} className="text-red-950" />
               </button>
 
-              {/* Title overlay */}
+              {}
               <div className="absolute bottom-0 left-0 right-0 p-8">
                 <div className="inline-block bg-amber-500 text-red-950 px-4 py-1 rounded-full mb-3">
                   {selectedData.category}
@@ -237,16 +237,16 @@ export function TouristAttractions() {
               </div>
             </div>
 
-            {/* Content */}
+            {}
             <div className="p-8">
-              {/* Description */}
+              {}
               <p className="text-neutral-700 leading-relaxed mb-8 text-lg">
                 {selectedData.description}
               </p>
 
-              {/* Info Grid */}
+              {}
               <div className="grid md:grid-cols-2 gap-8 mb-8">
-                {/* Location & Hours */}
+                {}
                 <div>
                   <h3 className="text-red-950 mb-4 flex items-center gap-2">
                     <MapPin size={24} />
@@ -268,7 +268,7 @@ export function TouristAttractions() {
                   </div>
                 </div>
 
-                {/* Activities */}
+                {}
                 <div>
                   <h3 className="text-red-950 mb-4">Aktivitas</h3>
                   <div className="space-y-2">
@@ -282,7 +282,7 @@ export function TouristAttractions() {
                 </div>
               </div>
 
-              {/* Facilities */}
+              {}
               <div className="mb-8">
                 <h3 className="text-red-950 mb-4">Fasilitas</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -294,7 +294,7 @@ export function TouristAttractions() {
                 </div>
               </div>
 
-              {/* Highlights */}
+              {}
               <div className="mb-8">
                 <h3 className="text-red-950 mb-4">Daya Tarik Utama</h3>
                 <div className="flex flex-wrap gap-2">
@@ -340,7 +340,7 @@ export function TouristAttractions() {
         </div>
       )}
 
-      {/* Map Section */}
+      {}
       <div className="bg-gradient-to-br from-red-950 to-red-800 rounded-2xl p-8 md:p-12 text-center shadow-2xl">
         <div className="max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-amber-500 text-red-950 px-4 py-2 rounded-full mb-6">

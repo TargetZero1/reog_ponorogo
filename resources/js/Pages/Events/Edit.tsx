@@ -48,7 +48,7 @@ export default function Edit(props: any) {
   return (
     <Layout>
       <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-red-50 -mt-6">
-        {/* Header */}
+        {}
         <div className="max-w-4xl mx-auto px-3 sm:px-4 pt-16 sm:pt-20 pb-4 sm:pb-6">
           <div className="bg-gradient-to-r from-[#6b0000] via-[#7b0b0b] to-[#8b0b0b] text-white rounded-lg sm:rounded-xl shadow-lg py-4 sm:py-6 md:py-8 px-4 sm:px-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
@@ -72,10 +72,10 @@ export default function Edit(props: any) {
           </div>
         </div>
 
-        {/* Form */}
+        {}
         <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8">
           <form onSubmit={submit} className="bg-white rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-6 md:p-8 border border-red-100">
-            {/* Image Upload */}
+            {}
             <div className="mb-6">
               <label className="block text-sm font-semibold text-red-950 mb-2">Event Image</label>
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-red-400 transition">
@@ -99,22 +99,7 @@ export default function Edit(props: any) {
                 )}
                 <input
                   type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="hidden"
-                  id="image-upload"
-                />
-                <label
-                  htmlFor="image-upload"
-                  className="mt-4 inline-block px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 cursor-pointer transition"
-                >
-                  {imagePreview ? 'Change Image' : 'Choose Image'}
-                </label>
-              </div>
-              {errors.image && <p className="text-red-600 text-sm mt-2">{errors.image}</p>}
-            </div>
-
-            {/* Title */}
+                  accept="image}
             <div className="mb-6">
               <label className="block text-sm font-semibold text-red-950 mb-2">Judul Event (Indonesia) *</label>
               <input
@@ -128,7 +113,7 @@ export default function Edit(props: any) {
               {errors.title && <p className="text-red-600 text-sm mt-2 font-semibold">{errors.title}</p>}
             </div>
 
-            {/* Title English */}
+            {}
             <div className="mb-6">
               <label className="block text-sm font-semibold text-red-950 mb-2">Title (English)</label>
               <input
@@ -139,7 +124,7 @@ export default function Edit(props: any) {
               />
             </div>
 
-            {/* Description */}
+            {}
             <div className="mb-6">
               <label className="block text-sm font-semibold text-red-950 mb-2">Deskripsi (Indonesia)</label>
               <textarea
@@ -152,7 +137,7 @@ export default function Edit(props: any) {
               {errors.description && <p className="text-red-600 text-sm mt-2">{errors.description}</p>}
             </div>
 
-            {/* Description English */}
+            {}
             <div className="mb-6">
               <label className="block text-sm font-semibold text-red-950 mb-2">Description (English)</label>
               <textarea
@@ -164,7 +149,7 @@ export default function Edit(props: any) {
               />
             </div>
 
-            {/* Date & Location */}
+            {}
             <div className="grid md:grid-cols-2 gap-6 mb-6">
               <div>
                 <label className="block text-sm font-semibold text-red-950 mb-2">Tanggal & Waktu *</label>
@@ -193,7 +178,7 @@ export default function Edit(props: any) {
               </div>
             </div>
 
-            {/* Location English */}
+            {}
             <div className="mb-6">
               <label className="block text-sm font-semibold text-red-950 mb-2">Location (English)</label>
               <input
@@ -204,7 +189,7 @@ export default function Edit(props: any) {
               />
             </div>
 
-            {/* Price & Capacity */}
+            {}
             <div className="grid md:grid-cols-2 gap-6 mb-6">
               <div>
                 <label className="block text-sm font-semibold text-red-950 mb-2">Harga Tiket (Rp)</label>
@@ -231,7 +216,7 @@ export default function Edit(props: any) {
               </div>
             </div>
 
-            {/* Published */}
+            {}
             <div className="mb-8 flex items-center gap-3 bg-amber-50 p-4 rounded-lg border border-amber-200">
               <input
                 type="checkbox"
@@ -242,7 +227,7 @@ export default function Edit(props: any) {
               <label className="text-sm font-semibold text-red-950">Publikasikan event ini sekarang</label>
             </div>
 
-            {/* Buttons */}
+            {}
             <div className="flex gap-4 pt-4 border-t border-gray-200">
               <button
                 type="submit"

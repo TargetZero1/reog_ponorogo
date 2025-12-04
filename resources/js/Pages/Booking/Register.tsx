@@ -52,7 +52,7 @@ export default function Register() {
           )}
 
           <form onSubmit={submit} className="space-y-4">
-            {/* Name */}
+            {}
             <div>
               <label className="block text-sm font-semibold text-red-950 mb-2">Nama Lengkap</label>
               <input
@@ -66,7 +66,7 @@ export default function Register() {
               />
             </div>
 
-            {/* Email */}
+            {}
             <div>
               <label className="block text-sm font-semibold text-red-950 mb-2">Email</label>
               <input
@@ -80,7 +80,7 @@ export default function Register() {
               />
             </div>
 
-            {/* Password */}
+            {}
             <div>
               <label className="block text-sm font-semibold text-red-950 mb-2">Password</label>
               <div className="relative">
@@ -103,7 +103,7 @@ export default function Register() {
               </div>
             </div>
 
-            {/* Password Confirmation */}
+            {}
             <div>
               <label className="block text-sm font-semibold text-red-950 mb-2">Konfirmasi Password</label>
               <div className="relative">

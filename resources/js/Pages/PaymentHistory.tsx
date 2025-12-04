@@ -45,7 +45,7 @@ export default function PaymentHistory({ payments }: PaymentHistoryProps) {
             <p className="text-neutral-600">{t('payment_history.no_history')}</p>
           ) : (
             <>
-              {/* Mobile Card Layout */}
+              {}
               <div className="block md:hidden space-y-4">
                 {payments.map((payment) => (
                   <div key={payment.id} className="bg-white border border-neutral-200 rounded-lg p-4 shadow-sm">
@@ -81,7 +81,7 @@ export default function PaymentHistory({ payments }: PaymentHistoryProps) {
                 ))}
               </div>
 
-              {/* Desktop Table Layout */}
+              {}
               <div className="hidden md:block overflow-x-auto">
                 <table className="min-w-full divide-y divide-neutral-200">
                   <thead className="bg-neutral-50">
@@ -145,7 +145,7 @@ export default function PaymentHistory({ payments }: PaymentHistoryProps) {
                 </table>
               </div>
 
-              {/* QR Code Modal/Display */}
+              {}
               {selectedTicket && (
                 <div className="mt-8 p-6 bg-gradient-to-br from-red-50 to-amber-50 rounded-xl border-2 border-red-200">
                   <h3 className="text-xl font-bold text-red-950 mb-4 flex items-center gap-2">
@@ -168,7 +168,7 @@ export default function PaymentHistory({ payments }: PaymentHistoryProps) {
                 </div>
               )}
 
-              {/* Mobile QR Code */}
+              {}
               <div className="block md:hidden space-y-4 mt-6">
                 {payments.map((payment) => (
                   <div key={payment.id} className="bg-white border border-neutral-200 rounded-lg p-4 shadow-sm">

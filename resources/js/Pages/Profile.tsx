@@ -77,7 +77,7 @@ export default function Profile() {
       />
       <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-red-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto">
-          {/* Header */}
+          {}
           <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-4xl font-bold text-red-950 mb-2 flex items-center gap-3">
@@ -91,7 +91,7 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* Success Message */}
+          {}
           {success && (
             <div className="mb-6 p-4 bg-green-50 border-l-4 border-green-500 rounded-lg flex items-center gap-3">
               <CheckCircle className="text-green-600 flex-shrink-0" size={20} />
@@ -99,17 +99,17 @@ export default function Profile() {
             </div>
           )}
 
-          {/* Profile Form */}
+          {}
           <div className="bg-white rounded-2xl shadow-lg p-8">
             <form onSubmit={submit} className="space-y-6">
-              {/* Profile Picture Upload */}
+              {}
               <div>
                 <label className="block text-sm font-semibold text-red-950 mb-3 flex items-center gap-2">
                   <Camera size={16} />
                   {locale === 'en' ? 'Profile Picture' : 'Foto Profil'}
                 </label>
                 <div className="flex items-center gap-4">
-                  {/* Current or Preview Image */}
+                  {}
                   <div className="relative">
                     {previewUrl ? (
                       <img 
@@ -124,37 +124,14 @@ export default function Profile() {
                     )}
                   </div>
 
-                  {/* Upload/Change Button */}
+                  {}
                   <div className="flex-1">
                     <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
                       <Upload size={18} />
                       {previewUrl ? (locale === 'en' ? 'Change Photo' : 'Ganti Foto') : (locale === 'en' ? 'Upload Photo' : 'Upload Foto')}
                       <input 
                         type="file" 
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        className="hidden"
-                      />
-                    </label>
-                    {previewUrl && (
-                      <button
-                        type="button"
-                        onClick={removeImage}
-                        className="ml-2 inline-flex items-center gap-1 px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
-                      >
-                        <X size={16} />
-                        {locale === 'en' ? 'Remove' : 'Hapus'}
-                      </button>
-                    )}
-                    <p className="text-xs text-gray-500 mt-2">
-                      {locale === 'en' ? 'JPG, PNG or GIF. Max 10MB.' : 'JPG, PNG atau GIF. Maksimal 10MB.'}
-                    </p>
-                  </div>
-                </div>
-                {errors.profile_picture && <p className="text-red-600 text-sm mt-2 font-medium">{errors.profile_picture}</p>}
-              </div>
-
-              {/* Name Field */}
+                        accept="image}
               <div>
                 <label className="block text-sm font-semibold text-red-950 mb-2 flex items-center gap-2">
                   <User size={16} />
@@ -172,7 +149,7 @@ export default function Profile() {
                 {errors.name && <p className="text-red-600 text-sm mt-2 font-medium">{errors.name}</p>}
               </div>
 
-              {/* Email Field */}
+              {}
               <div>
                 <label className="block text-sm font-semibold text-red-950 mb-2 flex items-center gap-2">
                   <Mail size={16} />
@@ -190,7 +167,7 @@ export default function Profile() {
                 {errors.email && <p className="text-red-600 text-sm mt-2 font-medium">{errors.email}</p>}
               </div>
 
-              {/* Password Section */}
+              {}
               <div className="pt-6 border-t border-gray-200">
                 <div className="flex items-center justify-between mb-4">
                   <label className="block text-sm font-semibold text-red-950 flex items-center gap-2">
@@ -240,7 +217,7 @@ export default function Profile() {
                 )}
               </div>
 
-              {/* Submit Button */}
+              {}
               <div className="flex items-center gap-4 pt-4">
                 <button
                   type="submit"
@@ -256,7 +233,7 @@ export default function Profile() {
               </div>
             </form>
             
-            {/* Logout Button */}
+            {}
             <div className="mt-6 pt-6 border-t border-gray-200">
               <form
                 method="POST"

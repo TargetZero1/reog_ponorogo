@@ -119,13 +119,13 @@ export default function Orders({ orders, filters }: OrdersProps) {
     <Layout>
       <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen p-3 sm:p-4 md:p-6 pt-16 sm:pt-20">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
+          {}
           <div className="mb-8">
             <h1 className="text-4xl font-bold text-gray-900 mb-2">Orders Management</h1>
             <p className="text-gray-600">View and manage all customer orders</p>
           </div>
 
-          {/* Filters Card */}
+          {}
           <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
             <div className="flex items-center gap-2 mb-4">
               <Filter size={20} className="text-gray-600" />
@@ -183,7 +183,7 @@ export default function Orders({ orders, filters }: OrdersProps) {
             </div>
           </div>
 
-          {/* Orders Table Card */}
+          {}
           <div className="bg-white rounded-xl shadow-lg overflow-hidden">
             <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-red-50 to-amber-50">
               <div className="flex items-center justify-between">
@@ -280,7 +280,7 @@ export default function Orders({ orders, filters }: OrdersProps) {
               </table>
             </div>
 
-            {/* Pagination */}
+            {}
             {orders.last_page > 1 && (
               <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
                 <div className="flex items-center justify-between">

@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Cache;
 
 class CacheInvalidationService
 {
-    /**
-     * Invalidate all dashboard caches
-     */
+    
     public static function invalidateDashboard()
     {
         Cache::forget('admin_dashboard_metrics');
@@ -17,18 +15,14 @@ class CacheInvalidationService
         Cache::forget('dashboard_payment_breakdown');
     }
 
-    /**
-     * Invalidate all analytics caches
-     */
+    
     public static function invalidateAnalytics()
     {
         Cache::forget('admin_analytics');
         Cache::forget('analytics_orders_by_month');
     }
 
-    /**
-     * Invalidate all reports caches
-     */
+    
     public static function invalidateReports()
     {
         Cache::forget('reports_total_orders');
@@ -39,18 +33,14 @@ class CacheInvalidationService
         Cache::forget('reports_top_customers');
     }
 
-    /**
-     * Invalidate public page caches
-     */
+    
     public static function invalidatePublic()
     {
         Cache::forget('published_places');
         Cache::forget('published_upcoming_events');
     }
 
-    /**
-     * Invalidate all caches
-     */
+    
     public static function invalidateAll()
     {
         self::invalidateDashboard();
@@ -59,9 +49,7 @@ class CacheInvalidationService
         self::invalidatePublic();
     }
 
-    /**
-     * Invalidate when ticket is created
-     */
+    
     public static function onTicketCreated()
     {
         self::invalidateDashboard();
@@ -69,9 +57,7 @@ class CacheInvalidationService
         self::invalidateReports();
     }
 
-    /**
-     * Invalidate when event is modified
-     */
+    
     public static function onEventModified()
     {
         self::invalidateDashboard();
@@ -79,9 +65,7 @@ class CacheInvalidationService
         self::invalidateAnalytics();
     }
 
-    /**
-     * Invalidate when place is modified
-     */
+    
     public static function onPlaceModified()
     {
         self::invalidatePublic();

@@ -17,7 +17,7 @@ export default function PublicIndex({ events }: any) {
       />
       <div className="py-6 sm:py-8 md:py-12 bg-gradient-to-b from-white via-neutral-50 to-white">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
-          {/* Header */}
+          {}
           <div className="text-center mb-6 sm:mb-8 md:mb-12">
             <div className="inline-flex items-center gap-2 bg-amber-500 text-red-950 px-4 py-2 rounded-full mb-4 shadow-lg font-semibold text-sm">
               <Calendar size={18} />
@@ -30,7 +30,7 @@ export default function PublicIndex({ events }: any) {
             <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-amber-500 to-red-600 mx-auto mt-4 sm:mt-6 rounded-full"></div>
           </div>
 
-          {/* Events Grid */}
+          {}
           <div className="grid gap-4 sm:gap-5 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
             {events.data.map((e: any, index: number) => (
               <div 
@@ -38,7 +38,7 @@ export default function PublicIndex({ events }: any) {
                 className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl border border-neutral-200 overflow-hidden transition-all duration-300 transform hover:-translate-y-2"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                {/* Event Image */}
+                {}
                 <div className="h-48 relative overflow-hidden">
                   {e.image_path ? (
                     <img 
@@ -61,7 +61,7 @@ export default function PublicIndex({ events }: any) {
                   </div>
                 </div>
 
-                {/* Event Content */}
+                {}
                 <div className="p-6">
                   <h3 className="font-bold text-xl text-red-950 mb-3 group-hover:text-red-700 transition-colors line-clamp-2">
                     {e.title}
@@ -87,7 +87,7 @@ export default function PublicIndex({ events }: any) {
                     {e.description || (locale === 'en' ? 'Interesting cultural event and Reog Ponorogo performance.' : 'Acara budaya dan pertunjukan Reog Ponorogo yang menarik.')}
                   </p>
 
-                  {/* Actions */}
+                  {}
                   <div className="flex gap-3 pt-4 border-t border-neutral-200">
                     <a 
                       href={getLocalizedRoute('events.show', { slug: e.slug || e.id }, locale)} 

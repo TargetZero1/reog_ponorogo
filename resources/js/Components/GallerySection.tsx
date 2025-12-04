@@ -161,7 +161,7 @@ export function GallerySection() {
         <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-amber-500 to-red-600 mx-auto mt-4 sm:mt-6 rounded-full"></div>
       </div>
 
-      {/* Masonry Gallery */}
+      {}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {gallery.map((item, index) => (
           <div
@@ -178,7 +178,7 @@ export function GallerySection() {
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
             />
             
-            {/* Overlay */}
+            {}
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                 <span className="inline-block bg-amber-500 text-red-950 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm mb-2 sm:mb-3 font-semibold">
@@ -202,7 +202,7 @@ export function GallerySection() {
               </div>
             </div>
 
-            {/* Category badge - always visible */}
+            {}
             <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm">
               {item.category}
             </div>
@@ -210,7 +210,7 @@ export function GallerySection() {
         ))}
       </div>
 
-      {/* Lightbox */}
+      {}
       {selectedImage && (
         <div
           className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 animate-[fadeIn_0.3s_ease-out]"

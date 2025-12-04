@@ -170,11 +170,11 @@ export function TypesOfReog() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* Decorative elements */}
+      {}
       <div className="absolute top-20 left-10 w-64 h-64 bg-red-500/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl"></div>
 
-      {/* Section Header */}
+      {}
       <div className="text-center mb-12 sm:mb-16 relative">
         <div className="inline-block bg-amber-500 text-red-950 px-4 sm:px-6 py-2 rounded-full mb-4 sm:mb-6 shadow-lg hover:shadow-xl transition-shadow font-semibold text-xs sm:text-sm">
           {sectionCopy.badge}
@@ -186,7 +186,7 @@ export function TypesOfReog() {
         <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-amber-500 to-red-600 mx-auto mt-4 sm:mt-6 rounded-full"></div>
       </div>
 
-      {/* Cards Grid with enhanced interactions */}
+      {}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
         {reogTypes.map((type, index) => (
           <div 
@@ -196,7 +196,7 @@ export function TypesOfReog() {
             className="relative group"
           >
             <div className="bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-3 h-full flex flex-col">
-              {/* Image */}
+              {}
               <div className="relative h-48 sm:h-72 overflow-hidden">
                 <ImageWithFallback
                   src={type.image}
@@ -207,18 +207,18 @@ export function TypesOfReog() {
                   className={`absolute inset-0 bg-gradient-to-t ${type.color} opacity-60 group-hover:opacity-40 transition-opacity duration-500`}
                 ></div>
                 
-                {/* Role Badge */}
+                {}
                 <div className="absolute top-4 sm:top-6 right-4 sm:right-6 bg-white/95 backdrop-blur-sm px-3 sm:px-4 py-1 sm:py-2 rounded-full shadow-lg transform group-hover:scale-110 transition-transform text-xs sm:text-sm">
                   <span className="text-red-950 font-semibold">{type.role}</span>
                 </div>
 
-                {/* Decorative element */}
+                {}
                 <div
                   className={`absolute -bottom-6 -left-6 w-24 h-24 bg-gradient-to-br ${type.color} rounded-full blur-2xl opacity-50 group-hover:opacity-70 transition-opacity`}
                 ></div>
               </div>
 
-              {/* Content */}
+              {}
               <div className="p-6 flex-1 flex flex-col relative">
                 <h3 className="text-red-950 mb-3 group-hover:text-red-700 transition-colors">
                   {type.name}
@@ -227,7 +227,7 @@ export function TypesOfReog() {
                   {type.description}
                 </p>
 
-                {/* Expandable details */}
+                {}
                 <div
                   className={`overflow-hidden transition-all duration-500 ${
                     expandedCard === index ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
@@ -240,7 +240,7 @@ export function TypesOfReog() {
                   </div>
                 </div>
                 
-                {/* Decorative line */}
+                {}
                 <div
                   className={`h-1 bg-gradient-to-r ${type.color} mt-6 rounded-full transition-all duration-500 ${
                     expandedCard === index ? 'w-full' : 'w-16'
@@ -248,13 +248,13 @@ export function TypesOfReog() {
                 ></div>
               </div>
 
-              {/* Hover indicator */}
+              {}
               <div className="absolute bottom-4 right-4 w-8 h-8 bg-gradient-to-br from-amber-400 to-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all transform group-hover:scale-110">
                 <span className="text-white text-xs">+</span>
               </div>
             </div>
 
-            {/* Glow effect */}
+            {}
             <div
               className={`absolute inset-0 bg-gradient-to-br ${type.color} rounded-3xl blur-2xl opacity-0 group-hover:opacity-20 transition-opacity -z-10`}
             ></div>
@@ -262,9 +262,9 @@ export function TypesOfReog() {
         ))}
       </div>
 
-      {/* Bottom Info with enhanced design */}
+      {}
       <div className="mt-20 bg-gradient-to-br from-red-950 via-red-800 to-red-950 rounded-3xl p-10 text-center shadow-2xl relative overflow-hidden group">
-        {/* Animated background pattern */}
+        {}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-1/4 w-32 h-32 bg-amber-500 rounded-full blur-3xl animate-[float_6s_ease-in-out_infinite]"></div>
           <div className="absolute bottom-0 right-1/4 w-40 h-40 bg-amber-600 rounded-full blur-3xl animate-[float_8s_ease-in-out_infinite]"></div>

@@ -80,13 +80,13 @@ export default function Dashboard({ stats, recentOrders, ordersByMonth, revenueB
     <Layout>
       <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen p-3 sm:p-4 md:p-6 pt-16 sm:pt-20">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
+          {}
           <div className="mb-4 sm:mb-6">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">Admin Dashboard</h1>
             <p className="text-gray-600 text-sm sm:text-base">Welcome back! Here's an overview of your business.</p>
           </div>
 
-          {/* Stat Cards */}
+          {}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 md:mb-8">
             {statCards.map((card, idx) => {
               const Icon = card.icon;
@@ -126,9 +126,9 @@ export default function Dashboard({ stats, recentOrders, ordersByMonth, revenueB
             })}
           </div>
 
-          {/* Charts Row */}
+          {}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            {/* Orders by Month Chart */}
+            {}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
@@ -165,7 +165,7 @@ export default function Dashboard({ stats, recentOrders, ordersByMonth, revenueB
               </div>
             </div>
 
-            {/* Revenue by Attraction Chart */}
+            {}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
@@ -203,9 +203,9 @@ export default function Dashboard({ stats, recentOrders, ordersByMonth, revenueB
             </div>
           </div>
 
-          {/* Payment Status & Recent Orders Row */}
+          {}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            {/* Payment Status Breakdown */}
+            {}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
                 <FileText size={20} className="text-purple-500" />
@@ -249,7 +249,7 @@ export default function Dashboard({ stats, recentOrders, ordersByMonth, revenueB
               </div>
             </div>
 
-            {/* Recent Orders */}
+            {}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">

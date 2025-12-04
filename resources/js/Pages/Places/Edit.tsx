@@ -84,7 +84,7 @@ export default function EditPlace({ place }: { place: any }) {
           </div>
 
           <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-lg p-6 md:p-8">
-            {/* Basic Information */}
+            {}
             <div className="mb-8">
               <h2 className="text-xl font-bold text-gray-900 mb-4 pb-2 border-b">Basic Information</h2>
               <div className="grid md:grid-cols-2 gap-4">
@@ -185,7 +185,7 @@ export default function EditPlace({ place }: { place: any }) {
               </div>
             </div>
 
-            {/* Highlights */}
+            {}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold text-gray-900">Highlights</h2>
@@ -222,7 +222,7 @@ export default function EditPlace({ place }: { place: any }) {
               </div>
             </div>
 
-            {/* Activities */}
+            {}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold text-gray-900">Activities</h2>
@@ -259,7 +259,7 @@ export default function EditPlace({ place }: { place: any }) {
               </div>
             </div>
 
-            {/* Facilities */}
+            {}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold text-gray-900">Facilities</h2>
@@ -296,7 +296,7 @@ export default function EditPlace({ place }: { place: any }) {
               </div>
             </div>
 
-            {/* Published Toggle */}
+            {}
             <div className="mb-8">
               <label className="flex items-center gap-3 cursor-pointer">
                 <input
@@ -309,7 +309,7 @@ export default function EditPlace({ place }: { place: any }) {
               </label>
             </div>
 
-            {/* Actions */}
+            {}
             <div className="flex items-center justify-end gap-4 pt-6 border-t">
               <a
                 href={getLocalizedRoute('admin.places.index', {}, locale)}

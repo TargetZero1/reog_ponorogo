@@ -64,7 +64,7 @@ export function CultureSection() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* Section Header */}
+      {}
       <div className="text-center mb-12 sm:mb-16">
         <div className="inline-flex items-center gap-2 bg-amber-500 text-red-950 px-3 sm:px-4 py-2 rounded-full mb-3 sm:mb-4 shadow-lg text-xs sm:text-sm">
           <Sparkles size={16} className="sm:size-5" />
@@ -78,7 +78,7 @@ export function CultureSection() {
         <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-amber-500 to-amber-400 mx-auto mt-4 sm:mt-6 rounded-full"></div>
       </div>
 
-      {/* Main Cultural Image */}
+      {}
       <div className="mb-16 relative rounded-3xl overflow-hidden shadow-2xl">
         <ImageWithFallback
           src="https://images.unsplash.com/photo-1634871572365-8bc444e6faea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbmRvbmVzaWFuJTIwZm9vZCUyMHNhdGF5fGVufDF8fHx8MTc2MzA0MzUwOHww&ixlib=rb-4.1.0&q=80&w=1080"
@@ -96,14 +96,14 @@ export function CultureSection() {
         </div>
       </div>
 
-      {/* Cultural Aspects */}
+      {}
       <div className="space-y-12">
         {culturalAspects.map((aspect, index) => (
           <div 
             key={index}
             className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow"
           >
-            {/* Header */}
+            {}
             <div className="flex items-center gap-4 mb-8">
               <div className={`w-16 h-16 bg-gradient-to-br ${aspect.color} rounded-xl flex items-center justify-center text-white shadow-lg`}>
                 {aspect.icon}
@@ -114,7 +114,7 @@ export function CultureSection() {
               </div>
             </div>
 
-            {/* Items Grid */}
+            {}
             <div className="grid md:grid-cols-3 gap-6">
               {aspect.items.map((item, itemIndex) => (
                 <div 
@@ -135,7 +135,7 @@ export function CultureSection() {
         ))}
       </div>
 
-      {/* Historical Timeline */}
+      {}
       <div className="mt-16 bg-gradient-to-br from-red-50 to-amber-50 rounded-2xl p-8 border border-red-200">
         <h3 className="text-red-950 mb-8 text-center">Garis Waktu Sejarah</h3>
         <div className="space-y-6">

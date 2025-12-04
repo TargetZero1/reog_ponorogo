@@ -11,9 +11,7 @@ use App\Models\Ticket;
 
 class OrderSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+    
     public function run(): void
     {
         // Get all existing users (exclude admin)

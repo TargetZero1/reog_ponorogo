@@ -317,9 +317,9 @@ export default function BudayaDanSejarah() {
         keywords={seoContent.keywords}
         url={pageUrl}
       />
-      {/* Hero Section */}
+      {}
       <div className="relative min-h-[100vh] flex items-center justify-center overflow-hidden pt-16">
-        {/* Background Image with Parallax */}
+        {}
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{
@@ -331,7 +331,7 @@ export default function BudayaDanSejarah() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/75 to-black/90"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-red-950/60 via-transparent to-amber-900/40"></div>
 
-        {/* Animated Background Elements */}
+        {}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-20 left-[10%] w-40 h-40 border-2 border-amber-500/20 rounded-full animate-[float_6s_ease-in-out_infinite]">
             <div className="absolute inset-4 border-2 border-amber-400/30 rounded-full"></div>
@@ -353,7 +353,7 @@ export default function BudayaDanSejarah() {
         </div>
 
         <div className="relative z-10 text-center px-3 sm:px-4 lg:px-6 max-w-4xl mx-auto">
-          {/* UNESCO Badge */}
+          {}
             <div className="inline-flex items-center gap-2 bg-amber-500 text-red-950 px-4 py-2 rounded-full mb-4 shadow-lg font-semibold text-sm">
             <Sparkles size={18} />
             <span>{heroContent.badge}</span>
@@ -373,7 +373,7 @@ export default function BudayaDanSejarah() {
             {heroContent.description}
           </p>
 
-          {/* Quick Stats */}
+          {}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 max-w-3xl mx-auto animate-[slideUp_1s_ease-out_0.6s_both]">
             {stats.map((stat, index) => (
               <div
@@ -391,7 +391,7 @@ export default function BudayaDanSejarah() {
         </div>
       </div>
 
-      {/* Cultural Aspects Section */}
+      {}
       <div className="py-8 sm:py-12 md:py-16 bg-gradient-to-br from-amber-50 via-white to-red-50 relative overflow-hidden">
         <ContainerBackground index={3} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -421,7 +421,7 @@ export default function BudayaDanSejarah() {
                 }`}
               >
                 <div className="bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500">
-                  {/* Header */}
+                  {}
                   <div className={`bg-gradient-to-br ${aspect.color} p-6 md:p-8 text-white relative overflow-hidden`}>
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer"></div>
                     <div className="relative z-10 flex items-center gap-4 md:gap-6">
@@ -435,7 +435,7 @@ export default function BudayaDanSejarah() {
                   </div>
                 </div>
 
-                  {/* Items Grid */}
+                  {}
                   <div className="p-6 md:p-8">
                 <div className="grid md:grid-cols-3 gap-6">
                   {aspect.items.map((item: { name: string; description: string; image: string }, itemIndex: number) => (
@@ -469,7 +469,7 @@ export default function BudayaDanSejarah() {
         </div>
       </div>
 
-      {/* Timeline Section */}
+      {}
       <div className="py-12 md:py-20 bg-gradient-to-br from-red-950 via-red-900 to-red-950 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(184,81,0,0.1),transparent_50%)]"></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(139,0,0,0.1),transparent_50%)]"></div>
@@ -490,7 +490,7 @@ export default function BudayaDanSejarah() {
                 </div>
 
           <div className="relative">
-            {/* Timeline Line */}
+            {}
             <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-amber-500 via-red-600 to-amber-500 transform md:-translate-x-1/2"></div>
 
             <div className="space-y-12 md:space-y-16">
@@ -504,14 +504,14 @@ export default function BudayaDanSejarah() {
                       : index % 2 === 0 ? 'opacity-0 -translate-x-10' : 'opacity-0 translate-x-10'
                   }`}
                 >
-                  {/* Year Badge */}
+                  {}
                   <div className={`flex-shrink-0 w-24 h-24 bg-gradient-to-br ${event.color} rounded-2xl flex flex-col items-center justify-center text-white shadow-2xl transform hover:scale-110 transition-transform relative z-10`}>
                     <div className="absolute -inset-1 bg-gradient-to-br ${event.color} rounded-2xl blur opacity-50"></div>
                     {event.icon}
                     <span className="text-xs font-semibold mt-1">{event.year}</span>
               </div>
 
-                  {/* Content Card */}
+                  {}
                   <div className={`flex-1 bg-white/10 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-white/20 hover:border-amber-400/50 transition-all duration-300 transform hover:scale-[1.02] shadow-xl hover:shadow-2xl ${
                     index % 2 === 0 ? 'md:mr-auto md:max-w-[45%]' : 'md:ml-auto md:max-w-[45%]'
                   }`}>
@@ -534,7 +534,7 @@ export default function BudayaDanSejarah() {
                 </div>
               </div>
 
-        {/* Share Section */}
+        {}
         <div className="py-12 bg-gradient-to-br from-red-50 to-amber-50">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="bg-white rounded-2xl shadow-lg p-8">

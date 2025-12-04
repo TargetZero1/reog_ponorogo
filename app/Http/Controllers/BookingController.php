@@ -15,10 +15,8 @@ use Illuminate\Support\Facades\Cache;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
-
 class BookingController extends Controller
 {
-
 
     public function showRegister(Request $request)
     {
@@ -143,8 +141,6 @@ class BookingController extends Controller
         ]);
     }
 
-
-
     public function createTicket(Request $request)
     {
         try {
@@ -231,8 +227,6 @@ class BookingController extends Controller
             'ticket' => $ticket,
         ]);
     }
-
-
 
     public function showPaymentHistory()
     {

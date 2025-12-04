@@ -20,7 +20,7 @@ export default function Reports({ summary, topAttractions, topCustomers }: Repor
     <Layout>
       <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-4 md:p-6 pt-16 sm:pt-20">
         <div className="max-w-7xl mx-auto">
-        {/* Header */}
+        {}
         <div className="mb-4 sm:mb-6 md:mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">Reports</h1>
@@ -37,7 +37,7 @@ export default function Reports({ summary, topAttractions, topCustomers }: Repor
           </div>
         </div>
 
-        {/* Summary Cards */}
+        {}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
             <div className="flex items-center justify-between">
@@ -89,7 +89,7 @@ export default function Reports({ summary, topAttractions, topCustomers }: Repor
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Top Attractions */}
+          {}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Top Attractions</h2>
             <div className="space-y-4">
@@ -115,7 +115,7 @@ export default function Reports({ summary, topAttractions, topCustomers }: Repor
             </div>
           </div>
 
-          {/* Top Customers */}
+          {}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Top Customers</h2>
             <div className="space-y-3">

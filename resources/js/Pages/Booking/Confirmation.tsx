@@ -41,7 +41,7 @@ export default function Confirmation({ ticket, whatsappUrl }: ConfirmationProps)
       />
       <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-green-50 flex items-center justify-center px-3 py-4 sm:py-8">
         <div className="max-w-2xl w-full">
-          {/* Success Header */}
+          {}
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6">
             <div className="flex justify-center mb-4 sm:mb-6">
               <div className="bg-green-100 p-3 sm:p-4 rounded-full">
@@ -52,9 +52,9 @@ export default function Confirmation({ ticket, whatsappUrl }: ConfirmationProps)
             <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-center text-green-600">{t('booking.success')}</h2>
             <p className="text-center text-neutral-600 mb-6 sm:mb-8 text-sm sm:text-base">{t('booking.thanks')}</p>
 
-            {/* Ticket Details & QR Code */}
+            {}
             <div className="grid md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
-              {/* Ticket Details - Cleaner Design */}
+              {}
               <div className="space-y-4 sm:space-y-6 bg-white p-4 sm:p-6 rounded-lg sm:rounded-xl border border-neutral-200">
                 <div>
                   <p className="text-xs sm:text-sm text-neutral-500 font-medium tracking-wide uppercase mb-1">{t('booking.order_id')}</p>
@@ -99,7 +99,7 @@ export default function Confirmation({ ticket, whatsappUrl }: ConfirmationProps)
                 </div>
               </div>
 
-              {/* QR Code */}
+              {}
               <div className="flex flex-col items-center justify-center bg-white p-4 sm:p-6 rounded-lg sm:rounded-xl border border-neutral-200">
                 <QRCode 
                   value={qrValue}

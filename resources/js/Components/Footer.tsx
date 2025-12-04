@@ -28,9 +28,9 @@ export function Footer() {
   return (
     <footer className="bg-gradient-to-br from-red-950 via-red-900 to-red-950 text-white pt-8 sm:pt-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        {/* Main Footer Content */}
+        {}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-6 sm:mb-8">
-          {/* Brand Section */}
+          {}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center shadow-lg flex-shrink-0">
@@ -45,7 +45,7 @@ export function Footer() {
               {t('footer.description')}
             </p>
             
-            {/* Social Media */}
+            {}
             <div className="flex gap-2 sm:gap-3">
               {socialMedia.map((social, index) => (
                 <a
@@ -62,7 +62,7 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Quick Links */}
+          {}
           <div>
             <h4 className="text-amber-400 mb-3 sm:mb-4 text-sm sm:text-base font-semibold">{t('footer.quick_links.title')}</h4>
             <ul className="space-y-1 sm:space-y-2">
@@ -80,7 +80,7 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Contact Info */}
+          {}
           <div>
             <h4 className="text-amber-400 mb-3 sm:mb-4 text-sm sm:text-base font-semibold">{t('footer.contact.title')}</h4>
             <ul className="space-y-2 sm:space-y-3">
@@ -101,7 +101,7 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Inquiry Form Section */}
+        {}
         <div className="border-t border-white/10 pt-8 mb-8">
           <div className="max-w-2xl">
             <h4 className="text-amber-400 mb-4">{t('footer.inquiry.title')}</h4>
@@ -134,7 +134,7 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Bottom Bar */}
+        {}
         <div className="border-t border-white/10 pt-6 sm:pt-8 pb-0 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-xs sm:text-sm text-amber-50/60">
           <p>
             {t('footer.copyright')}

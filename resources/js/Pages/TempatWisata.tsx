@@ -365,9 +365,9 @@ export default function TempatWisata({ places }: { places?: any[] }) {
 
   return (
     <Layout fullScreenHero={true}>
-      {/* Header Section with Hero Background Image */}
+      {}
       <div className="relative min-h-[120vh] flex items-center justify-center overflow-visible -mt-16">
-        {/* Background Image with Parallax */}
+        {}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-fixed"
           style={{
@@ -379,7 +379,7 @@ export default function TempatWisata({ places }: { places?: any[] }) {
         <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/70 to-black/85"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-red-950/50 via-transparent to-amber-900/30"></div>
 
-        {/* Animated Decorative Elements */}
+        {}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-20 left-[10%] w-40 h-40 border-2 border-amber-500/20 rounded-full animate-[float_6s_ease-in-out_infinite]">
             <div className="absolute inset-4 border-2 border-amber-400/30 rounded-full"></div>
@@ -393,7 +393,7 @@ export default function TempatWisata({ places }: { places?: any[] }) {
           <div className="absolute bottom-1/3 left-1/3 w-[600px] h-[600px] bg-gradient-radial from-red-500/8 via-red-600/4 to-transparent rounded-full blur-3xl animate-[float_12s_ease-in-out_infinite]"></div>
         </div>
 
-        {/* Content */}
+        {}
         <div className="relative z-10 text-center px-3 sm:px-4 lg:px-6 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500 text-red-950 px-4 sm:px-8 py-2 sm:py-4 rounded-full mb-10 sm:mb-12 md:mb-16 shadow-lg sm:shadow-2xl animate-[slideDown_1s_ease-out] border-2 border-amber-400/50 backdrop-blur-sm relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
@@ -420,7 +420,7 @@ export default function TempatWisata({ places }: { places?: any[] }) {
         </div>
       </div>
 
-      {/* Attractions Section */}
+      {}
       <div className="py-8 sm:py-12 md:py-16 bg-white text-gray-900 relative overflow-hidden">
         <ContainerBackground index={5} />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

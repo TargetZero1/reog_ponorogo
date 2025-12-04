@@ -64,7 +64,7 @@ export function ProfileDropdown({ scrolled, isMobile = false, isWhiteBackgroundP
                   {user.name || user.email}
                 </div>
 
-                {/* User Section */}
+                {}
                 {!isAdmin && (
                   <>
                     <Link
@@ -88,7 +88,7 @@ export function ProfileDropdown({ scrolled, isMobile = false, isWhiteBackgroundP
                   </>
                 )}
 
-                {/* Admin Section */}
+                {}
                 {isAdmin && (
                   <>
                     <Link

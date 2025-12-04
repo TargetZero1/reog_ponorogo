@@ -49,7 +49,7 @@ export function VideoSection() {
         <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-amber-500 to-red-600 mx-auto mt-4 sm:mt-6 rounded-full"></div>
       </div>
 
-      {/* Video Grid */}
+      {}
       <div className="grid md:grid-cols-2 gap-6 mb-12 sm:mb-16">
         {videos.map((video, index) => {
           // Check if video ID is placeholder
@@ -80,7 +80,7 @@ export function VideoSection() {
                     }
                   }}
                 >
-                  {/* YouTube Thumbnail Background */}
+                  {}
                   {isValidVideo ? (
                     <img
                       src={video.thumbnail}
@@ -100,17 +100,17 @@ export function VideoSection() {
                     />
                   )}
                   
-                  {/* Subtle Overlay */}
+                  {}
                   <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-colors"></div>
                   
-                  {/* Play Button - Subtle and transparent */}
+                  {}
                   <div className="relative z-10 transform group-hover:scale-110 transition-transform duration-300">
                     <button className="w-16 sm:w-20 h-16 sm:h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white/30 border-2 border-white/40 transition-all">
                       <Play size={24} className="sm:size-8 text-white ml-0.5 sm:ml-1" fill="white" fillOpacity="0.9" />
                     </button>
                   </div>
                   
-                  {/* Video overlay info */}
+                  {}
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent p-4 sm:p-6">
                     <div className="flex items-center justify-between text-white">
                       <div className="flex-1">
@@ -140,7 +140,7 @@ export function VideoSection() {
         })}
       </div>
 
-      {/* Statistics - Enhanced Design */}
+      {}
       <div className="grid md:grid-cols-3 gap-6 sm:gap-8 md:gap-10">
         {stats.map((stat, index) => (
           <div
@@ -150,12 +150,12 @@ export function VideoSection() {
             className="relative group"
           >
             <div className={`relative bg-gradient-to-br ${stat.color} p-8 sm:p-10 rounded-3xl shadow-2xl hover:shadow-amber-500/50 transition-all duration-500 transform ${hoveredStat === index ? 'scale-110 -translate-y-2' : 'scale-100'} overflow-hidden`}>
-              {/* Animated Background Pattern */}
+              {}
               <div className="absolute inset-0 opacity-20">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,_rgba(255,255,255,0.3)_1px,_transparent_0)] bg-[length:30px_30px] animate-[float_8s_ease-in-out_infinite]"></div>
               </div>
               
-              {/* Content */}
+              {}
               <div className="relative z-10">
                 <div className="mb-6 transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">
                   <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center text-white shadow-lg">
@@ -168,12 +168,12 @@ export function VideoSection() {
                 <p className="text-white/95 text-base sm:text-lg font-semibold tracking-wide">{stat.label}</p>
               </div>
               
-              {/* Decorative Elements */}
+              {}
               <div className="absolute top-4 right-4 w-20 h-20 border-2 border-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <div className="absolute bottom-4 left-4 w-16 h-16 border-2 border-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </div>
             
-            {/* Enhanced Glow effect */}
+            {}
             <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} rounded-3xl blur-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-500 -z-10 transform scale-110`}></div>
           </div>
         ))}

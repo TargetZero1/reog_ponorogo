@@ -88,7 +88,7 @@ export function Hero() {
         </div>
       ))}
 
-      {/* Animated Decorative Elements */}
+      {}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-[10%] w-40 h-40 border-2 border-amber-500/20 rounded-full animate-[float_6s_ease-in-out_infinite]">
           <div className="absolute inset-4 border-2 border-amber-400/30 rounded-full"></div>

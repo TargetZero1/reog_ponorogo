@@ -62,7 +62,7 @@ export default function Index(props: any) {
 
     return (
       <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition overflow-hidden border-l-4 border-red-600 group">
-        {/* Header */}
+        {}
         <div className="bg-gradient-to-r from-red-50 to-amber-50 p-4 border-b border-red-100">
           <h3 className="font-bold text-lg text-red-950 group-hover:text-red-700 transition line-clamp-2">
             {e.title}
@@ -85,7 +85,7 @@ export default function Index(props: any) {
           </div>
         </div>
 
-        {/* Details */}
+        {}
         <div className="p-4 space-y-3">
           <div className="flex items-start gap-2 text-sm text-gray-700">
             <Calendar size={16} className="text-red-600 flex-shrink-0 mt-0.5" />
@@ -124,7 +124,7 @@ export default function Index(props: any) {
           )}
         </div>
 
-        {/* Actions */}
+        {}
         <div className="bg-gray-50 px-4 py-3 space-y-2 border-t border-gray-100">
           {isPast ? (
             <>
@@ -225,7 +225,7 @@ export default function Index(props: any) {
   return (
     <Layout>
       <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-red-50 -mt-6">
-        {/* Header */}
+        {}
         <div className="max-w-7xl mx-auto px-4 pt-8 pb-6">
           <div className="bg-gradient-to-r from-[#6b0000] via-[#7b0b0b] to-[#8b0b0b] text-white rounded-xl shadow-lg py-8 px-6">
             <h1 className="text-4xl font-bold mb-2">Kelola Pertunjukan Reog</h1>
@@ -272,7 +272,7 @@ export default function Index(props: any) {
             </div>
           </div>
           
-          {/* Info Banner */}
+          {}
           {tab === 'events' && (
             <div className="mb-6 bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
               <p className="text-sm text-blue-800">
@@ -282,10 +282,10 @@ export default function Index(props: any) {
             </div>
           )}
 
-          {/* Content Grid */}
+          {}
           {tab === 'events' ? (
             <>
-              {/* Upcoming Events Section */}
+              {}
               <div className="mb-12">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="h-1 flex-1 bg-gradient-to-r from-red-600 to-amber-500 rounded-full"></div>
@@ -312,7 +312,7 @@ export default function Index(props: any) {
                 )}
               </div>
 
-              {/* Past Events Section */}
+              {}
               <div className="mb-12">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="h-1 flex-1 bg-gradient-to-r from-gray-400 to-gray-500 rounded-full"></div>
@@ -408,7 +408,7 @@ export default function Index(props: any) {
         </div>
       </div>
 
-      {/* Event Report Modal */}
+      {}
       {selectedEventReport && (
         <div 
           className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-[fadeIn_0.3s_ease-out]"

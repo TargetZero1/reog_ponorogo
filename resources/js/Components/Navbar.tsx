@@ -135,7 +135,7 @@ export function Navbar({ activeSection = '', setActiveSection = () => {} }: Navb
               ))}
             </div>
             
-            {/* Admin section */}
+            {}
             {user?.role === 'admin' && (
               <div className="flex items-center ml-4 pl-4 border-l border-white/30">
                 <span className="px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-bold uppercase tracking-wider mr-2">{t('nav.admin_label')}</span>

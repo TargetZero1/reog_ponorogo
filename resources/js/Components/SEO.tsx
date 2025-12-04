@@ -23,7 +23,7 @@ export function SEO({
 
   return (
     <Head>
-      {/* Primary Meta Tags */}
+      {}
       <title>{title}</title>
       <meta name="title" content={title} />
       <meta name="description" content={description} />
@@ -33,7 +33,7 @@ export function SEO({
       <meta name="language" content="Indonesian" />
       <meta name="revisit-after" content="7 days" />
 
-      {/* Open Graph / Facebook */}
+      {}
       <meta property="og:type" content={type} />
       <meta property="og:url" content={fullUrl} />
       <meta property="og:title" content={title} />
@@ -42,14 +42,14 @@ export function SEO({
       <meta property="og:site_name" content="Reog Ponorogo" />
       <meta property="og:locale" content="id_ID" />
 
-      {/* Twitter */}
+      {}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:url" content={fullUrl} />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={fullImage} />
 
-      {/* Additional */}
+      {}
       <link rel="canonical" href={fullUrl} />
     </Head>
   );

@@ -36,7 +36,7 @@ export default function Show(props: any) {
       />
       <div className="py-12 md:py-16 bg-gradient-to-b from-white via-neutral-50 to-white min-h-screen">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Hero Section */}
+          {}
           <div className="mb-8 md:mb-12">
             <a 
               href={getLocalizedRoute('events.index', {}, locale)} 
@@ -46,7 +46,7 @@ export default function Show(props: any) {
             </a>
             
             <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-              {/* Event Image or Gradient Background */}
+              {}
               {event.image_path ? (
                 <div className="relative h-80 md:h-96">
                   <img 
@@ -62,7 +62,7 @@ export default function Show(props: any) {
                 </div>
               )}
               
-              {/* Content Overlay */}
+              {}
               <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 text-white">
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight drop-shadow-lg">
                   {eventTitle}
@@ -88,7 +88,7 @@ export default function Show(props: any) {
             </div>
           </div>
 
-          {/* Content Section */}
+          {}
           <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 mb-8">
             <div className="mb-6 pb-6 border-b border-neutral-200">
               <div className="flex items-center justify-between flex-wrap gap-4">
@@ -120,7 +120,7 @@ export default function Show(props: any) {
                 {eventDescription || (locale === 'en' ? 'Interesting cultural event and Reog Ponorogo performance. Don\'t miss the opportunity to witness the grandeur of this traditional performance.' : 'Acara budaya dan pertunjukan Reog Ponorogo yang menarik. Jangan lewatkan kesempatan untuk menyaksikan kemegahan pertunjukan tradisional ini.')}
               </p>
               
-              {/* Share Buttons */}
+              {}
               <div className="mt-6 pt-6 border-t border-gray-200">
                 <ShareButtons 
                   url={eventUrl}
@@ -131,7 +131,7 @@ export default function Show(props: any) {
             </div>
           </div>
 
-          {/* Additional Info Card */}
+          {}
           <div className="bg-gradient-to-br from-amber-50 to-red-50 rounded-2xl p-6 md:p-8 border border-amber-200">
             <h3 className="text-xl font-bold text-red-950 mb-4">{t('events.important_info')}</h3>
             <ul className="space-y-3 text-gray-700">

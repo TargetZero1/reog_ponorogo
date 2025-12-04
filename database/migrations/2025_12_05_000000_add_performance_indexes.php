@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Add performance optimization indexes
-     */
+    
     public function up(): void
     {
         // Index for frequently queried columns in tickets
@@ -44,9 +42,7 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    
     public function down(): void
     {
         Schema::table('tickets', function (Blueprint $table) {

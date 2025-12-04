@@ -37,7 +37,7 @@ export default function Analytics({
     <Layout>
       <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-4 md:p-6 pt-16 sm:pt-20">
         <div className="max-w-7xl mx-auto">
-        {/* Header */}
+        {}
         <div className="mb-4 sm:mb-6 md:mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">Analytics</h1>
@@ -54,7 +54,7 @@ export default function Analytics({
           </div>
         </div>
 
-        {/* Key Metrics */}
+        {}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between mb-4">
@@ -93,7 +93,7 @@ export default function Analytics({
           </div>
         </div>
 
-        {/* Today & This Month Stats */}
+        {}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-md p-6 border border-blue-200">
             <h3 className="text-sm font-semibold text-blue-900 mb-2">Today's Orders</h3>
@@ -122,7 +122,7 @@ export default function Analytics({
           </div>
         </div>
 
-        {/* Payment Status Breakdown */}
+        {}
         {paymentStatusBreakdown && paymentStatusBreakdown.length > 0 && (
           <div className="bg-white rounded-lg shadow-md p-6 mb-8">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Payment Status Breakdown</h2>
@@ -140,7 +140,7 @@ export default function Analytics({
           </div>
         )}
 
-        {/* Sales by Attraction */}
+        {}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Sales by Attraction</h2>
           <div className="space-y-4">
@@ -163,7 +163,7 @@ export default function Analytics({
           </div>
         </div>
 
-        {/* Orders by Month */}
+        {}
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Orders by Month</h2>
           <div className="overflow-x-auto">

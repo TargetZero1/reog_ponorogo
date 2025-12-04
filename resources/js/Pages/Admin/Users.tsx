@@ -11,13 +11,13 @@ export default function Users({ users }: UsersProps) {
     <Layout>
       <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-4 md:p-6 pt-16 sm:pt-20">
         <div className="max-w-7xl mx-auto">
-        {/* Header */}
+        {}
         <div className="mb-4 sm:mb-6 md:mb-8">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">Users Management</h1>
           <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">View and manage all registered users</p>
         </div>
 
-        {/* Users Table */}
+        {}
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="p-6 border-b border-gray-200">
             <p className="text-gray-600">Total Users: <span className="font-bold text-gray-900">{users.total}</span></p>
@@ -59,7 +59,7 @@ export default function Users({ users }: UsersProps) {
             </table>
           </div>
 
-          {/* Pagination Info */}
+          {}
           {users.total > users.per_page && (
             <div className="px-6 py-4 border-t border-gray-200 text-sm text-gray-600">
               Showing {users.from} to {users.to} of {users.total} users
