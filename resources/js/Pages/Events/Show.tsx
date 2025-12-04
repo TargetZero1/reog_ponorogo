@@ -8,18 +8,29 @@ export default function Show(props: any) {
   const event = props.event;
   const { t, locale } = useTranslations();
   const eventUrl = typeof window !== 'undefined' ? window.location.href : '';
-  const eventDescription = event.description 
-    ? event.description.substring(0, 160) + '...' 
+  
+  // Helper function to get localized content
+  const getLocalized = (field: string) => {
+    const enField = `${field}_en`;
+    return locale === 'en' && event[enField] ? event[enField] : event[field];
+  };
+  
+  const eventTitle = getLocalized('title');
+  const eventDescription = getLocalized('description');
+  const eventLocation = getLocalized('location');
+  
+  const eventDescriptionMeta = eventDescription 
+    ? eventDescription.substring(0, 160) + '...' 
     : locale === 'en' 
-      ? `Performance ${event.title} - ${event.location || 'Ponorogo'}. Don't miss the opportunity to witness the grandeur of traditional Reog Ponorogo performance.`
-      : `Pertunjukan ${event.title} - ${event.location || 'Ponorogo'}. Jangan lewatkan kesempatan untuk menyaksikan kemegahan pertunjukan tradisional Reog Ponorogo.`;
+      ? `Performance ${eventTitle} - ${eventLocation || 'Ponorogo'}. Don't miss the opportunity to witness the grandeur of traditional Reog Ponorogo performance.`
+      : `Pertunjukan ${eventTitle} - ${eventLocation || 'Ponorogo'}. Jangan lewatkan kesempatan untuk menyaksikan kemegahan pertunjukan tradisional Reog Ponorogo.`;
 
   return (
     <Layout>
       <SEO 
-        title={`${event.title} - Reog Ponorogo`}
-        description={eventDescription}
-        keywords={`${event.title}, Reog Ponorogo, ${event.location || 'Ponorogo'}, Event Budaya, Pertunjukan Tradisional`}
+        title={`${eventTitle} - Reog Ponorogo`}
+        description={eventDescriptionMeta}
+        keywords={`${eventTitle}, Reog Ponorogo, ${eventLocation || 'Ponorogo'}, Event Budaya, Pertunjukan Tradisional`}
         url={eventUrl}
         type="article"
       />
@@ -34,11 +45,27 @@ export default function Show(props: any) {
               ← {t('common.back')} {t('nav.events')}
             </a>
             
-            <div className="bg-gradient-to-br from-red-600 via-amber-500 to-red-700 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden shadow-2xl">
-              <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_1px_1px,_rgba(255,255,255,0.15)_1px,_transparent_0)] bg-[length:20px_20px]"></div>
-              <div className="relative z-10">
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight">
-                  {event.title}
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+              {/* Event Image or Gradient Background */}
+              {event.image_path ? (
+                <div className="relative h-80 md:h-96">
+                  <img 
+                    src={event.image_path} 
+                    alt={eventTitle}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                </div>
+              ) : (
+                <div className="bg-gradient-to-br from-red-600 via-amber-500 to-red-700 h-80 md:h-96 relative">
+                  <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_1px_1px,_rgba(255,255,255,0.15)_1px,_transparent_0)] bg-[length:20px_20px]"></div>
+                </div>
+              )}
+              
+              {/* Content Overlay */}
+              <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 text-white">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight drop-shadow-lg">
+                  {eventTitle}
                 </h1>
                 <div className="flex flex-wrap gap-4 md:gap-6 text-amber-100">
                   <div className="flex items-center gap-2">
@@ -54,7 +81,7 @@ export default function Show(props: any) {
                   </div>
                   <div className="flex items-center gap-2">
                     <MapPin size={20} />
-                    <span>{event.location || (locale === 'en' ? 'Location TBA' : 'Lokasi TBA')}</span>
+                    <span>{eventLocation || (locale === 'en' ? 'Location TBA' : 'Lokasi TBA')}</span>
                   </div>
                 </div>
               </div>
@@ -76,7 +103,7 @@ export default function Show(props: any) {
                     window.location.href = getLocalizedRoute('pesan.checkout', { 
                       type: 'event', 
                       id: event.id,
-                      attraction: event.title 
+                      attraction: eventTitle 
                     }, locale);
                   }}
                   className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold rounded-lg hover:from-red-700 hover:to-red-800 transition-all shadow-lg hover:shadow-xl"
@@ -88,17 +115,17 @@ export default function Show(props: any) {
             </div>
 
             <div className="prose max-w-none">
-              <h2 className="text-2xl font-bold text-red-950 mb-4">{t('events.about_event')}</h2>
+              <h2 className="text-2xl font-bold text-red-950 mb-4">{locale === 'en' ? 'About This Event' : 'Tentang Acara Ini'}</h2>
               <p className="text-gray-700 leading-relaxed text-base md:text-lg whitespace-pre-line mb-6">
-                {event.description || (locale === 'en' ? 'Interesting cultural event and Reog Ponorogo performance. Don\'t miss the opportunity to witness the grandeur of this traditional performance.' : 'Acara budaya dan pertunjukan Reog Ponorogo yang menarik. Jangan lewatkan kesempatan untuk menyaksikan kemegahan pertunjukan tradisional ini.')}
+                {eventDescription || (locale === 'en' ? 'Interesting cultural event and Reog Ponorogo performance. Don\'t miss the opportunity to witness the grandeur of this traditional performance.' : 'Acara budaya dan pertunjukan Reog Ponorogo yang menarik. Jangan lewatkan kesempatan untuk menyaksikan kemegahan pertunjukan tradisional ini.')}
               </p>
               
               {/* Share Buttons */}
               <div className="mt-6 pt-6 border-t border-gray-200">
                 <ShareButtons 
                   url={eventUrl}
-                  title={event.title}
-                  description={eventDescription}
+                  title={eventTitle}
+                  description={eventDescriptionMeta}
                 />
               </div>
             </div>

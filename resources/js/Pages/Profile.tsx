@@ -19,8 +19,6 @@ export default function Profile() {
     password_confirmation: '',
   });
 
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-
   const [success, setSuccess] = useState(flash?.success || '');
   const [showPasswordFields, setShowPasswordFields] = useState(false);
 
@@ -179,17 +177,23 @@ export default function Profile() {
             
             {/* Logout Button */}
             <div className="mt-6 pt-6 border-t border-gray-200">
-              <button
-                onClick={() => {
-                  setIsLoggingOut(true);
-                  router.post(route('logout'));
+              <form
+                method="POST"
+                action={route('logout')}
+                onSubmit={(e) => {
+                  // Let the form submit naturally as POST
+                  // Don't prevent default
                 }}
-                disabled={isLoggingOut}
-                className="flex items-center gap-2 px-6 py-3 bg-gray-600 text-white rounded-lg font-semibold hover:bg-gray-700 transition shadow-md w-full sm:w-auto disabled:opacity-50"
               >
-                <Lock size={18} />
-                {isLoggingOut ? 'Logging out...' : t('nav.logout')}
-              </button>
+                <input type="hidden" name="_token" value={csrf_token} />
+                <button
+                  type="submit"
+                  className="flex items-center gap-2 px-6 py-3 bg-gray-600 text-white rounded-lg font-semibold hover:bg-gray-700 transition shadow-md w-full sm:w-auto"
+                >
+                  <Lock size={18} />
+                  {t('nav.logout')}
+                </button>
+              </form>
             </div>
           </div>
         </div>

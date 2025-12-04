@@ -1,10 +1,12 @@
 import { useForm, usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 import { Layout } from '../../Components/Layout';
 import { useTranslations, getLocalizedRoute } from '@/utils/translations';
 
 export default function Login() {
   const { locale } = useTranslations();
+  const [showPassword, setShowPassword] = useState(false);
   const [attraction, setAttraction] = useState(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
@@ -60,15 +62,24 @@ export default function Login() {
 
             <div>
               <label className="block text-sm font-semibold text-red-950 mb-2">Password</label>
-              <input
-                type="password"
-                value={data.password}
-                onChange={e => setData('password', e.target.value)}
-                placeholder="Masukkan password Anda"
-                className={`w-full border-2 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 transition ${
-                  errors.password ? 'border-red-400' : 'border-gray-300'
-                }`}
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={data.password}
+                  onChange={e => setData('password', e.target.value)}
+                  placeholder="Masukkan password Anda"
+                  className={`w-full border-2 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-red-500 transition ${
+                    errors.password ? 'border-red-400' : 'border-gray-300'
+                  }`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
 
             {attraction && (

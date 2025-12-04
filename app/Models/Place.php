@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Services\CacheInvalidationService;
 
 class Place extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name', 'slug', 'category', 'description', 'location', 'hours', 'rating', 'image_path', 'price', 'highlights', 'activities', 'facilities', 'best_time', 'published'
+        'name', 'name_en', 'slug', 'category', 'category_en', 'description', 'description_en', 'location', 'location_en', 'hours', 'rating', 'image_path', 'price', 'highlights', 'activities', 'facilities', 'best_time', 'published'
     ];
 
     protected $casts = [
@@ -21,4 +22,20 @@ class Place extends Model
         'rating' => 'decimal:2',
         'price' => 'decimal:2',
     ];
+
+    protected static function booted()
+    {
+        // Clear caches when place is modified
+        static::created(function () {
+            CacheInvalidationService::onPlaceModified();
+        });
+
+        static::updated(function () {
+            CacheInvalidationService::onPlaceModified();
+        });
+
+        static::deleted(function () {
+            CacheInvalidationService::onPlaceModified();
+        });
+    }
 }

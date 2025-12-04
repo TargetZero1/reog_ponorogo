@@ -52,7 +52,7 @@ class PlaceController extends Controller
 
         Place::create($data);
 
-        return redirect()->route('admin.places.index')->with('success', 'Place created');
+        return redirect()->route('admin.places.index', ['locale' => request()->route('locale')])->with('success', 'Place created');
     }
 
     public function edit($place)
@@ -118,7 +118,7 @@ class PlaceController extends Controller
 
         $placeModel->update($data);
 
-        return redirect()->route('admin.places.index')->with('success', 'Place updated');
+        return redirect()->route('admin.places.index', ['locale' => request()->route('locale')])->with('success', 'Place updated');
     }
 
     public function destroy($place)
@@ -166,16 +166,16 @@ class PlaceController extends Controller
     {
         $ids = $request->input('ids', []);
         Place::whereIn('id', $ids)->delete();
-        return redirect()->route('admin.places.index')->with('success', 'Places deleted successfully');
+        return redirect()->route('admin.places.index', ['locale' => request()->route('locale')])->with('success', 'Places deleted successfully');
     }
 
     // Bulk publish places
     public function bulkPublish(Request $request)
     {
         $ids = $request->input('ids', []);
-        $action = $request->input('action', 'publish'); // 'publish' or 'unpublish'
+        $action = $request->input('action', 'publish');
         $published = $action === 'publish' ? true : false;
         Place::whereIn('id', $ids)->update(['published' => $published]);
-        return redirect()->route('admin.places.index')->with('success', 'Places updated successfully');
+        return redirect()->route('admin.places.index', ['locale' => request()->route('locale')])->with('success', 'Places updated successfully');
     }
 }

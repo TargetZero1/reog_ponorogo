@@ -1,10 +1,13 @@
 import { useForm } from '@inertiajs/react';
 import { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 import { Layout } from '../../Components/Layout';
 import { useTranslations, getLocalizedRoute } from '@/utils/translations';
 
 export default function Register() {
   const { locale } = useTranslations();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
   const [attraction, setAttraction] = useState(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
@@ -80,27 +83,45 @@ export default function Register() {
             {/* Password */}
             <div>
               <label className="block text-sm font-semibold text-red-950 mb-2">Password</label>
-              <input
-                type="password"
-                value={data.password}
-                onChange={e => setData('password', e.target.value)}
-                placeholder="Minimal 6 karakter"
-                className={`w-full border-2 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 transition ${
-                  errors.password ? 'border-red-400' : 'border-gray-300'
-                }`}
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={data.password}
+                  onChange={e => setData('password', e.target.value)}
+                  placeholder="Minimal 6 karakter"
+                  className={`w-full border-2 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-red-500 transition ${
+                    errors.password ? 'border-red-400' : 'border-gray-300'
+                  }`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
 
             {/* Password Confirmation */}
             <div>
               <label className="block text-sm font-semibold text-red-950 mb-2">Konfirmasi Password</label>
-              <input
-                type="password"
-                value={data.password_confirmation}
-                onChange={e => setData('password_confirmation', e.target.value)}
-                placeholder="Ulangi password"
-                className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
-              />
+              <div className="relative">
+                <input
+                  type={showPasswordConfirm ? 'text' : 'password'}
+                  value={data.password_confirmation}
+                  onChange={e => setData('password_confirmation', e.target.value)}
+                  placeholder="Ulangi password"
+                  className="w-full border-2 border-gray-300 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showPasswordConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
 
             {attraction && (

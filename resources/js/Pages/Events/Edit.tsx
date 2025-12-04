@@ -1,24 +1,48 @@
 import { useForm } from '@inertiajs/react';
 import { Layout } from '../../Components/Layout';
-import { ArrowLeft, Eye } from 'lucide-react';
+import { ArrowLeft, Eye, Upload, X } from 'lucide-react';
 import { useTranslations, getLocalizedRoute } from '@/utils/translations';
+import { useState } from 'react';
 
 export default function Edit(props: any) {
   const { locale } = useTranslations();
   const event = props.event || {};
-  const { data, setData, put, errors, processing } = useForm({
+  const [imagePreview, setImagePreview] = useState<string | null>(event.image_path || null);
+  const { data, setData, post, errors, processing } = useForm({
     title: event.title || '',
+    title_en: event.title_en || '',
     description: event.description || '',
+    description_en: event.description_en || '',
     date: event.date ? new Date(event.date).toISOString().slice(0, 16) : '',
     location: event.location || '',
+    location_en: event.location_en || '',
     price: event.price || '0',
     capacity: event.capacity || '0',
     published: event.published ?? false,
+    image: null as File | null,
+    _method: 'PUT',
   });
 
   function submit(e: any) {
     e.preventDefault();
-    put(getLocalizedRoute('admin.events.update', { event: event.id }, locale));
+    post(getLocalizedRoute('admin.events.update', { event: event.id }, locale));
+  }
+
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      setData('image', file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function removeImage() {
+    setData('image', null);
+    setImagePreview(event.image_path || null);
   }
 
   return (
@@ -51,9 +75,48 @@ export default function Edit(props: any) {
         {/* Form */}
         <div className="max-w-4xl mx-auto px-4 py-12">
           <form onSubmit={submit} className="bg-white rounded-xl shadow-lg p-8 border border-red-100">
+            {/* Image Upload */}
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-red-950 mb-2">Event Image</label>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-red-400 transition">
+                {imagePreview ? (
+                  <div className="relative">
+                    <img src={imagePreview} alt="Preview" className="max-h-64 mx-auto rounded-lg" />
+                    <button
+                      type="button"
+                      onClick={removeImage}
+                      className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition"
+                    >
+                      <X size={20} />
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <Upload size={48} className="mx-auto text-gray-400 mb-3" />
+                    <p className="text-gray-600 mb-2">Click to upload event image</p>
+                    <p className="text-sm text-gray-500">PNG, JPG up to 10MB</p>
+                  </div>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                  id="image-upload"
+                />
+                <label
+                  htmlFor="image-upload"
+                  className="mt-4 inline-block px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 cursor-pointer transition"
+                >
+                  {imagePreview ? 'Change Image' : 'Choose Image'}
+                </label>
+              </div>
+              {errors.image && <p className="text-red-600 text-sm mt-2">{errors.image}</p>}
+            </div>
+
             {/* Title */}
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-red-950 mb-2">Judul Event *</label>
+              <label className="block text-sm font-semibold text-red-950 mb-2">Judul Event (Indonesia) *</label>
               <input
                 value={data.title}
                 onChange={e => setData('title', e.target.value)}
@@ -65,9 +128,20 @@ export default function Edit(props: any) {
               {errors.title && <p className="text-red-600 text-sm mt-2 font-semibold">{errors.title}</p>}
             </div>
 
+            {/* Title English */}
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-red-950 mb-2">Title (English)</label>
+              <input
+                value={data.title_en}
+                onChange={e => setData('title_en', e.target.value)}
+                placeholder="Event title in English (e.g., Traditional Reog Performance)"
+                className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
+              />
+            </div>
+
             {/* Description */}
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-red-950 mb-2">Deskripsi</label>
+              <label className="block text-sm font-semibold text-red-950 mb-2">Deskripsi (Indonesia)</label>
               <textarea
                 value={data.description}
                 onChange={e => setData('description', e.target.value)}
@@ -76,6 +150,18 @@ export default function Edit(props: any) {
                 className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
               />
               {errors.description && <p className="text-red-600 text-sm mt-2">{errors.description}</p>}
+            </div>
+
+            {/* Description English */}
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-red-950 mb-2">Description (English)</label>
+              <textarea
+                value={data.description_en}
+                onChange={e => setData('description_en', e.target.value)}
+                placeholder="Describe the performance details, what will be displayed, and cultural values..."
+                rows={5}
+                className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
+              />
             </div>
 
             {/* Date & Location */}
@@ -94,7 +180,7 @@ export default function Edit(props: any) {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-red-950 mb-2">Lokasi *</label>
+                <label className="block text-sm font-semibold text-red-950 mb-2">Lokasi (Indonesia) *</label>
                 <input
                   value={data.location}
                   onChange={e => setData('location', e.target.value)}
@@ -105,6 +191,17 @@ export default function Edit(props: any) {
                 />
                 {errors.location && <p className="text-red-600 text-sm mt-2">{errors.location}</p>}
               </div>
+            </div>
+
+            {/* Location English */}
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-red-950 mb-2">Location (English)</label>
+              <input
+                value={data.location_en}
+                onChange={e => setData('location_en', e.target.value)}
+                placeholder="Performance location (e.g., Ponorogo Town Square)"
+                className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
+              />
             </div>
 
             {/* Price & Capacity */}

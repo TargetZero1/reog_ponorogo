@@ -28,6 +28,8 @@ class SetLocale
             '_next',
             'vite',
             'assets',
+            'logout',
+            'set-locale',
         ];
 
         // If path starts with excluded prefix (admin/assets), skip locale enforcement

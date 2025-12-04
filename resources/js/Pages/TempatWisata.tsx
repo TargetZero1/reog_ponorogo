@@ -35,6 +35,7 @@ export default function TempatWisata({ places }: { places?: any[] }) {
         gridDescription: 'Each destination offers a unique combination of culture, nature, and local warmth. Start planning your trip today.',
         moreHighlights: (count: number) => `+${count} more`,
         detailButton: 'View Details',
+        description: 'About This Place',
         locationInfo: 'Location Information',
         address: 'Address',
         hours: 'Opening Hours',
@@ -69,6 +70,7 @@ export default function TempatWisata({ places }: { places?: any[] }) {
         gridDescription: 'Setiap destinasi menawarkan perpaduan budaya, alam, dan keramahan lokal. Rencanakan perjalanan Anda sekarang.',
         moreHighlights: (count: number) => `+${count} lainnya`,
         detailButton: 'Lihat Detail',
+        description: 'Tentang Tempat Ini',
         locationInfo: 'Informasi Lokasi',
         address: 'Alamat',
         hours: 'Jam Operasional',
@@ -325,56 +327,29 @@ export default function TempatWisata({ places }: { places?: any[] }) {
     places && places.length > 0
       ? places
           .filter((p: any) => p.published !== false)
-          .map((p: any) => ({
-            ...(locale === 'en'
-              ? (() => {
-                  const key = String(p.name || '').toLowerCase().trim();
-                  const override = englishPlaceOverrides[key] || {};
-                  return {
-                    name: override.name || p.name,
-                    category: override.category || p.category || 'Attraction',
-                    description: override.description || p.description || '',
-                    location: override.location || p.location || '',
-                    hours: override.hours || p.hours || '24 Hours',
-                    rating: override.rating || p.rating || 4.5,
-                    image:
-                      override.image ||
-                      p.image_path ||
-                      'https://images.unsplash.com/photo-1726744069854-a74d917b8f35?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-                    highlights:
-                      override.highlights ||
-                      (Array.isArray(p.highlights) ? p.highlights : p.highlights ? [p.highlights] : []),
-                    price:
-                      override.price ||
-                      (p.price ? `Rp ${Number(p.price).toLocaleString('id-ID')}` : text.free),
-                    activities:
-                      override.activities ||
-                      (Array.isArray(p.activities) ? p.activities : p.activities ? [p.activities] : []),
-                    facilities:
-                      override.facilities ||
-                      (Array.isArray(p.facilities) ? p.facilities : p.facilities ? [p.facilities] : []),
-                    bestTime: override.bestTime || p.best_time || text.bestTimeFallback,
-                    id: p.id,
-                  } as Place;
-                })()
-              : {
-                  name: p.name,
-                  category: p.category || 'Wisata',
-                  description: p.description || '',
-                  location: p.location || '',
-                  hours: p.hours || '24 Jam',
-                  rating: p.rating || 4.5,
-                  image:
-                    p.image_path ||
-                    'https://images.unsplash.com/photo-1726744069854-a74d917b8f35?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-                  highlights: Array.isArray(p.highlights) ? p.highlights : p.highlights ? [p.highlights] : [],
-                  price: p.price ? `Rp ${Number(p.price).toLocaleString('id-ID')}` : text.free,
-                  activities: Array.isArray(p.activities) ? p.activities : p.activities ? [p.activities] : [],
-                  facilities: Array.isArray(p.facilities) ? p.facilities : p.facilities ? [p.facilities] : [],
-                  bestTime: p.best_time || text.bestTimeFallback,
-                    id: p.id,
-                }),
-          }))
+          .map((p: any) => {
+            // Helper to get localized field
+            const getLocalized = (field: string) => {
+              const enField = `${field}_en`;
+              return locale === 'en' && p[enField] ? p[enField] : p[field];
+            };
+
+            return {
+              name: getLocalized('name'),
+              category: getLocalized('category') || (locale === 'en' ? 'Attraction' : 'Wisata'),
+              description: getLocalized('description') || '',
+              location: getLocalized('location') || '',
+              hours: p.hours || (locale === 'en' ? '24 Hours' : '24 Jam'),
+              rating: p.rating || 4.5,
+              image: p.image_path || 'https://images.unsplash.com/photo-1726744069854-a74d917b8f35?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+              highlights: Array.isArray(p.highlights) ? p.highlights : p.highlights ? [p.highlights] : [],
+              price: p.price ? `Rp ${Number(p.price).toLocaleString('id-ID')}` : text.free,
+              activities: Array.isArray(p.activities) ? p.activities : p.activities ? [p.activities] : [],
+              facilities: Array.isArray(p.facilities) ? p.facilities : p.facilities ? [p.facilities] : [],
+              bestTime: p.best_time || text.bestTimeFallback,
+              id: p.id,
+            } as Place;
+          })
       : fallbackAttractions;
 
   const selectedData = selectedAttraction !== null ? attractions[selectedAttraction] : null;
@@ -570,9 +545,12 @@ export default function TempatWisata({ places }: { places?: any[] }) {
                 </div>
 
                 <div className="p-6 sm:p-8">
-                  <p className="text-neutral-700 leading-relaxed mb-8 text-base sm:text-lg">
-                    {selectedData.description}
-                  </p>
+                  <div className="mb-8">
+                    <h3 className="text-red-950 mb-4 text-lg font-bold">{text.description}</h3>
+                    <p className="text-neutral-700 leading-relaxed text-base sm:text-lg">
+                      {selectedData.description}
+                    </p>
+                  </div>
 
                   <div className="grid md:grid-cols-2 gap-8 mb-8">
                     <div>

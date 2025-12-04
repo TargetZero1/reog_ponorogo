@@ -11,6 +11,7 @@ use App\Models\Place;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -252,67 +253,61 @@ class BookingController extends Controller
     // Admin Dashboard
     public function adminDashboard()
     {
-        $totalOrders = Ticket::count();
-        $totalRevenue = Ticket::sum('total_price');
-        $totalUsers = User::where('role', 'user')->count();
-        $totalEvents = Event::count();
+        // Cache key for invalidation
+        $cacheKey = 'admin_dashboard_metrics';
         
+        // Cache metrics for 30 minutes (1800 seconds)
+        $metrics = Cache::remember($cacheKey, 1800, function() {
+            return [
+                'totalOrders' => Ticket::count(),
+                'totalRevenue' => Ticket::sum('total_price'),
+                'totalUsers' => User::where('role', 'user')->count(),
+                'totalEvents' => Event::count(),
+                'todayOrders' => Ticket::whereDate('created_at', today())->count(),
+                'todayRevenue' => Ticket::whereDate('created_at', today())->sum('total_price'),
+                'thisMonthOrders' => Ticket::whereMonth('created_at', now()->month)
+                    ->whereYear('created_at', now()->year)->count(),
+                'thisMonthRevenue' => Ticket::whereMonth('created_at', now()->month)
+                    ->whereYear('created_at', now()->year)->sum('total_price'),
+                'thisMonthNewUsers' => User::where('role', 'user')
+                    ->whereMonth('created_at', now()->month)
+                    ->whereYear('created_at', now()->year)->count(),
+                'thisMonthNewEvents' => Event::whereMonth('created_at', now()->month)
+                    ->whereYear('created_at', now()->year)->count(),
+            ];
+        });
+
+        // Use eager loading to prevent N+1 queries
         $recentOrders = Ticket::with('user')
             ->latest()
             ->limit(5)
             ->get();
 
-        // Orders by month for chart (last 6 months)
-        $ordersByMonth = Ticket::selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as count, SUM(total_price) as revenue")
-            ->where('created_at', '>=', now()->subMonths(6))
-            ->groupByRaw("DATE_FORMAT(created_at, '%Y-%m')")
-            ->orderByRaw('month ASC')
-            ->get();
+        // Cache chart data
+        $ordersByMonth = Cache::remember('dashboard_orders_by_month', 3600, function() {
+            return Ticket::selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as count, SUM(total_price) as revenue")
+                ->where('created_at', '>=', now()->subMonths(6))
+                ->groupByRaw("DATE_FORMAT(created_at, '%Y-%m')")
+                ->orderByRaw('month ASC')
+                ->get();
+        });
 
-        // Revenue by attraction (top 5)
-        $revenueByAttraction = Ticket::selectRaw('attraction_name, SUM(total_price) as revenue, COUNT(*) as orders')
-            ->groupBy('attraction_name')
-            ->orderByDesc('revenue')
-            ->limit(5)
-            ->get();
+        $revenueByAttraction = Cache::remember('dashboard_revenue_by_attraction', 3600, function() {
+            return Ticket::selectRaw('attraction_name, SUM(total_price) as revenue, COUNT(*) as orders')
+                ->groupBy('attraction_name')
+                ->orderByDesc('revenue')
+                ->limit(5)
+                ->get();
+        });
 
-        // Payment status breakdown
-        $paymentStatusBreakdown = Ticket::selectRaw('payment_status, COUNT(*) as count, SUM(total_price) as revenue')
-            ->groupBy('payment_status')
-            ->get();
-
-        // Today's stats
-        $todayOrders = Ticket::whereDate('created_at', today())->count();
-        $todayRevenue = Ticket::whereDate('created_at', today())->sum('total_price');
-        $thisMonthOrders = Ticket::whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->count();
-        $thisMonthRevenue = Ticket::whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->sum('total_price');
-        
-        // Additional stats for Users and Events
-        $thisMonthNewUsers = User::where('role', 'user')
-            ->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->count();
-        $thisMonthNewEvents = Event::whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->count();
+        $paymentStatusBreakdown = Cache::remember('dashboard_payment_breakdown', 3600, function() {
+            return Ticket::selectRaw('payment_status, COUNT(*) as count, SUM(total_price) as revenue')
+                ->groupBy('payment_status')
+                ->get();
+        });
 
         return Inertia::render('Admin/Dashboard', [
-            'stats' => [
-                'totalOrders' => $totalOrders,
-                'totalRevenue' => $totalRevenue,
-                'totalUsers' => $totalUsers,
-                'totalEvents' => $totalEvents,
-                'todayOrders' => $todayOrders,
-                'todayRevenue' => $todayRevenue,
-                'thisMonthOrders' => $thisMonthOrders,
-                'thisMonthRevenue' => $thisMonthRevenue,
-                'thisMonthNewUsers' => $thisMonthNewUsers,
-                'thisMonthNewEvents' => $thisMonthNewEvents,
-            ],
+            'stats' => $metrics,
             'recentOrders' => $recentOrders,
             'ordersByMonth' => $ordersByMonth,
             'revenueByAttraction' => $revenueByAttraction,
@@ -323,53 +318,36 @@ class BookingController extends Controller
     // Admin Analytics
     public function adminAnalytics()
     {
-        $ticketsByAttraction = Ticket::selectRaw('attraction_name, COUNT(*) as count, SUM(total_price) as revenue')
-            ->groupBy('attraction_name')
-            ->orderByDesc('count')
-            ->get();
+        // Cache analytics data for 1 hour
+        $analytics = Cache::remember('admin_analytics', 3600, function() {
+            return [
+                'ticketsByAttraction' => Ticket::selectRaw('attraction_name, COUNT(*) as count, SUM(total_price) as revenue')
+                    ->groupBy('attraction_name')
+                    ->orderByDesc('count')
+                    ->get(),
+                'averageOrderValue' => Ticket::avg('total_price'),
+                'totalTicketsSold' => Ticket::sum('quantity'),
+                'totalRevenue' => Ticket::sum('total_price'),
+                'totalOrders' => Ticket::count(),
+                'totalUsers' => User::where('role', 'user')->count(),
+                'todayOrders' => Ticket::whereDate('created_at', today())->count(),
+                'todayRevenue' => Ticket::whereDate('created_at', today())->sum('total_price'),
+                'thisMonthOrders' => Ticket::whereMonth('created_at', now()->month)
+                    ->whereYear('created_at', now()->year)->count(),
+            ];
+        });
 
-        // MySQL-compatible monthly aggregation (use first day of month)
-        $ordersByMonth = Ticket::selectRaw("DATE_FORMAT(created_at, '%Y-%m-01') as month, COUNT(*) as count, SUM(total_price) as revenue")
-            ->groupByRaw("DATE_FORMAT(created_at, '%Y-%m-01')")
-            ->orderByRaw('month DESC')
-            ->limit(12)
-            ->get();
+        $ordersByMonth = Cache::remember('analytics_orders_by_month', 3600, function() {
+            return Ticket::selectRaw("DATE_FORMAT(created_at, '%Y-%m-01') as month, COUNT(*) as count, SUM(total_price) as revenue")
+                ->groupByRaw("DATE_FORMAT(created_at, '%Y-%m-01')")
+                ->orderByRaw('month DESC')
+                ->limit(12)
+                ->get();
+        });
 
-        $averageOrderValue = Ticket::avg('total_price');
-        $totalTicketsSold = Ticket::sum('quantity');
-        $totalRevenue = Ticket::sum('total_price');
-        $totalOrders = Ticket::count();
-        $totalUsers = User::where('role', 'user')->count();
-
-        // Additional metrics
-        $todayOrders = Ticket::whereDate('created_at', today())->count();
-        $todayRevenue = Ticket::whereDate('created_at', today())->sum('total_price');
-        $thisMonthOrders = Ticket::whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->count();
-        $thisMonthRevenue = Ticket::whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->sum('total_price');
-
-        // Payment status breakdown
-        $paymentStatusBreakdown = Ticket::selectRaw('payment_status, COUNT(*) as count, SUM(total_price) as revenue')
-            ->groupBy('payment_status')
-            ->get();
-
-        return Inertia::render('Admin/Analytics', [
-            'ticketsByAttraction' => $ticketsByAttraction,
+        return Inertia::render('Admin/Analytics', array_merge($analytics, [
             'ordersByMonth' => $ordersByMonth,
-            'averageOrderValue' => $averageOrderValue,
-            'totalTicketsSold' => $totalTicketsSold,
-            'totalRevenue' => $totalRevenue,
-            'totalOrders' => $totalOrders,
-            'totalUsers' => $totalUsers,
-            'todayOrders' => $todayOrders,
-            'todayRevenue' => $todayRevenue,
-            'thisMonthOrders' => $thisMonthOrders,
-            'thisMonthRevenue' => $thisMonthRevenue,
-            'paymentStatusBreakdown' => $paymentStatusBreakdown,
-        ]);
+        ]));
     }
 
     // Admin Orders Management

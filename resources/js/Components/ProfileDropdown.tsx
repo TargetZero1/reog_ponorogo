@@ -17,7 +17,6 @@ export function ProfileDropdown({ scrolled, isMobile = false, isWhiteBackgroundP
   const user = auth?.user;
   const isAdmin = user?.role === 'admin';
   const { t, locale } = useTranslations();
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -163,21 +162,26 @@ export function ProfileDropdown({ scrolled, isMobile = false, isWhiteBackgroundP
                 )}
 
                 <div className={`${useWhiteTheme ? 'border-gray-200' : 'border-red-700'} border-t`}>
-                  <button
-                    onClick={() => {
-                      setIsOpen(false);
-                      setIsLoggingOut(true);
-                      router.post(route('logout'));
+                  <form
+                    method="POST"
+                    action={route('logout')}
+                    onSubmit={(e) => {
+                      // Let the form submit naturally as POST
+                      // Don't prevent default
                     }}
-                    disabled={isLoggingOut}
-                    className={`${linkClasses} w-full text-left flex items-center gap-2 hover:cursor-pointer disabled:opacity-50`}
-                    role="menuitem"
-                    tabIndex={-1}
-                    id="menu-item-logout"
                   >
-                    <LogOut size={16} />
-                    {isLoggingOut ? 'Logging out...' : t('nav.logout')}
-                  </button>
+                    <input type="hidden" name="_token" value={csrf_token} />
+                    <button
+                      type="submit"
+                      className={`${linkClasses} w-full text-left flex items-center gap-2 hover:cursor-pointer`}
+                      role="menuitem"
+                      tabIndex={-1}
+                      id="menu-item-logout"
+                    >
+                      <LogOut size={16} />
+                      {t('nav.logout')}
+                    </button>
+                  </form>
                 </div>
               </>
             ) : (

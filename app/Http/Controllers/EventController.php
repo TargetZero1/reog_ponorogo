@@ -44,19 +44,31 @@ class EventController extends Controller
     {
         $data = $request->validate([
             'title' => 'required|string|max:255',
+            'title_en' => 'nullable|string|max:255',
             'description' => 'nullable|string',
+            'description_en' => 'nullable|string',
             'date' => 'nullable|date',
             'location' => 'nullable|string|max:255',
+            'location_en' => 'nullable|string|max:255',
             'capacity' => 'nullable|integer|min:0',
             'price' => 'nullable|numeric|min:0',
             'published' => 'nullable|boolean',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
 
         $data['slug'] = Str::slug($data['title'] ?? now());
 
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . Str::slug($data['title']) . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images/events'), $imageName);
+            $data['image_path'] = '/images/events/' . $imageName;
+        }
+
         Event::create($data);
 
-        return redirect()->route('admin.events.index')->with('success', 'Event created successfully!');
+        return redirect()->route('admin.events.index', ['locale' => request()->route('locale')])->with('success', 'Event created successfully!');
     }
 
     public function show($event)
@@ -210,19 +222,36 @@ class EventController extends Controller
 
         $data = $request->validate([
             'title' => 'required|string|max:255',
+            'title_en' => 'nullable|string|max:255',
             'description' => 'nullable|string',
+            'description_en' => 'nullable|string',
             'date' => 'nullable|date',
             'location' => 'nullable|string|max:255',
+            'location_en' => 'nullable|string|max:255',
             'capacity' => 'nullable|integer|min:0',
             'price' => 'nullable|numeric|min:0',
             'published' => 'nullable|boolean',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
 
         $data['slug'] = Str::slug($data['title'] ?? $eventModel->title);
 
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($eventModel->image_path && file_exists(public_path($eventModel->image_path))) {
+                unlink(public_path($eventModel->image_path));
+            }
+            
+            $image = $request->file('image');
+            $imageName = time() . '_' . Str::slug($data['title']) . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images/events'), $imageName);
+            $data['image_path'] = '/images/events/' . $imageName;
+        }
+
         $eventModel->update($data);
 
-        return redirect()->route('admin.events.index')->with('success', 'Event updated successfully!');
+        return redirect()->route('admin.events.index', ['locale' => request()->route('locale')])->with('success', 'Event updated successfully!');
     }
 
     public function destroy($event)
@@ -270,7 +299,7 @@ class EventController extends Controller
     {
         $ids = $request->input('ids', []);
         Event::whereIn('id', $ids)->delete();
-        return redirect()->route('admin.events.index')->with('success', 'Events deleted successfully');
+        return redirect()->route('admin.events.index', ['locale' => request()->route('locale')])->with('success', 'Events deleted successfully');
     }
 
     // Bulk publish events
@@ -280,6 +309,6 @@ class EventController extends Controller
         $action = $request->input('action', 'publish'); // 'publish' or 'unpublish'
         $published = $action === 'publish' ? true : false;
         Event::whereIn('id', $ids)->update(['published' => $published]);
-        return redirect()->route('admin.events.index')->with('success', 'Events updated successfully');
+        return redirect()->route('admin.events.index', ['locale' => request()->route('locale')])->with('success', 'Events updated successfully');
     }
 }

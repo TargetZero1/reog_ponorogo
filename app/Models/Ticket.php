@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Services\CacheInvalidationService;
 
 class Ticket extends Model
 {
@@ -19,6 +20,18 @@ class Ticket extends Model
         'ticket_type',
         'source_id',
     ];
+
+    protected static function booted()
+    {
+        // Clear caches when ticket is created or updated
+        static::created(function () {
+            CacheInvalidationService::onTicketCreated();
+        });
+
+        static::updated(function () {
+            CacheInvalidationService::onTicketCreated();
+        });
+    }
 
     public function user()
     {

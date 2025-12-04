@@ -2,6 +2,7 @@
 
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\EventController;
 use Illuminate\Http\Request;
@@ -34,7 +35,11 @@ Route::prefix('{locale}')->where(['locale' => 'id|en'])->group(function () {
 
     // 3. PLACES INDEX
     Route::get('/tempat-wisata', function ($locale) {
-        $places = Place::where('published', true)->orderBy('name')->get();
+        $places = Cache::remember('published_places', 3600, function() {
+            return Place::where('published', true)
+                ->orderBy('name')
+                ->get();
+        });
         return Inertia::render('TempatWisata', [
             'places' => $places,
         ]);
@@ -42,10 +47,12 @@ Route::prefix('{locale}')->where(['locale' => 'id|en'])->group(function () {
 
     // 4. EVENTS INDEX
     Route::get('/events', function ($locale) {
-        $events = Event::where('published', true)
-            ->where('date', '>=', now())
-            ->orderBy('date', 'asc')
-            ->paginate(12);
+        $events = Cache::remember('published_upcoming_events', 3600, function() {
+            return Event::where('published', true)
+                ->where('date', '>=', now())
+                ->orderBy('date', 'asc')
+                ->paginate(12);
+        });
         return Inertia::render('Events/PublicIndex', [
             'events' => $events,
         ]);
@@ -139,36 +146,18 @@ Route::get('/', function () {
     return redirect('/id');
 });
 
-// Logout post handler - must be outside locale group to avoid redirect loops
+// Logout post handler - must be outside locale group
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cookie;
 Route::post('/logout', function (Request $request) {
-    // Get locale from session BEFORE invalidating
-    $locale = $request->session()->get('locale', 'id');
-    
-    // Perform complete logout - order matters!
+    // Logout
     Auth::logout();
     
-    // Invalidate and regenerate session
+    // Invalidate session
     $request->session()->invalidate();
     $request->session()->regenerateToken();
     
-    // Clear all session data
-    $request->session()->flush();
-    
-    // Redirect to login page with locale - use 303 See Other for POST redirect
-    $response = redirect("/{$locale}/pesan-ticket/login", 303);
-    
-    // Add cache-busting headers to prevent browser caching
-    $response->header('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate, private');
-    $response->header('Pragma', 'no-cache');
-    $response->header('Expires', '0');
-    
-    // Explicitly delete session cookie to force browser to forget session
-    $sessionName = config('session.cookie', 'reogheritage-session');
-    $response->cookie($sessionName, null, -1, '/', null, false, true);
-    
-    return $response;
+    // Redirect to login page - use hardcoded 'id' as default
+    return redirect("/id/login");
 })->name('logout')->middleware('web');
 
 // Graceful GET fallback (just redirect to locale home without performing logout logic)

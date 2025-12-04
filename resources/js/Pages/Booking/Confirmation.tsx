@@ -23,11 +23,11 @@ export default function Confirmation({ ticket, whatsappUrl }: ConfirmationProps)
     : '';
   const qrValue = `TICKET-${ticket.id}|${ticket.attraction_name}|${ticket.quantity}|${ticket.visit_date}`;
 
-  // Auto-redirect to WhatsApp after 2 seconds
+  // Auto-open WhatsApp in new tab after 2 seconds, user stays on confirmation
   useEffect(() => {
     if (whatsappUrl) {
       const timer = setTimeout(() => {
-        window.location.href = whatsappUrl;
+        window.open(whatsappUrl, '_blank');
       }, 2000);
       return () => clearTimeout(timer);
     }
@@ -53,54 +53,54 @@ export default function Confirmation({ ticket, whatsappUrl }: ConfirmationProps)
             <p className="text-center text-neutral-600 mb-8">{t('booking.thanks')}</p>
 
             {/* Ticket Details & QR Code */}
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
-              {/* Ticket Details */}
-              <div className="space-y-3 bg-gradient-to-br from-red-50 to-amber-50 p-6 rounded-lg border-2 border-red-200">
-                <div className="flex items-center gap-2 mb-4">
-                  <Ticket className="text-red-600" size={24} />
-                  <h3 className="text-lg font-bold text-red-950">{locale === 'en' ? 'Ticket Details' : 'Detail Tiket'}</h3>
+            <div className="grid md:grid-cols-2 gap-8 mb-8">
+              {/* Ticket Details - Cleaner Design */}
+              <div className="space-y-6 bg-white p-8 rounded-xl border border-neutral-200">
+                <div>
+                  <p className="text-sm text-neutral-500 font-medium tracking-wide uppercase mb-1">{t('booking.order_id')}</p>
+                  <p className="text-3xl font-bold text-red-600">#{ticket.id}</p>
                 </div>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-neutral-600 font-medium">{t('booking.order_id')}:</span>
-                    <span className="font-bold text-red-950">#{ticket.id}</span>
+
+                <div className="border-t border-neutral-100 pt-6">
+                  <p className="text-sm text-neutral-500 font-medium tracking-wide uppercase mb-2">{t('booking.destination')}</p>
+                  <p className="text-xl font-semibold text-neutral-900">{ticket.attraction_name}</p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-6 border-t border-neutral-100 pt-6">
+                  <div>
+                    <p className="text-sm text-neutral-500 font-medium tracking-wide uppercase mb-2">{t('booking.quantity')}</p>
+                    <p className="text-2xl font-bold text-neutral-900">{ticket.quantity}</p>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-neutral-600 font-medium">{t('booking.destination')}:</span>
-                    <span className="font-semibold text-neutral-900 text-right">{ticket.attraction_name}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-neutral-600 font-medium">{t('booking.quantity')}:</span>
-                    <span className="font-semibold text-neutral-900">{ticket.quantity}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-neutral-600 font-medium">{t('booking.total_price')}:</span>
-                    <span className="font-bold text-red-600">Rp {Number(ticket.total_price).toLocaleString(locale === 'en' ? 'en-US' : 'id-ID')}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-neutral-600 font-medium">{t('booking.visit_date')}:</span>
-                    <span className="font-semibold text-neutral-900">{new Date(ticket.visit_date).toLocaleDateString(locale === 'en' ? 'en-US' : 'id-ID', { 
-                      weekday: 'long',
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    })}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-neutral-600 font-medium">{t('booking.status')}:</span>
-                    <span className={`font-semibold px-3 py-1 rounded-full text-sm ${
+                  <div>
+                    <p className="text-sm text-neutral-500 font-medium tracking-wide uppercase mb-2">{t('booking.status')}</p>
+                    <span className={`inline-block font-semibold px-4 py-2 rounded-lg text-sm ${
                       ticket.payment_status === 'completed' 
-                        ? 'bg-green-100 text-green-700' 
-                        : 'bg-yellow-100 text-yellow-700'
+                        ? 'bg-green-50 text-green-700' 
+                        : 'bg-amber-50 text-amber-700'
                     }`}>
                       {ticket.payment_status === 'completed' ? t('booking.paid') : t('booking.pending')}
                     </span>
                   </div>
                 </div>
+
+                <div className="border-t border-neutral-100 pt-6">
+                  <p className="text-sm text-neutral-500 font-medium tracking-wide uppercase mb-2">{t('booking.visit_date')}</p>
+                  <p className="text-lg font-semibold text-neutral-900">{new Date(ticket.visit_date).toLocaleDateString(locale === 'en' ? 'en-US' : 'id-ID', { 
+                    weekday: 'short',
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric' 
+                  })}</p>
+                </div>
+
+                <div className="bg-gradient-to-r from-red-50 to-amber-50 border border-red-100 rounded-lg p-6 border-t-4 border-t-red-600">
+                  <p className="text-sm text-neutral-600 font-medium tracking-wide uppercase mb-2">{t('booking.total_price')}</p>
+                  <p className="text-3xl font-bold text-red-600">Rp {Number(ticket.total_price).toLocaleString(locale === 'en' ? 'en-US' : 'id-ID')}</p>
+                </div>
               </div>
 
               {/* QR Code */}
-              <div className="flex flex-col items-center justify-center">
+              <div className="flex flex-col items-center justify-center bg-white p-8 rounded-xl border border-neutral-200">
                 <QRCode 
                   value={qrValue}
                   size={200}
@@ -116,7 +116,7 @@ export default function Confirmation({ ticket, whatsappUrl }: ConfirmationProps)
                   {t('booking.whatsapp_redirect')}
                 </p>
                 <button
-                  onClick={() => window.location.href = whatsappUrl}
+                  onClick={() => window.open(whatsappUrl, '_blank')}
                   className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-lg hover:from-green-600 hover:to-green-700 transition-all shadow-lg flex items-center justify-center gap-2 font-semibold mb-4"
                 >
                   <MessageCircle size={20} />

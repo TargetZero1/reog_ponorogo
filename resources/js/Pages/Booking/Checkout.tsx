@@ -65,11 +65,11 @@ export default function Checkout({ attraction, pricePerTicket, ticketType, sourc
           <input type="hidden" name="attraction" value={attraction || ''} />
           <input type="hidden" name="ticket_type" value={ticketType || ''} />
           <input type="hidden" name="source_id" value={sourceId || ''} />
+          <input type="hidden" name="quantity" value={Math.max(1, Math.min(10, Math.floor(Number(quantity)) || 1))} />
 
           <div>
             <label className="block text-sm font-medium text-neutral-700">Jumlah Tiket</label>
             <input
-              name="quantity"
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
               type="number"

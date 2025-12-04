@@ -38,9 +38,20 @@ export default function PublicIndex({ events }: any) {
                 className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl border border-neutral-200 overflow-hidden transition-all duration-300 transform hover:-translate-y-2"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                {/* Event Image Placeholder */}
-                <div className="h-48 bg-gradient-to-br from-red-600 via-amber-500 to-red-700 relative overflow-hidden">
-                  <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_1px_1px,_rgba(255,255,255,0.15)_1px,_transparent_0)] bg-[length:20px_20px]"></div>
+                {/* Event Image */}
+                <div className="h-48 relative overflow-hidden">
+                  {e.image_path ? (
+                    <img 
+                      src={e.image_path} 
+                      alt={e.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-red-600 via-amber-500 to-red-700">
+                      <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_1px_1px,_rgba(255,255,255,0.15)_1px,_transparent_0)] bg-[length:20px_20px]"></div>
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                   <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1">
                     {Number(e.price) > 0 ? (
                       <span className="text-white font-bold text-sm">Rp {Number(e.price).toLocaleString(locale === 'en' ? 'en-US' : 'id-ID')}</span>

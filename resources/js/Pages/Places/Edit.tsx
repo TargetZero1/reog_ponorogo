@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { usePage, router } from '@inertiajs/react';
+import { usePage, useForm } from '@inertiajs/react';
 import { Layout } from '../../Components/Layout';
 import { Plus, X, Save, ArrowLeft, Eye } from 'lucide-react';
 import { useTranslations, getLocalizedRoute } from '@/utils/translations';
@@ -9,7 +9,7 @@ export default function EditPlace({ place }: { place: any }) {
   const { csrf_token } = page.props as any;
   const { locale } = useTranslations();
   
-  const [formData, setFormData] = useState({
+  const { data, setData, patch, processing, errors } = useForm({
     name: place.name || '',
     category: place.category || '',
     description: place.description || '',
@@ -27,26 +27,26 @@ export default function EditPlace({ place }: { place: any }) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.patch(getLocalizedRoute('admin.places.update', { place: place.id }, locale), formData, {
+    patch(getLocalizedRoute('admin.places.update', { place: place.id }, locale), {
       onSuccess: () => {
-        router.visit(getLocalizedRoute('admin.places.index', {}, locale));
+        // Redirect handled by Laravel
       },
     });
   };
 
   const addArrayItem = (field: 'highlights' | 'activities' | 'facilities') => {
-    setFormData({ ...formData, [field]: [...formData[field], ''] });
+    setData(field, [...data[field], '']);
   };
 
   const removeArrayItem = (field: 'highlights' | 'activities' | 'facilities', index: number) => {
-    const newArray = formData[field].filter((_: string, i: number) => i !== index);
-    setFormData({ ...formData, [field]: newArray });
+    const newArray = data[field].filter((_: string, i: number) => i !== index);
+    setData(field, newArray);
   };
 
   const updateArrayItem = (field: 'highlights' | 'activities' | 'facilities', index: number, value: string) => {
-    const newArray = [...formData[field]];
+    const newArray = [...data[field]];
     newArray[index] = value;
-    setFormData({ ...formData, [field]: newArray });
+    setData(field, newArray);
   };
 
   const viewOnPublicSite = () => {
@@ -94,8 +94,8 @@ export default function EditPlace({ place }: { place: any }) {
                   </label>
                   <input
                     type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    value={data.name}
+                    onChange={(e) => setData('name', e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     required
                   />
@@ -104,8 +104,8 @@ export default function EditPlace({ place }: { place: any }) {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
                   <input
                     type="text"
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    value={data.category}
+                    onChange={(e) => setData('category', e.target.value)}
                     placeholder="e.g., Wisata Alam, Wisata Budaya"
                     className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
                   />
@@ -114,8 +114,8 @@ export default function EditPlace({ place }: { place: any }) {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
                   <input
                     type="text"
-                    value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    value={data.location}
+                    onChange={(e) => setData('location', e.target.value)}
                     placeholder="e.g., Kecamatan Ngebel, Ponorogo"
                     className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
                   />
@@ -124,8 +124,8 @@ export default function EditPlace({ place }: { place: any }) {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Operating Hours</label>
                   <input
                     type="text"
-                    value={formData.hours}
-                    onChange={(e) => setFormData({ ...formData, hours: e.target.value })}
+                    value={data.hours}
+                    onChange={(e) => setData('hours', e.target.value)}
                     placeholder="e.g., 08:00 - 17:00 WIB"
                     className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
                   />
@@ -137,8 +137,8 @@ export default function EditPlace({ place }: { place: any }) {
                     step="0.1"
                     min="0"
                     max="5"
-                    value={formData.rating}
-                    onChange={(e) => setFormData({ ...formData, rating: parseFloat(e.target.value) })}
+                    value={data.rating}
+                    onChange={(e) => setData('rating', parseFloat(e.target.value))}
                     className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
                   />
                 </div>
@@ -146,8 +146,8 @@ export default function EditPlace({ place }: { place: any }) {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Price (Rp)</label>
                   <input
                     type="number"
-                    value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    value={data.price}
+                    onChange={(e) => setData('price', e.target.value)}
                     placeholder="Leave empty for free"
                     className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
                   />
@@ -156,8 +156,8 @@ export default function EditPlace({ place }: { place: any }) {
               <div className="mt-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
                 <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  value={data.description}
+                  onChange={(e) => setData('description', e.target.value)}
                   rows={4}
                   className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
                   placeholder="Describe the place..."
@@ -167,8 +167,8 @@ export default function EditPlace({ place }: { place: any }) {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Image URL</label>
                 <input
                   type="url"
-                  value={formData.image_path}
-                  onChange={(e) => setFormData({ ...formData, image_path: e.target.value })}
+                  value={data.image_path}
+                  onChange={(e) => setData('image_path', e.target.value)}
                   placeholder="https://..."
                   className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
                 />
@@ -177,8 +177,8 @@ export default function EditPlace({ place }: { place: any }) {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Best Time to Visit</label>
                 <input
                   type="text"
-                  value={formData.best_time}
-                  onChange={(e) => setFormData({ ...formData, best_time: e.target.value })}
+                  value={data.best_time}
+                  onChange={(e) => setData('best_time', e.target.value)}
                   placeholder="e.g., Pagi hari untuk sunrise"
                   className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
                 />
@@ -199,7 +199,7 @@ export default function EditPlace({ place }: { place: any }) {
                 </button>
               </div>
               <div className="space-y-2">
-                {formData.highlights.map((highlight: string, index: number) => (
+                {data.highlights.map((highlight: string, index: number) => (
                   <div key={index} className="flex gap-2">
                     <input
                       type="text"
@@ -208,7 +208,7 @@ export default function EditPlace({ place }: { place: any }) {
                       placeholder="Enter highlight..."
                       className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
-                    {formData.highlights.length > 1 && (
+                    {data.highlights.length > 1 && (
                       <button
                         type="button"
                         onClick={() => removeArrayItem('highlights', index)}
@@ -236,7 +236,7 @@ export default function EditPlace({ place }: { place: any }) {
                 </button>
               </div>
               <div className="space-y-2">
-                {formData.activities.map((activity: string, index: number) => (
+                {data.activities.map((activity: string, index: number) => (
                   <div key={index} className="flex gap-2">
                     <input
                       type="text"
@@ -245,7 +245,7 @@ export default function EditPlace({ place }: { place: any }) {
                       placeholder="Enter activity..."
                       className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
-                    {formData.activities.length > 1 && (
+                    {data.activities.length > 1 && (
                       <button
                         type="button"
                         onClick={() => removeArrayItem('activities', index)}
@@ -273,7 +273,7 @@ export default function EditPlace({ place }: { place: any }) {
                 </button>
               </div>
               <div className="space-y-2">
-                {formData.facilities.map((facility: string, index: number) => (
+                {data.facilities.map((facility: string, index: number) => (
                   <div key={index} className="flex gap-2">
                     <input
                       type="text"
@@ -282,7 +282,7 @@ export default function EditPlace({ place }: { place: any }) {
                       placeholder="Enter facility..."
                       className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
                     />
-                    {formData.facilities.length > 1 && (
+                    {data.facilities.length > 1 && (
                       <button
                         type="button"
                         onClick={() => removeArrayItem('facilities', index)}
@@ -301,8 +301,8 @@ export default function EditPlace({ place }: { place: any }) {
               <label className="flex items-center gap-3 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={formData.published}
-                  onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
+                  checked={data.published}
+                  onChange={(e) => setData('published', e.target.checked)}
                   className="w-5 h-5 text-red-600 rounded focus:ring-2 focus:ring-red-500"
                 />
                 <span className="text-sm font-medium text-gray-700">Publish this place (visible to public)</span>
@@ -319,10 +319,11 @@ export default function EditPlace({ place }: { place: any }) {
               </a>
               <button
                 type="submit"
-                className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition shadow-lg"
+                disabled={processing}
+                className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition shadow-lg disabled:opacity-50"
               >
                 <Save size={18} />
-                Save Changes
+                {processing ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
           </form>
