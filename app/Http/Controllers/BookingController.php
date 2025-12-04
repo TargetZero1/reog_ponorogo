@@ -85,7 +85,8 @@ class BookingController extends Controller
     public function showCheckout(Request $request)
     {
         if (!Auth::check()) {
-            return redirect()->route('pesan.register', ['attraction' => $request->query('attraction')]);
+            $locale = app()->getLocale();
+            return redirect()->route('pesan.register', ['locale' => $locale, 'attraction' => $request->query('attraction')]);
         }
 
         $attraction = $request->query('attraction');
@@ -226,7 +227,8 @@ class BookingController extends Controller
     public function showPaymentHistory()
     {
         if (!Auth::check()) {
-            return redirect()->route('pesan.login');
+            $locale = app()->getLocale();
+            return redirect()->route('pesan.login', ['locale' => $locale]);
         }
 
         $payments = Ticket::where('user_id', Auth::id())

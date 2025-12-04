@@ -2,6 +2,42 @@ import axios from 'axios';
 import route from 'ziggy-js';
 
 (window as any).axios = axios;
-(window as any).route = route;
+
+const detectLocale = () => {
+  if (typeof window === 'undefined') {
+    return 'id';
+  }
+
+  const pathLocale = window.location.pathname.split('/')[1];
+  if (['id', 'en'].includes(pathLocale)) {
+    return pathLocale;
+  }
+
+  const htmlLang = document.documentElement.getAttribute('lang');
+  if (htmlLang && ['id', 'en'].includes(htmlLang)) {
+    return htmlLang as string;
+  }
+
+  return 'id';
+};
+
+const originalRoute = route;
+
+(window as any).route = (name: any, params?: any, absolute?: any, config?: any) => {
+  let processedParams = params;
+
+  if (processedParams === undefined || processedParams === null) {
+    processedParams = {};
+  }
+
+  if (typeof processedParams === 'object' && !Array.isArray(processedParams)) {
+    processedParams = {
+      ...processedParams,
+      locale: processedParams.locale || detectLocale(),
+    };
+  }
+
+  return (originalRoute as any)(name, processedParams, absolute, config);
+};
 
 (window as any).axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

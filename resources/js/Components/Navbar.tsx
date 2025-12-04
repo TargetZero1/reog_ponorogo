@@ -2,6 +2,7 @@ import { Menu, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { ProfileDropdown } from './ProfileDropdown';
 import { usePage } from '@inertiajs/react';
+import { useTranslations, getLocalizedRoute } from '@/utils/translations';
 
 interface NavbarProps {
   activeSection?: string;
@@ -14,52 +15,47 @@ export function Navbar({ activeSection = '', setActiveSection = () => {} }: Navb
   const [currentPath, setCurrentPath] = useState('');
   const { auth } = usePage().props as any;
   const user = auth?.user;
+  const { t, locale } = useTranslations();
 
   useEffect(() => {
     setCurrentPath(window.location.pathname);
   }, []);
 
-  // Determine if current page is admin page
-  const isAdminPage = currentPath.startsWith('/admin');
+  const homeRoute = getLocalizedRoute('home', undefined, locale);
+  const budayaRoute = getLocalizedRoute('budaya', undefined, locale);
+  const wisataRoute = getLocalizedRoute('places.index', undefined, locale);
+  const eventsRoute = getLocalizedRoute('events.index', undefined, locale);
+  const adminEventsRoute = getLocalizedRoute('admin.events.index', undefined, locale);
+
+  const adminBasePath = `/${locale}/admin`;
+  const isAdminPage = currentPath.startsWith(adminBasePath);
   
   // Determine if current page has white background (needs maroon navbar)
-  const isWhiteBackgroundPage = (currentPath !== '/' && 
-    currentPath !== '/index.php' && 
-    !currentPath.includes('#') &&
-    currentPath !== route('home').replace(window.location.origin, '')) || isAdminPage;
+  const homePathname = new URL(homeRoute, window.location.origin).pathname;
+  const isWhiteBackgroundPage = currentPath !== homePathname || isAdminPage;
 
-  // ✅ FIXED: Using named routes with the route() helper
   const navLinks = [
-    // 1. Home (Use named route)
-    { id: 'beranda', label: 'Beranda', href: route('home'), isPage: false },
-    
-    // 2. Anchors (Append the hash to the named route)
-    { id: 'reog', label: 'Reog Ponorogo', href: `${route('home')}#reog`, isPage: false },
-    { id: 'jenis-reog', label: 'Jenis Reog', href: `${route('home')}#jenis-reog`, isPage: false },
-    
-    // 3. Pages (Use named routes)
-    { id: 'budaya', label: 'Budaya dan Sejarah', href: route('budaya'), isPage: true },
-    { id: 'wisata', label: 'Tempat Wisata', href: route('places.index'), isPage: true },
-    { id: 'events', label: 'Events', href: route('events.index'), isPage: true },
+    { id: 'beranda', label: t('nav.home'), href: homeRoute, isPage: false },
+    { id: 'reog', label: t('nav.reog_section'), href: `${homeRoute}#reog`, isPage: false },
+    { id: 'jenis-reog', label: t('nav.types_section'), href: `${homeRoute}#jenis-reog`, isPage: false },
+    { id: 'budaya', label: t('nav.culture'), href: budayaRoute, isPage: true },
+    { id: 'wisata', label: t('nav.places'), href: wisataRoute, isPage: true },
+    { id: 'events', label: t('nav.events_page'), href: eventsRoute, isPage: true },
   ];
 
-  // ✅ FIXED: Admin link now uses the named route too (pointing to admin.events.index)
   const adminLinks = [
-    { id: 'events', label: 'Events', href: route('admin.events.index'), isPage: true },
+    { id: 'admin-events', label: t('admin.events'), href: adminEventsRoute, isPage: true },
   ];
 
   const scrollToSection = (id: string, href: string, isPage: boolean) => {
     setMobileMenuOpen(false);
     
     if (isPage) {
-      // This forces the browser to go to the correct full URL (including /public)
       window.location.href = href;
     } else {
-      // Logic for scrolling on the homepage
-      // We check if we are on the homepage path (e.g., /reogheritage/public/)
-      const homePath = new URL(route('home')).pathname;
-      
-      if (currentPath === homePath || currentPath === '/' || currentPath === '/index.php') {
+      const homePath = new URL(homeRoute, window.location.origin).pathname;
+
+      if (currentPath === homePath) {
         const element = document.getElementById(id);
         if (element) {
           element.scrollIntoView({ behavior: 'smooth' });
@@ -101,7 +97,7 @@ export function Navbar({ activeSection = '', setActiveSection = () => {} }: Navb
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0 flex items-center gap-3">
-            <a href={route('home')} aria-label="Reog Ponorogo home" className="flex items-center gap-3">
+            <a href={homeRoute} aria-label="Reog Ponorogo home" className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center shadow-lg">
                 <span className="text-red-950">🦚</span>
               </div>
@@ -141,7 +137,7 @@ export function Navbar({ activeSection = '', setActiveSection = () => {} }: Navb
             {/* Admin section */}
             {user?.role === 'admin' && (
               <>
-                <span className="ml-4 px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-bold uppercase tracking-wider">Admin</span>
+                <span className="ml-4 px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-bold uppercase tracking-wider">{t('nav.admin_label')}</span>
                 {adminLinks.map((link) => (
                   <button
                     key={link.id}
@@ -160,8 +156,8 @@ export function Navbar({ activeSection = '', setActiveSection = () => {} }: Navb
             )}
             <ProfileDropdown scrolled={scrolled} isWhiteBackgroundPage={isAdminPage || isWhiteBackgroundPage} />
           </div>
-
-          <div className="md:hidden flex items-center">
+@@
+          <div className="md:hidden flex items-center gap-2">
             <ProfileDropdown scrolled={scrolled} isMobile={true} isWhiteBackgroundPage={false} />
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

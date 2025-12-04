@@ -192,7 +192,7 @@ async function login(credentials) {
     });
 
     // First, get CSRF token from login page (this also sets session cookie)
-    const loginPage = await axiosInstance.get('/pesan-ticket/login', {
+    const loginPage = await axiosInstance.get('/id/pesan-ticket/login', {
       headers: cookies ? { 'Cookie': cookies } : {}
     });
     
@@ -216,7 +216,7 @@ async function login(credentials) {
       ...(csrfToken && { _token: csrfToken })
     });
 
-    const response = await axiosInstance.post('/pesan-ticket/login', formData.toString(), {
+    const response = await axiosInstance.post('/id/pesan-ticket/login', formData.toString(), {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Accept': 'application/json, text/html',
@@ -277,35 +277,42 @@ async function runTests() {
   console.log(`\nBase URL: ${BASE_URL}\n`);
 
   // ============================================
-  // PUBLIC ENDPOINTS
+  // PUBLIC ENDPOINTS (with locale)
   // ============================================
   console.log(`${colors.blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${colors.reset}`);
-  console.log(`${colors.blue}Public Endpoints${colors.reset}`);
+  console.log(`${colors.blue}Public Endpoints (Indonesian)${colors.reset}`);
   console.log(`${colors.blue}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${colors.reset}\n`);
 
-  await testEndpoint('Home Page', 'GET', '/', { expectedStatus: 200 });
-  await testEndpoint('Budaya & Sejarah', 'GET', '/budaya-dan-sejarah', { expectedStatus: 200 });
-  await testEndpoint('Tourist Attractions', 'GET', '/tempat-wisata', { expectedStatus: 200 });
-  await testEndpoint('Events Index', 'GET', '/events', { expectedStatus: 200 });
-  await testEndpoint('Register Page', 'GET', '/pesan-ticket/register', { expectedStatus: 200 });
-  await testEndpoint('Login Page', 'GET', '/pesan-ticket/login', { expectedStatus: 200 });
-  await testEndpoint('Login Page (Alt)', 'GET', '/login', { expectedStatus: 200 });
+  await testEndpoint('Home Page (ID)', 'GET', '/id', { expectedStatus: 200 });
+  await testEndpoint('Budaya & Sejarah (ID)', 'GET', '/id/budaya-dan-sejarah', { expectedStatus: 200 });
+  await testEndpoint('Tourist Attractions (ID)', 'GET', '/id/tempat-wisata', { expectedStatus: 200 });
+  await testEndpoint('Events Index (ID)', 'GET', '/id/events', { expectedStatus: 200 });
+  await testEndpoint('Register Page (ID)', 'GET', '/id/pesan-ticket/register', { expectedStatus: 200 });
+  await testEndpoint('Login Page (ID)', 'GET', '/id/pesan-ticket/login', { expectedStatus: 200 });
+  await testEndpoint('Login Page (ID Alt)', 'GET', '/id/login', { expectedStatus: 200 });
+
+  console.log(`\n${colors.blue}Public Endpoints (English)${colors.reset}\n`);
+  await testEndpoint('Home Page (EN)', 'GET', '/en', { expectedStatus: 200 });
+  await testEndpoint('Budaya & Sejarah (EN)', 'GET', '/en/budaya-dan-sejarah', { expectedStatus: 200 });
+  await testEndpoint('Tourist Attractions (EN)', 'GET', '/en/tempat-wisata', { expectedStatus: 200 });
+  await testEndpoint('Events Index (EN)', 'GET', '/en/events', { expectedStatus: 200 });
 
   // Try to get a valid event slug (this might fail if no events exist)
   try {
-    const eventsResponse = await axios.get(`${BASE_URL}/events`, { timeout: TIMEOUT });
+    const eventsResponse = await axios.get(`${BASE_URL}/id/events`, { timeout: TIMEOUT });
     if (eventsResponse.data && typeof eventsResponse.data === 'object') {
       // Inertia response - check for events in props
       const events = eventsResponse.data.props?.events?.data || eventsResponse.data.props?.events || [];
       if (events.length > 0 && events[0].slug) {
-        await testEndpoint('Event Show', 'GET', `/events/${events[0].slug}`, { expectedStatus: 200 });
+        await testEndpoint('Event Show (ID)', 'GET', `/id/events/${events[0].slug}`, { expectedStatus: 200 });
+        await testEndpoint('Event Show (EN)', 'GET', `/en/events/${events[0].slug}`, { expectedStatus: 200 });
       } else {
-        results.skipped++;
+        results.skipped += 2;
         console.log(`${colors.yellow}⊘${colors.reset} Event Show - SKIPPED (no events found)`);
       }
     }
   } catch (error) {
-    results.skipped++;
+    results.skipped += 2;
     console.log(`${colors.yellow}⊘${colors.reset} Event Show - SKIPPED (could not fetch events)`);
   }
 
@@ -318,24 +325,24 @@ async function runTests() {
 
   // Test without auth (Inertia returns 200 with login page instead of 302 redirect)
   // Accept 200 or 302 as both indicate protection
-  await testEndpoint('Checkout (No Auth)', 'GET', '/pesan-ticket/checkout', { expectedStatus: null }); // Accept 200 (login page) or 302
-  await testEndpoint('Payment History (No Auth)', 'GET', '/payment-history', { expectedStatus: null });
-  await testEndpoint('Profile (No Auth)', 'GET', '/profile', { expectedStatus: null });
+  await testEndpoint('Checkout (No Auth)', 'GET', '/id/pesan-ticket/checkout', { expectedStatus: null }); // Accept 200 (login page) or 302
+  await testEndpoint('Payment History (No Auth)', 'GET', '/id/payment-history', { expectedStatus: null });
+  await testEndpoint('Profile (No Auth)', 'GET', '/id/profile', { expectedStatus: null });
 
   // Login as regular user
   console.log(`\n${colors.cyan}Logging in as regular user...${colors.reset}\n`);
   const userCookies = await login(TEST_USER);
 
   if (userCookies) {
-    await testEndpoint('Checkout (Authenticated)', 'GET', '/pesan-ticket/checkout', { 
+    await testEndpoint('Checkout (Authenticated)', 'GET', '/id/pesan-ticket/checkout', { 
       cookies: userCookies,
       expectedStatus: 200 
     });
-    await testEndpoint('Payment History (Authenticated)', 'GET', '/payment-history', { 
+    await testEndpoint('Payment History (Authenticated)', 'GET', '/id/payment-history', { 
       cookies: userCookies,
       expectedStatus: 200 
     });
-    await testEndpoint('Profile (Authenticated)', 'GET', '/profile', { 
+    await testEndpoint('Profile (Authenticated)', 'GET', '/id/profile', { 
       cookies: userCookies,
       expectedStatus: 200 
     });
@@ -366,31 +373,31 @@ async function runTests() {
   const adminCookies = await login(ADMIN_USER);
 
   if (adminCookies) {
-    await testEndpoint('Admin Dashboard (Authenticated)', 'GET', '/admin/dashboard', { 
+    await testEndpoint('Admin Dashboard (Authenticated)', 'GET', '/id/admin/dashboard', { 
       cookies: adminCookies,
       expectedStatus: 200 
     });
-    await testEndpoint('Admin Orders (Authenticated)', 'GET', '/admin/orders', { 
+    await testEndpoint('Admin Orders (Authenticated)', 'GET', '/id/admin/orders', { 
       cookies: adminCookies,
       expectedStatus: 200 
     });
-    await testEndpoint('Admin Events (Authenticated)', 'GET', '/admin/events', { 
+    await testEndpoint('Admin Events (Authenticated)', 'GET', '/id/admin/events', { 
       cookies: adminCookies,
       expectedStatus: 200 
     });
-    await testEndpoint('Admin Places (Authenticated)', 'GET', '/admin/places', { 
+    await testEndpoint('Admin Places (Authenticated)', 'GET', '/id/admin/places', { 
       cookies: adminCookies,
       expectedStatus: 200 
     });
-    await testEndpoint('Admin Analytics (Authenticated)', 'GET', '/admin/analytics', { 
+    await testEndpoint('Admin Analytics (Authenticated)', 'GET', '/id/admin/analytics', { 
       cookies: adminCookies,
       expectedStatus: 200 
     });
-    await testEndpoint('Admin Users (Authenticated)', 'GET', '/admin/users', { 
+    await testEndpoint('Admin Users (Authenticated)', 'GET', '/id/admin/users', { 
       cookies: adminCookies,
       expectedStatus: 200 
     });
-    await testEndpoint('Admin Reports (Authenticated)', 'GET', '/admin/reports', { 
+    await testEndpoint('Admin Reports (Authenticated)', 'GET', '/id/admin/reports', { 
       cookies: adminCookies,
       expectedStatus: 200 
     });

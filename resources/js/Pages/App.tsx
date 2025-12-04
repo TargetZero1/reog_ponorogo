@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Head } from '@inertiajs/react';
 import { Navbar } from '../Components/Navbar';
 import { Hero } from '../Components/Hero';
 import { ReogSection } from '../Components/ReogSection';
@@ -9,6 +10,7 @@ import { TestimonialsSection } from '../Components/TestimonialsSection';
 import { Footer } from '../Components/Footer';
 import { ScrollToTop } from '../Components/ScrollToTop';
 import { ContainerBackground } from '../Components/ContainerBackground';
+import { SEO } from '../Components/SEO';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState('beranda');
@@ -44,8 +46,14 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      <Navbar activeSection={activeSection} setActiveSection={setActiveSection} />
+    <>
+      <SEO 
+        title="Reog Ponorogo - Warisan Budaya UNESCO 2025"
+        description="Sistem Informasi Warisan Budaya UNESCO Reog Ponorogo 2025. Jelajahi keindahan budaya, sejarah, dan pertunjukan Reog Ponorogo yang telah diakui sebagai Warisan Budaya Takbenda UNESCO."
+        keywords="Reog Ponorogo, UNESCO, Warisan Budaya, Indonesia, Tarian Tradisional, Budaya Jawa, Ponorogo, Cultural Heritage"
+      />
+      <div className="min-h-screen bg-neutral-50">
+        <Navbar activeSection={activeSection} setActiveSection={setActiveSection} />
       
       <main id="main">
         <section id="beranda" className="scroll-mt-16 -mt-16 relative">
@@ -73,8 +81,9 @@ export default function App() {
         </section>
       </main>
       
-      <Footer />
-      <ScrollToTop />
-    </div>
+        <Footer />
+        <ScrollToTop />
+      </div>
+    </>
   );
 }

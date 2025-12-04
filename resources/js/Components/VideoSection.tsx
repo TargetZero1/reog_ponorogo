@@ -11,13 +11,13 @@ export function VideoSection() {
       id: 'wPbJP5XxInU', // Reog Ponorogo - Kesenian Reog Guno Seco
       title: 'Reog Ponorogo - Kesenian Reog Guno Seco',
       description: 'Pertunjukan Tradisional Reog Ponorogo',
-      thumbnail: 'https://img.youtube.com/vi/wPbJP5XxInU/maxresdefault.jpg'
+      thumbnail: 'https://img.youtube.com/vi/wPbJP5XxInU/hqdefault.jpg'
     },
     {
       id: 'GpnfLxonXuk', // Cara Menggambar Reog Ponorogo / Reog Performance
       title: 'Reog Ponorogo Performance',
       description: 'Pertunjukan Seni Tradisional',
-      thumbnail: 'https://img.youtube.com/vi/GpnfLxonXuk/maxresdefault.jpg'
+      thumbnail: 'https://img.youtube.com/vi/GpnfLxonXuk/hqdefault.jpg'
     }
   ];
 
